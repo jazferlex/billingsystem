@@ -1,0 +1,395 @@
+{% load static %}
+<!doctype html>
+<html class="no-js" lang="zxx">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>GINATILAN WATERWORKS</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="manifest" href="site.webmanifest">
+		<link rel="shortcut icon" type="image/x-icon" href="{% static 'asset/img/favicon(1).ico' %}">
+
+		<!-- CSS here -->
+        <link href="{% static 'website/img/apple-touch-icon.ico' %}" rel="apple-touch-icon">
+
+            <link rel="stylesheet" href="{% static 'asset/css/bootstrap.min.css' %}">
+            <link rel="stylesheet" href="{% static 'asset/css/owl.carousel.min.css' %}">
+            <link rel="stylesheet" href="{% static 'asset/css/slicknav.css' %}">
+            <link rel="stylesheet" href="{% static 'asset/css/flaticon.css' %}">
+            <link rel="stylesheet" href="{% static 'asset/css/animate.min.css' %}">
+            <link rel="stylesheet" href="{% static 'asset/css/magnific-popup.css' %}">
+            <link rel="stylesheet" href="{% static 'asset/css/fontawesome-all.min.css' %}">
+            <link rel="stylesheet" href="{% static 'asset/css/themify-icons.css' %}">
+            <link rel="stylesheet" href="{% static 'asset/css/slick.css ' %}">
+            <link rel="stylesheet" href="{% static 'asset/css/nice-select.css' %}">
+            <link rel="stylesheet" href="{% static 'asset/css/style.css' %}">
+            <link rel="stylesheet" href="{% static 'asset/css/custom.css ' %}">
+   </head>
+
+   <body>
+    <!-- Preloader Start -->
+    <div id="preloader-active">
+        <div class="preloader d-flex align-items-center justify-content-center">
+            <div class="preloader-inner position-relative">
+                <div class="preloader-circle"></div>
+                <div class="preloader-img pere-text">
+                    <img src="static/asset/img/logo/loder.jpg" alt="">
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Preloader Start -->
+    <header>
+        <!-- Header Start -->
+       <div class="header-area header_area header-transparent">
+            <div class="main-header">
+               <div class="header-bottom  header-sticky">
+                    <div class="container-fluid">
+                        <div class="row align-items-center">
+                            <!-- Logo -->
+                            <div class="col-xl-2 col-lg-1 col-md-1">
+                                <div class="logo">
+                                  <a href="index.html"><img src="static/asset/img/ginatilanlogo1.png" alt="">  GINATILAN WATERWORKS</a>
+                                </div>
+                            </div>
+                            <div class="col-xl-8 col-lg-8 col-md-8">
+                                <!-- Main-menu -->
+                                <div class="main-menu f-right d-none d-lg-block">
+                                    <nav> 
+                                        <ul id="navigation">                                                                                                                                     
+                                            <li><a href="#"></a></li>
+                                            <li><a href="#"></a></li>
+                                            <li><a href="#"></a></li>
+                                            <li><a href="#"></a></li>
+                                            <li><a href="#"></a>
+                                                
+                                            </li>
+                                            <li><a href="#"></a>
+                                                
+                                            </li>
+                                            <li><a href="#"></a></li>
+                                        </ul>
+                                    </nav>
+                                </div>
+                            </div>             
+                            <div class="col-xl-2 col-lg-3 col-md-3">
+                                <div class="header-right-btn f-right d-none d-lg-block">
+                                    
+                                </div>
+                            </div>
+                            <!-- Mobile Menu -->
+                            
+                        </div>
+                    </div>
+               </div>
+            </div>
+       </div>
+        <!-- Header End -->
+    </header>
+    <main>
+        <form action="/costumer-service" method="POST">
+            {% csrf_token %}
+                   <!-- slider Area Start-->
+        <script>
+            var msg = "{{context.msg}}";
+            if(msg != ""){
+                alert(msg);
+            }
+        </script>           
+        <div class="slider-area  slider-height" data-background="static/asset/img/hero/h1_hero.jpg">
+            <div class="slider-active">
+                <!-- Single Slider -->
+                <div class="single-slider">
+                    <div class="slider-cap-wrapper">
+                          <div class="hero__img">
+                            <img src="static/asset/img/banner/water2.jpg.jpg" alt=""  data-animation="fadeInRight" data-transition-duration="5s">
+                          </div>
+                          <div class="hero__caption">
+                              <h1 data-animation="fadeInLeft" data-delay=".4s">Water is the Source of Life</h1>
+                              <p data-animation="fadeInLeft" data-delay=".6s">"Be formless, shapeless, like water. You put water into a cup, it becomes the cup. You put water into a bottle, it becomes the bottle. You put it into a teapot, it becomes the teapot. Now water can flow or it can crash. Be water, my friend." <br>- Bruce Lee</p>
+
+
+                          </div>
+                    </div>
+                </div>
+                <!-- Single Slider -->
+                <div class="single-slider">
+                    <div class="slider-cap-wrapper">
+                          <div class="hero__img">
+                            <img src="static/asset/img/banner/water.jpg.jpg" alt=""  data-animation="fadeInRight" data-transition-duration="5s">
+                          </div>
+                          <div class="hero__caption">
+                              <h1 data-animation="fadeInLeft" data-delay=".4s">Life in us is like the water in a river.</h1>
+                              <p data-animation="fadeInLeft" data-delay=".6s">“Human nature is like water. It takes the shape of its container.” <br>― Wallace Stevens</p>
+                              <!-- Hero Btn -->
+                              
+                          </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- slider Area End-->
+       
+        <!-- Want To Work End -->
+        <!-- Our Services Start -->
+        <div class="our-services  pt-50 pb-150">
+            <div class="container">
+                <div class="row">
+                    <div class=" col-lg-4 col-md-6 col-sm-6">
+                        <div class="single-services text-center mb-30">
+                            <div class="services-ion">
+                                <span class="flaticon-experience"></span>
+                            </div>
+                            <div class="services-cap">
+                                <h5>My Water Bill</h5> 
+                                <ul>
+                                    <li><i class="fa fa-chevron-right" aria-hidden="true"></i>View / Download Your Bill this month.</li>
+                                    <li><i class="fa fa-chevron-right" aria-hidden="true"></i>View your past bill.</li>
+                                </ul>   
+                                <br>  
+                                <div class="form-outline">
+                                 <input type="text" id="form1" name="search_for" class="form-control form-icon-trailing" placeholder="Account ID / Meter Number" />
+                                </div>
+                                    <br>
+                            <div class="col-sm-offset-4 col-sm-4">
+                            	<button type="submit" class="btn btn-primary" href="#" role="button">Submit</button>
+                            </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class=" col-lg-4 col-md-6 col-sm-6">
+                        <div class="single-services text-center mb-30">
+                            <div class="services-ion">
+                                <span class="flaticon-pay"></span>
+                            </div>
+                            <div class="services-cap">
+                                <h5>Water Connection Application</h5>
+                                <ul>
+                                    <li><i class="fa fa-chevron-right" aria-hidden="true"></i>Apply for water connection online.</li>
+                                    
+                                </ul>   
+                                <br>
+                                
+                                <div class="row">
+                                <div class="col-sm-offset-4 col-sm-4">
+                         <a type="button" class="btn btn-primary" data-toggle="modal" data-target="#staticBackdrop">Apply Now</a>
+                            </div>
+                            <div class="col-sm-offset-0 col-sm-1"></div>
+                      
+                            </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class=" col-lg-4 col-md-6 col-sm-6">
+                        <div class="single-services text-center mb-30">
+                            <div class="services-ion">
+                                <span class="flaticon-good"></span>
+                            </div>
+                            <div class="services-cap">
+                                <h5>Application Status</h5>
+                                <ul>
+                                    <li><i class="fa fa-chevron-right" aria-hidden="true"></i>Check Your Application Status.</li>                                   
+                                </ul>  
+                                <br>
+                                <div class="form-outline">
+                                 <input type="text" name="applicantid" id="form1" class="form-control form-icon-trailing" placeholder="Application ID" />
+  
+  
+                                </div>
+                                    <br>
+                            <div class="col-sm-offset-4 col-sm-4">
+                         <button type="submit" class="btn btn-primary"  role="button">Submit</button>
+                            </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Modal -->
+<div class="modal fade" id="staticBackdrop" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="staticBackdropLabel">Do you already have an Account?</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <center>
+            <div class="modal-footer">
+               <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#staticBackdrop1">Yes</button>
+               <a href="/application"><button type="button" class="btn btn-secondary">No</button></a>
+          </center>
+
+      </div>
+    
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="staticBackdrop1" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="staticBackdropLabel">Enter Your Account ID / Meter Number</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="form-outline">
+        <input type="text" id="form1" name="accountid" class="form-control form-icon-trailing" placeholder="Account ID / Meter Number" />
+        </div>
+            <br>
+        <div class="col-sm-offset-4 col-sm-4">
+                <button type="submit" class="btn btn-primary" role="button">Submit</button>
+        </div>
+      
+        </div>
+      </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+            </div>
+        </div>
+      
+       
+       
+       
+        
+        <div class="wantToWork-area wantToWork-area2 w-padding2">
+            <div class="container">
+               
+                
+            </div>
+        </div>
+        <!-- Want To Work End -->
+
+    </main>
+    <footer>
+        <!-- Footer Start-->
+        <div class="footer-area">
+            <div class="container">
+               <div class="footer-top footer-padding">
+                    <div class="row justify-content-between">
+                        <div class="col-xl-4 col-lg-4 col-md-4 col-sm-6">
+                            <div class="single-footer-caption mb-50">
+                                <div class="single-footer-caption mb-30">
+                                    <!-- logo -->
+                                    <div class="footer-logo">
+                                        <a href=""><img src="static/asset/img/ginatilanlogo1.png" alt=""><br><br><br>GINATILAN WATERWORKS</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xl-2 col-lg-2 col-md-4 col-sm-6">
+                            <div class="single-footer-caption mb-50">
+                                <div class="footer-tittle">
+                                    <h4>Services</h4>
+                                    <ul>
+                                        <li><a href="#">My Bill</a></li>
+                                        <li><a href="#">Water Connection Application</a></li>
+                                        <li><a href="#">Application Status</a></li>
+                                       
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xl-3 col-lg-3 col-md-4 col-sm-6">
+                            <div class="single-footer-caption mb-50">
+                                <div class="footer-tittle">
+                                    <h4>Government Department Links</h4>
+                                    <ul>
+                                        <li><a href="#">Department of Interior and Local Government</a></li>
+                                        <li><a href="#">Department of Health</a></li>
+                                        <li><a href="#">Social Security System</a></li>
+                                        <li><a href="#">Department of Education</a></li>
+                                        <li><a href="#">Department of Information and Communications Technology</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xl-3 col-lg-3 col-md-4 col-sm-6">
+                            <div class="single-footer-caption mb-50">
+                                <div class="footer-tittle">
+                                    <h4><span>+63 </span>9209999999</h4>
+                                    <ul>
+                                        <li><a href="#">example@gmail.com</a></li>
+                                    </ul>
+                                    <p>Poblacion, First Floor, Old Municipal Building, Ginatilan, Cebu</p>
+                                </div>
+                                <!-- footer social -->
+                                <div class="footer-social">
+                                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                                    <a href="#"><i class="fab fa-twitter"></i></a>
+                                    <a href="#"><i class="fas fa-globe"></i></a>
+                                    <a href="#"><i class="fab fa-instagram"></i></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+               </div>
+                <div class="footer-bottom">
+                    <div class="row">
+                        <div class="col-xl-12 ">
+                            <div class="footer-copy-right">
+                                <p>
+  Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved | Made with <i class="fa fa-heart" aria-hidden="true"></i> by <a href="/credits-CTU-G-Developers">CTU-Pioneers</a>
+ </p>
+                            </div>
+                        </div>
+                    </div>
+               </div>
+            </div>
+        </div>
+        <!-- Footer End-->
+    </footer>
+    <!-- Scroll Up -->
+    <div id="back-top" >
+        <a title="Go to Top" href="#"> <i class="fas fa-level-up-alt"></i></a>
+    </div>
+
+
+    <!-- JS here -->
+		<!-- All JS Custom Plugins Link Here here -->
+        <script src="./static/asset/js/vendor/modernizr-3.5.0.min.js"></script>
+		<!-- Jquery, Popper, Bootstrap -->
+		<script src="./static/asset/js/vendor/jquery-1.12.4.min.js"></script>
+        <script src="./static/asset/js/popper.min.js"></script>
+        <script src="./static/asset/js/bootstrap.min.js"></script>
+	    <!-- Jquery Mobile Menu -->
+        <script src="./static/asset/js/jquery.slicknav.min.js"></script>
+
+		<!-- Jquery Slick , Owl-Carousel Plugins -->
+        <script src="./static/asset/js/owl.carousel.min.js"></script>
+        <script src="./static/asset/js/slick.min.js"></script>
+		<!-- One Page, Animated-HeadLin -->
+        <script src="./static/asset/js/wow.min.js"></script>
+		<script src="./static/asset/js/animated.headline.js"></script>
+        <script src="./static/asset/js/jquery.magnific-popup.js"></script>
+
+		<!-- Nice-select, sticky -->
+        <script src="./static/asset/js/jquery.nice-select.min.js"></script>
+		<script src="./static/asset/js/jquery.sticky.js"></script>
+        
+        <!-- contact js -->
+        <script src="./static/asset/js/contact.js"></script>
+        <script src="./static/asset/js/jquery.form.js"></script>
+        <script src="./static/asset/js/jquery.validate.min.js"></script>
+        <script src="./static/asset/js/mail-script.js"></script>
+        <script src="./static/asset/js/jquery.ajaxchimp.min.js"></script>
+        
+		<!-- Jquery Plugins, main Jquery -->	
+        <script src="./static/asset/js/plugins.js"></script>
+        <script src="./static/asset/js/main.js"></script>
+    </form>
+    </body>
+</html>

@@ -1,0 +1,198 @@
+﻿{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="">
+  <meta name="author" content="Dashboard">
+  <meta name="keyword" content="Dashboard, Bootstrap, Admin, Template, Theme, Responsive, Fluid, Retina">
+  <title>Ginatilan Billing System</title>
+
+  <!-- Favicons -->
+  <link href="{% static 'website/img/favicon.ico' %}" rel="icon">
+  <link href="{% static 'website/img/apple-touch-icon.ico' %}" rel="apple-touch-icon">
+
+  <!-- Bootstrap core CSS -->
+  <link href="{% static 'website/lib/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+  <!--external css-->
+  <link href="{% static 'website/lib/font-awesome/css/font-awesome.css' %}" rel="stylesheet" />
+  <link rel="stylesheet" type="text/css" href="{% static '/website/css/zabuto_calendar.css' %}">
+  <link rel="stylesheet" type="text/css" href="{% static '/website/lib/gritter/css/jquery.gritter.css' %}" />
+ <!-- Custom styles for this template -->
+  <link href="{% static 'website/css/styles.css' %}" rel="stylesheet">
+  <link href="{% static '/website/css/font.css' %}" rel="stylesheet">
+  <link href="{% static 'website/css/style-responsive.css' %}" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'website/lib/bootstrap/css/bootstrap.min.css' %}">
+  <link rel="stylesheet" href="{% static 'website/lib/DataTables/css/mdb.min.css' %}">
+  <link rel="stylesheet" href="{% static 'website/lib/bootstrap/css/ModifiedBootstrap.css' %}">
+  <link rel="stylesheet" href="{% static 'website/lib/DataTables/css/dataTables.bootstrap4.min.css' %}">
+  <script src="{% static 'website/lib/jquery/jquery.min.js' %}"></script>
+  <script src="{% static 'website/lib/DataTables/js/popper.min.js' %}"></script>
+  <script src="{% static 'website/lib/bootstrap/js/bootstrap.min.js' %}"></script>
+  <script src="{% static 'website/lib/DataTables/js/mdb.min.js' %}"></script>
+  <script src="{% static 'UtilPage/utility.js' %}"></script>
+</head>
+
+<body onload="load_role(approverflag)">
+  <script>var approverflag = "{{getId.usertype}}";</script>
+    <section id="container">
+        <!--Header Start-->
+        <header class="header black-bg">
+            <div class="sidebar-toggle-box">
+                <div class="fa fa-bars tooltips" data-placement="right" data-original-title="Toggle Navigation"></div>
+            </div>
+            <!--logo start-->
+            <a href="/" class="logo"><b>Ginatilan Water Billing<span> Station</span></b></a>
+            <!--logo end-->
+            <div class="top-menu">               
+                <ul class="nav pull-right top-menu">                 
+                    <li><a class="logout" href="/logout">Logout</a></li>                    
+                </ul>
+            </div>
+        </header>
+        <!--Header End-->
+        <!--sidebar start-->
+        <aside>
+            <div id="sidebar" class="nav-collapse ">
+                <!-- sidebar menu start-->
+                <ul class="sidebar-menu" id="nav-accordion">
+                    <p class="centered"><a href=""><img src="{% static 'website/img/ui-admin.jpg' %}" class="img-circle" width="80"></a></p>
+                    <h5 class="centered">{{ context.name }}</h5>
+                    <li class="mt">
+                        <a class="active" href="/source_access/view-system-user">
+                            <i class="fa fa-arrow-left"></i>
+                            <span>Back</span>
+                        </a>
+                    </li>
+        </aside>
+        <!--sidebar end-->
+        <!--main content start-->
+        <section id="main-content">
+            <section class="wrapper">
+                <!-- DATA Section -->
+
+                <center><h3>Edit User</h3></center>
+                <br>
+                <form  action="/source_access/edit_systemuser={{ getId.userid }}" method="POST" enctype="multipart/form-data" >
+                  
+                    {% csrf_token %}
+                
+
+                      <div class="row">
+                       <div class = "col-sm">
+                         <div class="form-group">
+                           <label for="exampleInputEmail1">Firstname</label>
+                           <input type="text" name="firstname" class="form-control" id="Fname" aria-describedby="fname"  value="{{ getId.firstname }}" placeholder="Firstname" >
+                         </div>
+                       </div>
+                       <div class = "col-sm">
+                         <div class="form-group">
+                           <label for="exampleInputEmail1">Middlename</label>
+                           <input type="text" name="{{ ReqParams.mname }}" class="form-control" id="Mname" aria-describedby="mname"  value="{{ getId.middlename }}" placeholder="Middlename" >
+                         </div>
+                       </div>
+                       <div class = "col-sm">
+                         <div class="form-group">
+                           <label for="exampleInputEmail1">Lastname</label>
+                           <input type="text"  name="{{ ReqParams.lname }}" class="form-control" id="Lname" aria-describedby="lname" value="{{ getId.lastname }}" placeholder="" >
+                         </div>
+                       </div>
+                      </div>
+                     
+                     <div class="form-group">
+                      <label for="exampleInputPassword1">User ID</label>
+                      <input type="text" name="{{ ReqParams.userid }}" class="form-control" id="email" aria-describedby="email"  value="{{ getId.userid }}" placeholder="Email Address" >
+                    </div> 
+
+                      <div class="form-group">
+                        <label for="exampleInputPassword1">Mobile Number</label>
+                        <input type="text" name="{{ ReqParams.mobile1 }}" class="form-control" id="mobile1" aria-describedby="mobile1"  value="{{ getId.mobilenumber }}" placeholder="Mobile Number " >
+                      </div>
+
+
+                    <div class="form-group">
+                       <label for="exampleInputPassword1">Email</label>
+                       <input type="email" name="{{ ReqParams.email }}" class="form-control" id="email" aria-describedby="email"  value="{{ getId.emailaddress }}" placeholder="Email Address" >
+                    </div>
+
+
+                    <div  class="form-group">
+                      <p>User Types</p>
+                       
+                       <input type="checkbox" id="admin" name="{{ReqParams.admin}}" value="{{ ReqParams.ADMIN }}">
+                       <label for="admin">ADMIN</label><br>
+                       <input type="checkbox" id="teller" name="{{ReqParams.teller}}" value="{{ ReqParams.TELLER }}">
+                       <label for="admin">TELLER</label><br>                             
+                       <input type="checkbox" id="supervisor" name="{{ReqParams.supervisor}}" value="{{ ReqParams.SUPERVISOR }}">
+                       <label for="admin">SUPERVISOR</label><br>                             
+                       <input type="checkbox" id="manager" name="{{ReqParams.manager}}" value="{{ ReqParams.MANAGER }}">
+                       <label for="admin">MANAGER</label><br> 
+                       <input type="checkbox" id="reader" name="{{ReqParams.input_reader}}" value="{{ ReqParams.INPUT_READER }}">
+                       <label for="admin">METER READER</label><br>
+                    </div>   
+                    <script>
+                     
+                  </script>
+                    
+                    
+                    <div class="form-group">
+                     <label for="level">Authorized Approver</label>
+                     <select name="{{ ReqParams.can_approve }}" class="form-control" id="selectlevel" >
+                       <option value="{{getId.approverflag}}">{{ context.can_approve }}</option>         
+                       <option value="1">Supervisor</option>
+                       <option value="2">Engineer's Office</option>
+                       <option value="3">Mayor's Office</option>           
+                     </select>
+                   </div>
+                    <script>
+                      
+                      
+                    </script>
+                   
+                    </div> 
+                    <div class="form-group">
+                      {% for message in messages %}
+                      <label for="exampleInputPassword1">Password {{message}}</label>
+                      {%endfor%}
+                      <input type="password" name="{{ ReqParams.PASS }}" class="form-control" id="email" aria-describedby="email"  value="{{ context.password }}" placeholder="" >
+                    </div>   
+                      
+                    <div class="form-group">
+                      <label for="exampleInputPassword1">repeat Password</label>
+                      <input type="password" name="repeatpassword" class="form-control" id="email" aria-describedby="email"  value="{{ context.password }}" placeholder="" >
+                    </div>   
+
+                      <div class="modal-footer">
+                        <button type="submit" 
+                        class="btn btn-primary" id="nxtbtn"  value="POST" >
+                          Submit
+                      </button>
+
+                  
+                </div>
+              
+            </form>
+            </section>
+        </section>
+        <!--main content end-->
+
+    </section>
+    <!-- js placed at the end of the document so the pages load faster -->
+
+    
+    <script src="{% static 'website/lib/jquery/jquery.min.js' %}"></script>
+
+    <script src="{% static 'website/lib/bootstrap/js/bootstrap.min.js' %}"></script>
+    <script class="include" type="text/javascript" src="{% static 'website/lib/jquery.dcjqaccordion.2.7.js' %} "></script>
+    <script src="{% static 'website/lib/jquery.scrollTo.min.js' %}"></script>
+    <script src="{% static 'website/lib/jquery.nicescroll.js' %}" type="text/javascript"></script>
+    <script src="{% static 'website/lib/jquery.sparkline.js' %}"></script>
+    <script src="{% static 'website/lib/common-scripts.js' %}"></script>
+    <script type="text/javascript" src="{% static 'website/lib/gritter/js/jquery.gritter.js' %}"></script>
+    <script type="text/javascript" src="{% static 'website/lib/gritter-conf.js' %}"></script>
+    
+</body>
+
+</html>

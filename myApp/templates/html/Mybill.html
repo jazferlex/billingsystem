@@ -1,0 +1,408 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <!-- Favicons -->
+    <link href="{% static 'website/img/favicon.ico' %}" rel="icon">
+    <link href="{% static 'website/img/apple-touch-icon.ico' %}" rel="apple-touch-icon">
+
+    <!-- Bootstrap core CSS -->
+    <link href="{% static 'website/lib/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+    <!--external css-->
+    <link href="{% static 'website/lib/font-awesome/css/font-awesome.css' %}" rel="stylesheet" />
+    <link rel="stylesheet" type="text/css" href="{% static '/website/css/zabuto_calendar.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static '/website/lib/gritter/css/jquery.gritter.css' %}" />
+    <link href="{% static 'website/css/styles.css' %}" rel="stylesheet">
+    <link href="{% static 'website/css/style-responsive.css' %}" rel="stylesheet">
+    <!-- Custom styles for this template -->
+    <link href="{% static 'website/css/styles.css' %}" rel="stylesheet">
+    <link href="{% static '/website/css/font.css' %}" rel="stylesheet">
+    <link href="{% static 'website/css/style-responsive.css' %}" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'website/lib/bootstrap/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'website/lib/DataTables/css/mdb.min.css' %}">
+    <link rel="stylesheet" href="{% static 'website/lib/bootstrap/css/ModifiedBootstrap.css' %}">
+    <link rel="stylesheet" href="{% static 'website/lib/DataTables/css/dataTables.bootstrap4.min.css' %}">
+    <script src="{% static 'website/lib/jquery/jquery.min.js' %}"></script>
+    <script src="{% static 'website/lib/DataTables/js/popper.min.js' %}"></script>
+    <script src="{% static 'website/lib/bootstrap/js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'website/lib/DataTables/js/mdb.min.js' %}"></script>
+    <link rel="stylesheet" href="{% static 'static/bill.css' %}">
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
+
+    <script src="{% static 'website/lib/jsPDF2/billjspdf1.js' %}"></script>
+    <script src="{% static 'website/lib/jsPDF2/billjspdf2.js' %}"></script>
+    <script src="{% static 'website/lib/jsPDF2/billjspdf3.js' %}"></script>
+    <script src="{% static 'UtilPage/utility.js' %}"></script>
+   
+
+</head>
+<script>
+    var msg = "{{context.msg}}";
+</script>
+<body onload="hidebutton(msg)">
+    <form action="/mybill={{account.accountinfoid}}">
+    
+    <section id="container">
+        <!--Header Start-->
+        <header class="header black-bg">
+            <div class="sidebar-toggle-box">
+                <div class="fa fa-bars tooltips" data-placement="right" data-original-title="Toggle Navigation"></div>
+            </div>
+            <!--logo start-->
+            <a href="index.html" class="logo"><b>Ginatilan Water Billing<span> Station</span></b></a>
+            <!--logo end-->
+            <div class="top-menu">               
+                <ul class="nav pull-right top-menu">                 
+                                      
+                </ul>
+            </div>
+        </header>
+        <!--Header End-->
+        <!--sidebar start-->
+        <aside>
+            
+            <div id="sidebar" class="nav-collapse ">
+                <!-- sidebar menu start-->
+                <ul class="sidebar-menu" id="nav-accordion">
+                    <p class="centered"><a href=""><img src="{% static 'website/img/ui-admin.jpg' %}" class="img-circle" width="80"></a></p>
+                    <h5 class="centered">{{account.firstname}}</h5>
+                    <li class="mt">
+                        <a class="active" href="/account={{ account.accountinfoid}}">
+                            <i class=""></i>
+                            <span>Back</span>
+                        </a>
+                    </li>
+                    
+                   
+            </div>
+        
+        </aside>
+        <section id="main-content">
+            <section class="wrapper">
+                <br>
+                <br>
+                <br>
+                <br>
+                <button type="button" onclick="getPDF()" id="btnbtn"
+                        class="btn btn-primary" >
+                        <i class="fa fa-download" aria-hidden="true"> Download</i>
+                </button>
+                <script>
+                    var msg = "{{context.msg}}";
+                    if(msg != ""){
+                        alert(msg)
+                    }
+                    
+                </script>
+                <form class="form" action="/my-bill={{account.accountinfoid}}">
+                    <br>
+                    <br>      
+            <div class="content">
+            <div class="container">
+            <div class="row">
+                    <div class="col-sm-10 col-sm-offset-1">
+                        <div class="widget-box">
+                            <div class="widget-header widget-header-large">
+                                <center>
+                                <h3 class="widget-title grey lighter">
+                                    <i class="ace-icon fa fa-leaf green"></i>
+                                    Your Bill
+                                </h3>
+                                </center>
+
+                                <div class="widget-toolbar no-border invoice-info">
+                                    
+                                </div>
+                                <br>
+                                <br>
+                                
+                            </div>
+
+                            <div class="widget-body">
+                                <div class="widget-main padding-24">
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                            <div class="row">
+                                                <div class="col-xs-11 label label-lg label-info arrowed-in arrowed-right">
+                                                    <b>Company Info</b>
+                                                </div>
+                                            </div>
+
+                                            <div>
+                                                <ul class="list-unstyled spaced">
+                                                    <li>
+                                                        <i class="ace-icon fa fa-caret-right blue"></i>Name: <strong>Giantilan Water</strong>
+                                                    </li>
+
+                                                    <li>
+                                                        <i class="ace-icon fa fa-caret-right blue"></i>Address: <strong>Poblacion,Ginatilan,Cebu</strong>
+                                                    </li>
+
+                                                    <li>
+                                                        <i class="ace-icon fa fa-caret-right blue"></i>Zip Code: <strong>6028</strong>
+                                                    </li>
+
+                                                    <li>
+                                                        <i class="ace-icon fa fa-caret-right blue"></i>Country: <strong>Philippines</strong>
+                                                    </li>
+
+                                                    <li>
+                                                        <i class="ace-icon fa fa-caret-right blue"></i>
+                                                            Phone:
+                                                       
+                                                    </li>
+
+                                                    <li class="divider"></li>
+
+                                                    
+                                                </ul>
+                                            </div>
+                                        </div><!-- /.col -->
+
+                                        <div class="col-sm-6">
+                                            <div class="row">
+                                                <div class="col-xs-11 label label-lg label-success arrowed-in arrowed-right">
+                                                    <b>Customer Info</b>
+                                                </div>
+                                            </div>
+
+                                            <div>
+                                                <ul class="list-unstyled  spaced">
+                                                    <li>
+                                                        <i class="ace-icon fa fa-caret-right green"></i>Name: <strong>{{context.name}}</strong>
+                                                    </li>
+                                                    <li>
+                                                        <i class="ace-icon fa fa-caret-right green"></i>Account ID: <strong>{{context.accountinfoid}}</strong>
+                                                    </li>
+                                                    <li>
+                                                        <i class="ace-icon fa fa-caret-right green"></i>Meter Number: <strong>{{context.meternumber}}</strong>
+                                                    </li>
+                                                    <li>
+                                                        <i class="ace-icon fa fa-caret-right green"></i>Address: <strong>{{context.address}}</strong>
+                                                    </li>
+
+                                                    <li>
+                                                        <i class="ace-icon fa fa-caret-right green"></i>Zip Code:<strong>6028</strong>
+                                                    </li>
+
+                                                    <li>
+                                                        <i class="ace-icon fa fa-caret-right green"></i>Country: <strong>Philippines</strong>
+                                                    </li>
+
+                                                    <li class="divider"></li>
+
+                                                    <li>
+                                                        <i class="ace-icon fa fa-caret-right green"></i>
+                                                        Contact Info:
+                                                    </li>
+                                                    <li>
+                                                       <strong>{{context.mobile1}}</strong>
+                                                       <strong>{{context.mobile2}}</strong>
+                                                       <strong>{{context.email}}</strong>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div><!-- /.col -->
+                                    </div><!-- /.row -->
+                                    <br>
+                                    <br>
+                                    <div class="widget-main padding-24">
+                                        <div class="row">
+                                            <div class="col-sm-6">
+                                                <div class="row">
+                                                    <div class="col-xs-11 label label-lg label-info arrowed-in arrowed-right">
+                                                        <b>Bill Info</b>
+                                                    </div>
+                                                </div>
+    
+                                                <div>
+                                                    <ul class="list-unstyled spaced">
+                                                        <li>
+                                                            <i class="ace-icon fa fa-caret-right blue"></i>Month: 
+                                                        </li>
+                                                        
+                                                        <li>
+                                                            <i class="ace-icon fa fa-caret-right blue"></i>Posted on: 
+                                                        </li>
+    
+                                                        <li>
+                                                            <i class="ace-icon fa fa-caret-right blue"></i>Posted by:
+                                                        </li>
+    
+                                                        <li>
+                                                            <i class="ace-icon fa fa-caret-right blue"></i>Payment Schedule:
+                                                        </li>
+    
+                                                        
+    
+                                                        <li class="divider"></li>
+    
+                                                        
+                                                    </ul>
+                                                </div>
+                                            </div><!-- /.col -->
+                                        </div><!-- /.row -->
+
+                                    <div class="space"></div>
+                                    <br>
+                                    <br>
+                                    <div>
+                                       
+                                        <table class="table table-striped table-bordered">
+                                         
+
+                                            <tbody>
+                                                <tr>
+                                                   
+
+                                                    <td>
+                                                     Current Reading
+                                                    </td>
+                                                    <td class="hidden-xs">
+                                                       {{context.current_reading}} m3
+                                                    </td>
+                                                    
+                                                </tr>
+
+                                                <tr>
+                                                    
+
+                                                    <td>
+                                                        Previous Reading
+                                                    </td>
+                                                    <td class="hidden-xs">
+                                                        {{context.previous_reading}} m3
+                                                    </td>
+                                                    
+                                                </tr>
+
+                                                <tr>
+                                                   
+                                                    <td>Usage</td>
+                                                    <td class="hidden-xs"> {{context.usage}} m3</td>
+                                                    
+                                                 
+                                                </tr>
+
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <br>
+                                    <br>
+                                    <div>
+                                       
+                                    <table class="table table-striped table-bordered">
+                                         
+
+                                            <tbody>
+                                                <tr>
+                                                    
+
+                                                    <td>
+                                                     Bill
+                                                    </td>
+                                                    <td class="hidden-xs">
+                                                       Php.{{context.bill}}
+                                                    </td>
+                                                    
+                                                </tr>
+
+                                                <tr>
+                                                   
+
+                                                    <td>
+                                                        Penalty
+                                                    </td>
+                                                    <td class="hidden-xs">
+                                                        Php.{{context.penalty}}
+                                                    </td>
+                                                    
+                                                </tr>
+
+                                                <tr>
+                                                    
+                                                    <td>Total Bill</td>
+                                                    <td class="hidden-xs"> Php.{{context.totalbill}} </td>
+                                                    
+                                                 
+                                                </tr>
+
+                                                <tr>
+                                                    
+                                                    <td>Previous Due</td>
+                                                    <td class="hidden-xs"> Php.{{context.prev_balance}} </td>
+                                                    
+                                                 
+                                                </tr>
+
+                                            </tbody>
+                                        </table>
+                                    </div>
+
+                                    <div class="hr hr8 hr-double hr-dotted"></div>
+
+                            
+                                    <div class = "row">
+                                        <div class = "col-sm">
+                                          <div class="form-group">
+                                           
+                                          </div>
+                                        </div>
+                                        <div class = "col-sm">
+                                          <div class="form-group">
+                                           
+                                          </div>
+                                        </div>
+                                        <div class = "col-sm">
+                                          <div class="form-group">
+                                            <h4 class="pull-right">
+                                                Total amount :
+                                                <span class="red">Php.{{context.total_balance}}</span>
+                                            </h4>
+                                          </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="space-6"></div>
+                                    <div class="well">
+                                        
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </div>
+        
+    </form>                    
+
+</section>
+</section>
+</section>
+
+</form>   
+
+
+<script src="{% static 'website/lib/jquery/jquery.min.js' %}"></script>
+
+<script src="{% static 'website/lib/bootstrap/js/bootstrap.min.js' %}"></script>
+<script class="include" type="text/javascript" src="{% static 'website/lib/jquery.dcjqaccordion.2.7.js' %} "></script>
+<script src="{% static 'website/lib/jquery.scrollTo.min.js' %}"></script>
+<script src="{% static 'website/lib/jquery.nicescroll.js' %}" type="text/javascript"></script>
+<script src="{% static 'website/lib/jquery.sparkline.js' %}"></script>
+<script src="{% static 'website/lib/common-scripts.js' %}"></script>
+<script type="text/javascript" src="{% static 'website/lib/gritter/js/jquery.gritter.js' %}"></script>
+<script type="text/javascript" src="{% static 'website/lib/gritter-conf.js' %}"></script>
+<!-- Custom styles for this template -->
+<script src="{% static 'website/lib/DataTables/js/jquery.dataTables.min.js' %}"></script>
+<script src="{% static 'website/lib/DataTables/js/dataTables.bootstrap4.min.js' %}"></script>
+
+</body>
+</html>

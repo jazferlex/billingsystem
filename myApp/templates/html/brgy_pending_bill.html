@@ -1,0 +1,903 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="Dashboard">
+    <meta name="keyword" content="Dashboard, Bootstrap, Admin, Template, Theme, Responsive, Fluid, Retina">
+    <title>Ginatilan Billing System</title>
+
+    <!-- Favicons -->
+    <link href="{% static 'website/img/favicon.ico' %}" rel="icon">
+    <link href="{% static 'website/img/apple-touch-icon.ico' %}" rel="apple-touch-icon">
+
+    <!-- Bootstrap core CSS -->
+    <link href="{% static 'website/lib/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+    <!--external css-->
+    <link href="{% static 'website/lib/font-awesome/css/font-awesome.css' %}" rel="stylesheet" />
+    <link rel="stylesheet" type="text/css" href="{% static '/website/css/zabuto_calendar.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static '/website/lib/gritter/css/jquery.gritter.css' %}" />
+    <!-- Custom styles for this template -->
+    <link href="{% static 'website/css/styles.css' %}" rel="stylesheet">
+    <link href="{% static '/website/css/font.css' %}" rel="stylesheet">
+    <link href="{% static 'website/css/style-responsive.css' %}" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'website/lib/bootstrap/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'website/lib/DataTables/css/mdb.min.css' %}">
+    <link rel="stylesheet" href="{% static 'website/lib/bootstrap/css/ModifiedBootstrap.css' %}">
+    <link rel="stylesheet" href="{% static 'website/lib/DataTables/css/dataTables.bootstrap4.min.css' %}">
+    <script src="{% static 'website/lib/jquery/jquery.min.js' %}"></script>
+    <script src="{% static 'website/lib/DataTables/js/popper.min.js' %}"></script>
+    <script src="{% static 'website/lib/bootstrap/js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'website/lib/DataTables/js/mdb.min.js' %}"></script>
+
+    <style>
+        p {text-align: center;}
+    </style>
+
+</head>
+
+<body onload="show(),showtable()">
+    <section id="container">
+
+        <!--Header Start-->
+        <header class="header black-bg">
+            <div class="sidebar-toggle-box">
+                <div class="fa fa-bars tooltips" data-placement="right" data-original-title="Toggle Navigation"></div>
+            </div>
+            <!--logo start-->
+            <a href="index.html" class="logo"><b>Ginatilan Water Billing<span> Station</span></b></a>
+            <!--logo end-->
+            <div class="top-menu">
+                <ul class="nav pull-right top-menu">
+                    <li><a class="logout" href="/logout">Logout</a></li>
+                </ul>
+            </div>
+        </header>
+        <!--Header End-->
+        <!--sidebar start-->
+        <aside>
+            <div id="sidebar" class="nav-collapse ">
+                <!-- sidebar menu start-->
+                <ul class="sidebar-menu" id="nav-accordion">
+                    <p class="centered"><a href=""><img src="{% static 'website/img/ui-admin.jpg' %}" class="img-circle" width="80"></a></p>
+                    <h5 class="centered">{{ context.name }}</h5>
+
+   
+                    <div id="billspayment" >
+                        <li class="sub-menu" >
+                          <a href="">
+                              <i class="fa fa-newspaper-o"></i>
+                              <span>Billing</span>
+                          </a>
+                          <ul class="sub">
+                            <li><a href="/source_access/Payment">Bills Payment</a></li>                      
+                            <li id=""><a href="/source_access/Send-Bill">Send Bill</a></li>
+                          </ul>
+                      </li>
+                    </div>
+        
+                      <div id="input_reading" >
+                          <li class="sub-menu" >
+                            <a href="">
+                                <i class="fa fa-newspaper-o"></i>
+                                <span>Meter Reading</span>
+                            </a>
+                            <ul class="sub">
+                              <li><a href="/source_access/add-meter-reading">Input Meter Reading</a></li>                      
+                              <li id="modification"><a href="/source_access/Modify_Reading_Request">Modify Meter Reading</a></li>
+                          
+                            </ul>
+                        </li>
+                      </div>
+        
+                      <div id="manage_account" >
+                        <li class="sub-menu" >
+                            <a class="active" href="">
+                                <i class="fa fa-address-book"></i>
+                                <span>Consumer Accounts</span>
+                            </a>
+                            <ul class="sub">
+                                <li><a href="/source_access/view-consumer-list">View Consumer List</a></li>
+                                <li><a href="/source_access/add-new-consumer">Consumer Creation</a></li>
+                                <li><a href="/source_access/view-suspended-account">Reactivate Account</a></li>
+                            </ul>
+                        </li>
+                        </div>
+        
+        
+        
+                        <div id="reports" >
+        
+                         <li class="sub-menu" >
+                            <a href="">
+                                <i class="fa fa-newspaper-o"></i>
+                                <span>Reports</span>
+                            </a>
+                            <ul class="sub">
+                              <li><a href="/source_access/usage-report-data">Usage Report</a></li>
+                              <li><a href="/source_access/revenue-report-data">Revenue Report</a></li>
+                                <li><a href="/source_access/pending_bills">Unsettled Bills</a></li>
+                            </ul>
+                        </li>
+                        </div>
+        
+                        <div id="application" >
+                        <li class="sub-menu" >
+                            <a href="">
+                                <i class="fa fa-user-plus"></i>
+                                <span>Approve Application</span>
+                            </a>
+                            <ul class="sub">
+                              <li><a href="/source_access/list-applicants">Application Request</a></li>
+                              <li><a href="/source_access/view-approved-applicants">Approved Applicants</a></li>
+                            </ul>
+                        </li>
+                        </div>
+        
+                        <div id="usermanagement" >
+                        <li class="sub-menu" >
+                            <a class= "" href="/source_access/view-system-user">
+                              <i class="fa fa-address-book"></i>
+                              <span>Users Management</span>
+                              </a>
+                          </li>
+                        </div>
+        
+                        <div id="usercreation" >
+                          <li class="sub-menu" >
+                              <a class= "" href="/source_access/add_new_authorized_personel">
+                                <i class="fa fa-address-book"></i>
+                                <span>User Creation</span>
+                                </a>
+                            </li>
+                          </div>
+        
+                        <div id="rates"  >
+                        <li class="sub-menu" >
+                            <a class= "" href="/source_access/update-revenue-code">
+                              <i class="fa fa-address-book"></i>
+                              <span>Rates Management</span>
+                              </a>
+                        </li>
+                        </div>
+        
+                        <div  id="backupdatabase"  >
+                        <li class="sub-menu">
+                            <!--Temporary disabled -->
+                            <!--<a href="">
+                              <i class="fa fa-database"></i>
+                              <span>Backup Database</span>
+                              </a> -->
+                            <ul class="sub">
+                              <li><a href="html/daily_data">Daily Data</a></li>
+                              <li><a href="">Weekly Data</a></li>
+                              <li><a href="">Monthly Data</a></li>
+                              <li><a href="">Yearly Data</a></li>
+                            </ul>
+                        </li>
+                    </div>
+                    
+                    <div id="account-settings" >
+                        <li class="sub-menu" >
+                            <a class="" href="">
+                                <i class="fa fa-cogs"></i>
+                                <span>Account Settings</span>
+                            </a>
+                            <ul class="sub">
+                                <li><a href="/source_access/My-Account={{context.userid}}">My Account</a></li>
+                                <li><a href="/manual" target="_blank">View User Manual</a></li>
+                                <li><a href="/logout">Log Out</a></li>
+                            </ul>
+                        </li>
+                    </div>
+            
+                </div>
+        
+                <script>
+                    function show(){
+                    var usertype = "{{ context.UserType }}";
+        
+                    document.getElementById("rates").style.display = 'none';
+                    document.getElementById("usermanagement").style.display = 'none';
+                    document.getElementById("backupdatabase").style.display = 'none';
+                    document.getElementById("manage_account").style.display = 'none';
+                    document.getElementById("input_reading").style.display = 'none';
+                    document.getElementById("application").style.display = 'none';
+                    document.getElementById("reports").style.display = 'none';
+                    document.getElementById("billspayment").style.display = 'none'
+                    document.getElementById("usercreation").style.display = 'none'
+                    document.getElementById("modification").style.display = 'none'
+        
+                    //admin
+                    if(usertype.includes("1") === true){
+                        document.getElementById("usermanagement").style.display = 'block';
+                        document.getElementById("backupdatabase").style.display = 'block';
+                        document.getElementById("usercreation").style.display = 'block'
+                    }
+                    //Teller
+                    if(usertype.includes("2") === true){
+                        document.getElementById("manage_account").style.display = 'block';
+                        document.getElementById("reports").style.display = 'block';
+                        document.getElementById("input_reading").style.display = 'block';
+                        document.getElementById("billspayment").style.display = 'block'
+                        //document.getElementById("modification").style.display = 'block'
+        
+                    }
+                    //Supervisor
+                    if(usertype.includes("3") === true){
+                          document.getElementById("manage_account").style.display = 'block';
+                          document.getElementById("reports").style.display = 'block';
+                          document.getElementById("input_reading").style.display = 'block';
+                          document.getElementById("modification").style.display = 'none'
+                          document.getElementById("application").style.display = 'block';
+                          document.getElementById("billspayment").style.display = 'block'
+                          document.getElementById("rates").style.display = 'block';
+        
+                      }
+                    //Manager
+                    if(usertype.includes("4") === true){
+                        document.getElementById("rates").style.display = 'block';
+                        document.getElementById("application").style.display = 'block';
+                        document.getElementById("reports").style.display = 'block';
+                    }
+        
+                    //meter reader
+                    if(usertype.includes("5") === true){
+                        document.getElementById("input_reading").style.display = 'block';
+                    }
+        
+                };
+                </script>
+            </aside>
+        <!--main content start-->
+        <section id="main-content">
+            <section class="wrapper">
+                <!-- DATA Section -->
+
+                <!-- Modal -->
+                <div>
+                    <button type="button"
+                    class="btn btn-primary" id="create_pdf">
+                    Download
+                    </button>
+                </div>
+                <form class="form" action="/source_access/brgy_pending_bills" method="POST">
+                {%csrf_token%}
+
+                <!--convert to Philippine money-->
+                <script>
+
+                    const formatter = new Intl.NumberFormat('en-US', {
+                        style: 'currency',
+                        currency: 'Php',
+                        minimumFractionDigits: 2
+                    })
+
+
+                </script>
+
+                <br>
+                <div id="pdftable">
+                <p>Unsettled bill for barangay Anao.</p>
+                <div class="table-responsive" id="anao">
+
+                        <table class="table m-0" >
+                            <thead>
+                                <tr>
+                                    <th scope="col">Account ID</th>
+                                    <th scope="col">Name</th>
+                                    <th scope="col">Address</th>
+                                    <th scope="col">Current Due</th>
+                                </tr>
+                                <i></i>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                  {% for bill,account in Anao %}
+                                    <td >{{ account.accountinfoid }}</td>
+                                    <td>{{ account.firstname }} {{ account.middlename }}, {{ account.lastname }}</td>
+                                    <td>{{ account.address }}</td>
+                                    <td><script>document.write(formatter.format(parseInt("{{bill.commulative_bill}}")));</script></td>
+                                </tr>
+                            </tbody>
+                            {%endfor%}
+                        </table>
+                        <br>
+            </div>
+                <div class="table-responsive" id="cagsing">
+                    <p>Unsettled bill for barangay Cagsing.</p>
+                        <table class="table m-0">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Account ID</th>
+                                    <th scope="col">Name</th>
+                                    <th scope="col">Address</th>
+                                    <th scope="col">Current Due</th>
+                                </tr>
+                                <i></i>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                  {% for bill,account in Cagsing %}
+                                    <td >{{ account.accountinfoid }}</td>
+                                    <td>{{ account.firstname }} {{ account.middlename }}, {{ account.lastname }}</td>
+                                    <td>{{ account.address }}</td>
+                                    <td>{{ bill.commulative_bill }}</td>
+                                </tr>
+                            </tbody>
+                            {%endfor%}
+                        </table>
+                        <br>
+            </div>
+
+
+                <div class="table-responsive" id="calabawan">
+                    <p>Unsettled bill for barangay Calabawan.</p>
+                        <table class="table m-0">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Account ID</th>
+                                    <th scope="col">Name</th>
+                                    <th scope="col">Address</th>
+                                    <th scope="col">Current Due</th>
+                                </tr>
+                                <i></i>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                  {% for bill,account in Calabawan %}
+                                    <td >{{ account.accountinfoid }}</td>
+                                    <td>{{ account.firstname }} {{ account.middlename }}, {{ account.lastname }}</td>
+                                    <td>{{ account.address }}</td>
+                                    <td>{{ bill.commulative_bill }}</td>
+                                </tr>
+                            </tbody>
+                            {%endfor%}
+                        </table>
+                        <br>
+            </div>
+
+
+                <div class="table-responsive" id="cambagte">
+                    <p>Unsettled bill for barangay Cambagte.</p>
+                        <table class="table m-0">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Account ID</th>
+                                    <th scope="col">Name</th>
+                                    <th scope="col">Address</th>
+                                    <th scope="col">Current Due</th>
+                                </tr>
+                                <i></i>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                  {% for bill,account in Cambagte %}
+                                    <td >{{ account.accountinfoid }}</td>
+                                    <td>{{ account.firstname }} {{ account.middlename }}, {{ account.lastname }}</td>
+                                    <td>{{ account.address }}</td>
+                                    <td>{{ bill.commulative_bill }}</td>
+                                </tr>
+                            </tbody>
+                            {%endfor%}
+                        </table>
+                        <br>
+            </div>
+
+
+                <div class="table-responsive" id="campisong">
+                    <p>Unsettled bill for barangay Campisong.</p>
+                        <table class="table m-0">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Account ID</th>
+                                    <th scope="col">Name</th>
+                                    <th scope="col">Address</th>
+                                    <th scope="col">Current Due</th>
+                                </tr>
+                                <i></i>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                  {% for bill,account in Campisong %}
+                                    <td >{{ account.accountinfoid }}</td>
+                                    <td>{{ account.firstname }} {{ account.middlename }}, {{ account.lastname }}</td>
+                                    <td>{{ account.address }}</td>
+                                    <td>{{ bill.commulative_bill }}</td>
+                                </tr>
+                            </tbody>
+                            {%endfor%}
+                        </table>
+                        <br>
+            </div>
+
+
+                <div class="table-responsive" id="cañorong">
+                    <p>Unsettled bill for barangay Cañorong.</p>
+                        <table class="table m-0">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Account ID</th>
+                                    <th scope="col">Name</th>
+                                    <th scope="col">Address</th>
+                                    <th scope="col">Current Due</th>
+                                </tr>
+                                <i></i>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                  {% for bill,account in Cañorong %}
+                                    <td >{{ account.accountinfoid }}</td>
+                                    <td>{{ account.firstname }} {{ account.middlename }}, {{ account.lastname }}</td>
+                                    <td>{{ account.address }}</td>
+                                    <td>{{ bill.commulative_bill }}</td>
+                                </tr>
+                            </tbody>
+                            {%endfor%}
+                        </table>
+                        <br>
+            </div>
+
+
+                <div class="table-responsive" id="guiwanon">
+                    <p>Unsettled bill for barangay Guiwanon.</p>
+                        <table class="table m-0">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Account ID</th>
+                                    <th scope="col">Name</th>
+                                    <th scope="col">Address</th>
+                                    <th scope="col">Current Due</th>
+                                </tr>
+                                <i></i>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                  {% for bill,account in Guiwanon %}
+                                    <td >{{ account.accountinfoid }}</td>
+                                    <td>{{ account.firstname }} {{ account.middlename }}, {{ account.lastname }}</td>
+                                    <td>{{ account.address }}</td>
+                                    <td>{{ bill.commulative_bill }}</td>
+                                </tr>
+                            </tbody>
+                            {%endfor%}
+                        </table>
+                        <br>
+            </div>
+
+
+                <div class="table-responsive" id="looc">
+                    <p>Unsettled bill for barangay Looc.</p>
+                        <table class="table m-0">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Account ID</th>
+                                    <th scope="col">Name</th>
+                                    <th scope="col">Address</th>
+                                    <th scope="col">Current Due</th>
+                                </tr>
+                                <i></i>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                  {% for bill,account in Looc %}
+                                    <td >{{ account.accountinfoid }}</td>
+                                    <td>{{ account.firstname }} {{ account.middlename }}, {{ account.lastname }}</td>
+                                    <td>{{ account.address }}</td>
+                                    <td>{{ bill.commulative_bill }}</td>
+                                </tr>
+                            </tbody>
+                            {%endfor%}
+                        </table>
+                        <br>
+            </div>
+
+
+                <div class="table-responsive" id="malatbo">
+                    <p>Unsettled bill for barangay Malatbo.</p>
+                        <table class="table m-0">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Account ID</th>
+                                    <th scope="col">Name</th>
+                                    <th scope="col">Address</th>
+                                    <th scope="col">Current Due</th>
+                                </tr>
+                                <i></i>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                  {% for bill,account in Malatbo %}
+                                    <td >{{ account.accountinfoid }}</td>
+                                    <td>{{ account.firstname }} {{ account.middlename }}, {{ account.lastname }}</td>
+                                    <td>{{ account.address }}</td>
+                                    <td>{{ bill.commulative_bill }}</td>
+                                </tr>
+                            </tbody>
+                            {%endfor%}
+                        </table>
+                        <br>
+            </div>
+
+
+                <div class="table-responsive" id="mangaco">
+                    <p>Unsettled bill for barangay Mangaco.</p>
+                        <table class="table m-0">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Account ID</th>
+                                    <th scope="col">Name</th>
+                                    <th scope="col">Address</th>
+                                    <th scope="col">Current Due</th>
+                                </tr>
+                                <i></i>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                  {% for bill,account in Mangaco %}
+                                    <td >{{ account.accountinfoid }}</td>
+                                    <td>{{ account.firstname }} {{ account.middlename }}, {{ account.lastname }}</td>
+                                    <td>{{ account.address }}</td>
+                                    <td>{{ bill.commulative_bill }}</td>
+                                </tr>
+                            </tbody>
+                            {%endfor%}
+                        </table>
+                        <br>
+            </div>
+
+
+                <div class="table-responsive" id="palanas">
+                    <p>Unsettled bill for barangay Palanas.</p>
+                        <table class="table m-0">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Account ID</th>
+                                    <th scope="col">Name</th>
+                                    <th scope="col">Address</th>
+                                    <th scope="col">Current Due</th>
+                                </tr>
+                                <i></i>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                  {% for bill,account in Palanas %}
+                                    <td >{{ account.accountinfoid }}</td>
+                                    <td>{{ account.firstname }} {{ account.middlename }}, {{ account.lastname }}</td>
+                                    <td>{{ account.address }}</td>
+                                    <td>{{ bill.commulative_bill }}</td>
+                                </tr>
+                            </tbody>
+                            {%endfor%}
+                        </table>
+                        <br>
+            </div>
+
+
+                <div class="table-responsive" id="poblacion">
+                    <p>Unsettled bill for barangay Poblacion.</p>
+                        <table class="table m-0">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Account ID</th>
+                                    <th scope="col">Name</th>
+                                    <th scope="col">Address</th>
+                                    <th scope="col">Current Due</th>
+                                </tr>
+                                <i></i>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                  {% for bill,account in Poblacion %}
+                                    <td >{{ account.accountinfoid }}</td>
+                                    <td>{{ account.firstname }} {{ account.middlename }}, {{ account.lastname }}</td>
+                                    <td>{{ account.address }}</td>
+                                    <td>{{ bill.commulative_bill }}</td>
+                                </tr>
+                            </tbody>
+                            {%endfor%}
+                        </table>
+                        <br>
+            </div>
+
+
+                <div class="table-responsive" id="salamanca">
+                    <p>Unsettled bill for barangay Salamanca.</p>
+                        <table class="table m-0">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Account ID</th>
+                                    <th scope="col">Name</th>
+                                    <th scope="col">Address</th>
+                                    <th scope="col">Current Due</th>
+                                </tr>
+                                <i></i>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                  {% for bill,account in Salamanca %}
+                                    <td >{{ account.accountinfoid }}</td>
+                                    <td>{{ account.firstname }} {{ account.middlename }}, {{ account.lastname }}</td>
+                                    <td>{{ account.address }}</td>
+                                    <td>{{ bill.commulative_bill }}</td>
+                                </tr>
+                            </tbody>
+                            {%endfor%}
+                        </table>
+                        <br>
+            </div>
+
+                <div class="table-responsive" id="sanroque">
+                    <p>Unsettled bill for barangay San Roque</p>
+                        <table class="table m-0">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Account ID</th>
+                                    <th scope="col">Name</th>
+                                    <th scope="col">Address</th>
+                                    <th scope="col">Current Due</th>
+                                </tr>
+                                <i></i>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                  {% for bill,account in SanRoque %}
+                                    <td >{{ account.accountinfoid }}</td>
+                                    <td>{{ account.firstname }} {{ account.middlename }}, {{ account.lastname }}</td>
+                                    <td>{{ account.address }}</td>
+                                    <td>{{ bill.commulative_bill }}</td>
+                                </tr>
+                            </tbody>
+                            {%endfor%}
+                        </table>
+                        <br>
+            </div>
+            <p>Nothing Follows.</p>
+        </div>
+        <script>
+            function showtable(){
+            var usertype = "{{ context.UserType }}";
+
+            document.getElementById("anao").style.display = 'none';
+            document.getElementById("cagsing").style.display = 'none';
+            document.getElementById("calabawan").style.display = 'none';
+            document.getElementById("cambagte").style.display = 'none';
+            document.getElementById("campisong").style.display = 'none';
+            document.getElementById("cañorong").style.display = 'none';
+            document.getElementById("guiwanon").style.display = 'none';
+            document.getElementById("looc").style.display = 'none';
+            document.getElementById("malatbo").style.display = 'none';
+            document.getElementById("mangaco").style.display = 'none';
+            document.getElementById("palanas").style.display = 'none';
+            document.getElementById("poblacion").style.display = 'none';
+            document.getElementById("salamanca").style.display = 'none';
+            document.getElementById("sanroque").style.display = 'none';
+
+
+            var Anao = "{{Anao}}";
+            if( Anao != null || Anao.length != 0){
+                document.getElementById("anao").style.display = 'block';
+            }
+            var Cagsing = "{{Cagsing}}";
+            if(Cagsing != null || Cagsing.length != 0){
+                document.getElementById("cagsing").style.display = 'block';
+            }
+            var Calabawan = "{{Calabawan}}";
+            if(Calabawan != null || Calabawan.length != 0){
+                document.getElementById("calabawan").style.display = 'block';
+            }
+            var Cambagte = "{{ Cambagte }}";
+            if(Cambagte != null || Cambagte.length != 0){
+                document.getElementById("cambagte").style.display = 'block';
+            }
+            var Cañorong = "{{ Cañorong }}";
+            if(Cañorong != null || Cañorong.length != 0){
+                document.getElementById("cañorong").style.display = 'block';
+            }
+            var Guiwanon = "{{ Guiwanon }}";
+            if(Guiwanon != null || Guiwanon.length != 0){
+                document.getElementById("guiwanon").style.display = 'block';
+            }
+            var Looc = "{{ Looc }}";
+            if(Looc != null || Looc.length != 0){
+                document.getElementById("looc").style.display = 'block';
+            }
+            var Malatbo = "{{ Malatbo }}";
+            if(Malatbo != null || Malatbo.length != 0){
+                document.getElementById("malatbo").style.display = 'block';
+            }
+            var Mangaco = "{{ Mangaco }}";
+            if(Mangaco != null || Mangaco.length != 0){
+                document.getElementById("mangaco").style.display = 'block';
+            }
+            var Palanas = "{{ Palanas }}";
+            if(Palanas != null || Palanas.length != 0){
+                document.getElementById("palanas").style.display = 'block';
+            }
+            var Poblacion = "{{ Poblacion }}";
+            if(Poblacion != null || Poblacion.length != 0){
+                document.getElementById("poblacion").style.display = 'block';
+            }
+            var Salamanca = "{{ Salamanca }}";
+            if(Salamanca != null || Salamanca.length != 0){
+                document.getElementById("salamanca").style.display = 'block';
+            }
+            var SanRoque = "{{ SanRoque }}";
+            if(SanRoque != null || SanRoque.length != 0){
+                document.getElementById("sanroque").style.display = 'block';
+            }
+            }
+        </script>
+            </form>
+            <script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+                    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.5/jspdf.min.js"></script>
+                    <script>
+                        (function () {
+                            var
+                            form = $('.form'),
+                            cache_width = form.width(),
+                            a4 = [595.28, 841.89]; // for a4 size paper width and height
+
+                            $('#create_pdf').on('click', function () {
+                                $('#pdftable').scrollTop(0);
+                                createPDF();
+                            });
+                            //create pdf
+                            function createPDF() {
+                                getCanvas().then(function (canvas) {
+                                    var imgData = canvas.toDataURL('image/png');
+
+                                        /*
+                                        Here are the numbers (paper width and height) that I found to work.
+                                        It still creates a little overlap part between the pages, but good enough for me.
+                                        if you can find an official number from jsPDF, use them.
+                                        In millimeters: 210mm x 297mm. In centimeters: 21cm x 29.7cm. In inches: 8.27in x 11.69in.
+                                        */
+
+                                        var imgWidth = 210;
+                                        var pageHeight = 295;
+                                        var imgHeight = canvas.height * imgWidth / canvas.width;
+                                        var heightLeft = imgHeight;
+
+                                        var doc = new jsPDF('p', 'mm', 'a4');
+                                        var position = 0;
+
+                                        doc.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+                                        heightLeft -= pageHeight;
+
+                                        while (heightLeft >= 0) {
+                                        position = heightLeft - imgHeight;
+                                        doc.addPage();
+                                        doc.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+                                        heightLeft -= pageHeight;
+                                        }
+                                        doc.save('pending_bills.pdf');
+                                        form.width(cache_width);
+                                    });
+                                };
+                                    /**    var imgWidth = 425;
+                                        var pageHeight = 590;
+                                        var imgHeight = canvas.height * imgWidth / canvas.width;
+                                        var heightLeft = imgHeight;
+                                        img = canvas.toDataURL("image/png"),
+                                        doc = new jsPDF({
+                                            unit: 'px',
+                                            format: 'a4'
+                                        });
+                                        var position = 0;
+                                        //doc.addImage(img, 'JPEG', 20, 20);
+                                        doc.addImage(img, 'JPEG', 0, position, imgWidth, imgHeight, '', 'FAST', 0);
+                                        heightLeft -= pageHeight;
+
+                                        while (heightLeft >= 0) {
+                                            position = heightLeft - imgHeight;
+                                            doc.addPage();
+                                            doc.addImage(img, 'JPEG', 0, position, imgWidth, imgHeight, '', 'FAST', 0);
+                                            //doc.addImage(img, 'JPEG', 20, 20);
+                                            heightLeft -= pageHeight;
+                                            }
+
+                                        doc.save('pending_bills.pdf');
+                                        form.width(cache_width);
+                                    });**/
+
+
+
+
+                            // create canvas object
+                            function getCanvas() {
+                                form.width((a4[0] * 1.33333) - 80).css('max-width', 'none');
+                                return html2canvas(form, {
+                                    imageTimeout: 2000,
+                                    removeContainer: true
+                                });
+                            }
+
+                        }());
+                        </script>
+                        <script>
+                                /*
+                            * jQuery helper plugin for examples and tests
+                            */
+                                (function ($) {
+                                    $.fn.html2canvas = function (options) {
+                                        var date = new Date(),
+                                        $message = null,
+                                        timeoutTimer = false,
+                                        timer = date.getTime();
+                                        html2canvas.logging = options && options.logging;
+                                        html2canvas.Preload(this[0], $.extend({
+                                            complete: function (images) {
+                                                var queue = html2canvas.Parse(this[0], images, options),
+                                                $canvas = $(html2canvas.Renderer(queue, options)),
+                                                finishTime = new Date();
+
+                                                $canvas.css({ position: 'absolute', left: 0, top: 0 }).appendTo(document.body);
+                                                $canvas.siblings().toggle();
+
+                                                $(window).click(function () {
+                                                    if (!$canvas.is(':visible')) {
+                                                        $canvas.toggle().siblings().toggle();
+                                                        throwMessage("Canvas Render visible");
+                                                    } else {
+                                                        $canvas.siblings().toggle();
+                                                        $canvas.toggle();
+                                                        throwMessage("Canvas Render hidden");
+                                                    }
+                                                });
+                                                throwMessage('Screenshot created in ' + ((finishTime.getTime() - timer) / 1000) + " seconds<br />", 4000);
+                                            }
+                                        }, options));
+
+                                        function throwMessage(msg, duration) {
+                                            window.clearTimeout(timeoutTimer);
+                                            timeoutTimer = window.setTimeout(function () {
+                                                $message.fadeOut(function () {
+                                                    $message.remove();
+                                                });
+                                            }, duration || 2000);
+                                            if ($message)
+                                                $message.remove();
+                                            $message = $('<div ></div>').html(msg).css({
+                                                margin: 0,
+                                                padding: 10,
+                                                background: "#000",
+                                                opacity: 0.7,
+                                                position: "fixed",
+                                                top: 10,
+                                                right: 10,
+                                                fontFamily: 'Tahoma',
+                                                color: '#fff',
+                                                fontSize: 12,
+                                                borderRadius: 12,
+                                                width: 'auto',
+                                                height: 'auto',
+                                                textAlign: 'center',
+                                                textDecoration: 'none'
+                                            }).hide().fadeIn().appendTo('body');
+                                        }
+                                    };
+                                })(jQuery);
+
+                                </script>
+
+
+        <!--main content end-->
+    </section>
+    <!-- js placed at the end of the document so the pages load faster -->
+    <script src="{% static 'website/lib/jquery/jquery.min.js' %}"></script>
+    <script src="{% static 'website/lib/bootstrap/js/bootstrap.min.js' %}"></script>
+    <script class="include" type="text/javascript" src="{% static 'website/lib/jquery.dcjqaccordion.2.7.js' %} "></script>
+    <script src="{% static 'website/lib/jquery.scrollTo.min.js' %}"></script>
+    <script src="{% static 'website/lib/jquery.nicescroll.js' %}" type="text/javascript"></script>
+    <script src="{% static 'website/lib/jquery.sparkline.js' %}"></script>
+    <script src="{% static 'website/lib/common-scripts.js' %}"></script>
+    <script type="text/javascript" src="{% static 'website/lib/gritter/js/jquery.gritter.js' %}"></script>
+    <script type="text/javascript" src="{% static 'website/lib/gritter-conf.js' %}"></script>
+
+</body>
+
+</html>
