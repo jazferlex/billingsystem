@@ -559,9 +559,10 @@ def pending_bills(request):
    for record in order_by_bill:
       if record.commulative_bill != 0:
          totalbill += record.commulative_bill
-         account = account_info.objects.get(accountinfoid = record.accountinfoid)
-         bills.append(record)
-         credentials.append(account)
+         if account_info.objects.filter(pk = record.accountinfoid).exists():
+            account = account_info.objects.get(accountinfoid = record.accountinfoid)
+            bills.append(record)
+            credentials.append(account)
 
    formatted_float = "Php:{:,.2f}".format(totalbill)
    print(formatted_float)

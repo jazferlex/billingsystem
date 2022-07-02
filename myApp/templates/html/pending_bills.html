@@ -250,14 +250,12 @@
 
 
                     </script>
-                <button type="button" id="cmd"  onclick="PendingBills(total)"
+                <button type="button" id="cmd"  onclick="PendingBills('{{context.total_str}}')"
                         class="btn btn-primary" >
                         <i class="fa fa-download" aria-hidden="true"> Get A PDF Copy</i>
                 </button>
         
-                <script>
-                    var total =  "{{context.total_str}}"
-                </script>
+            
             
                 <!--<a href="{% url 'pdfbill' %}" target="_blank">Dowload bill</a>-->
                 </div>
@@ -349,7 +347,67 @@
 
   <!-- Template Main JS File -->
   <script src="{% static 'manual/assets/js/main.js' %}"></script>
+<script >
+       function PendingBills(val) {  
+        var doc = new jsPDF('p', 'pt', 'letter');  
+        var htmlstring = '';  
+        var tempVarToCheckPageHeight = 0;  
+        var pageHeight = 0;  
+        
+        pageHeight = doc.internal.pageSize.height;  
+        specialElementHandlers = {  
+            // element with id of "bypass" - jQuery style selector  
+            '#bypassme': function(element, renderer) {  
+                // true = "handled elsewhere, bypass text extraction"  
+                return true  
+            }  
+        };  
+        margins = {  
+            top: 150,  
+            bottom: 60,  
+            left: 40,  
+            right: 40,  
+            width: 600  
+        };  
+        const formatter = new Intl.NumberFormat('en-US', {
+            style: 'currency',
+            currency: 'Php',
+            minimumFractionDigits: 2
+        })
 
+        var y = 20; 
+        var x = 20; 
+        
+        doc.setLineWidth(2);
+        doc.setFontSize(14);  
+        doc.text(250, y = y + 30,  "Unsettled Bills"); 
+        doc.text(200, x = x + 50, val);                         
+        
+        doc.autoTable({  
+            html: '#tablePagination',  
+            startY: 100,  
+            theme: 'grid',  
+            columnStyles: {  
+                0: {  
+                    cellWidth: 70,  
+                },  
+                1: {  
+                    cellWidth: 70,  
+                },  
+                2: {  
+                    cellWidth: 70,  
+                }  
+            },  
+            styles: {  
+                minCellHeight: 50
+            
+            }  
+        })  
+        doc.save('Unsettled Bills.pdf');  
+    }  
+    
+
+</script>
   <script>
     $(document).ready(function() {
             $('#tablePagination').DataTable(
@@ -372,6 +430,7 @@
         // Animate loader off screen
         $(".se-pre-con").fadeOut("slow");;
         });
+
     </script>
 
 </body>

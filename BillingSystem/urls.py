@@ -17,7 +17,7 @@ from django.contrib import admin
 from django.urls import path
 from django.conf import settings
 from django.conf.urls.static import static
-from myApp import Payment_Installment, views,AddMeterReading, Payment, ReportGenerator,BillingUtil,update_account,RevenueCode,MeterReadingModification,Application,Utility,DataTransfer,PdfGen
+from myApp import Payment_Installment, views,AddMeterReading, Payment, ReportGenerator,BillingUtil,update_account,RevenueCode,MeterReadingModification,Application,Utility,DataTransfer,PdfGen,ImportData
 
 
 
@@ -107,6 +107,8 @@ urlpatterns = [
     path('payment_history', DataTransfer.writebill),
     path('stop_meter/<str:id>', BillingUtil.stop_meter),
     path('post_month_bill', Payment_Installment.pay_per_month),
+    path('source_access/import_data', ImportData.import_data),
+    path('source_access/bulk_input_reading', ImportData.bulkreading),
     
 
     

@@ -9,6 +9,7 @@ from .BillingDB import *
 from .BillingUtil import *
 from .Payment import *
 import datetime
+import time
 
 
 def Search(request):
@@ -588,15 +589,17 @@ def pay_per_month(request):
    or_number = request.POST["or_number"]
    paymenthistory = payment_history()
    if request.method == "POST":
+      
       usage = usage_record.objects.get(pk = id)
       account = account_info.objects.get(pk = usage.accountinfoid)
+      current_record = usage_record.objects.get(pk = account.accountinfoid + "-" + str(current_date.year))
       yearly_record = Year_Report.objects.get(pk = usage.year)  
       
       total_paid_brgy = barangay_report.objects.get(pk = account.barangay + "-" + str(usage.year))
       if month == "1":
          diff = usage.totalbill_jan - usage.paidamt_jan
          usage.paidamt_jan += diff
-         usage.commulative_bill -= diff
+         current_record.commulative_bil -= diff
          usage.ior_jan = or_number 
          usage.datepaid_jan = current_date
          usage.save()
@@ -620,7 +623,7 @@ def pay_per_month(request):
          paymenthistory.year = current_date.year
          paymenthistory.accountinfoid = account.accountinfoid
          paymenthistory.amount = diff
-         paymenthistory.time = time.asctime( time.localtime(time.time()) )
+         paymenthistory.time = time.asctime(time.localtime(time.time()) )
          paymenthistory.save()
 
          
@@ -628,7 +631,7 @@ def pay_per_month(request):
       if month == "2":
          diff = usage.totalbill_feb - usage.paidamt_feb
          usage.paidamt_feb += diff
-         usage.commulative_bill -= diff
+         current_record.commulative_bil -= diff
          usage.ior_feb = or_number 
          usage.datepaid_feb = current_date
          usage.save()
@@ -652,7 +655,7 @@ def pay_per_month(request):
          paymenthistory.year = current_date.year
          paymenthistory.accountinfoid = account.accountinfoid
          paymenthistory.amount = diff
-         paymenthistory.time = time.asctime( time.localtime(time.time()) )
+         paymenthistory.time = time.asctime(time.localtime(time.time()) )
          paymenthistory.save()
 
          
@@ -660,7 +663,7 @@ def pay_per_month(request):
       if month == "3":
          diff = usage.totalbill_mar - usage.paidamt_mar
          usage.paidamt_mar += diff
-         usage.commulative_bill -= diff
+         current_record.commulative_bil -= diff
          usage.ior_mar = or_number 
          usage.datepaid_mar = current_date
          usage.save()
@@ -692,7 +695,7 @@ def pay_per_month(request):
       if month == "4":
          diff = usage.totalbill_apr - usage.paidamt_apr
          usage.paidamt_apr += diff
-         usage.commulative_bill -= diff
+         current_record.commulative_bil -= diff
          usage.ior_apr = or_number 
          usage.datepaid_apr = current_date
          usage.save()
@@ -724,7 +727,7 @@ def pay_per_month(request):
       if month == "5":
          diff = usage.totalbill_may - usage.paidamt_may
          usage.paidamt_may += diff
-         usage.commulative_bill -= diff
+         current_record.commulative_bil -= diff
          usage.ior_may = or_number 
          usage.datepaid_may = current_date
          usage.save()
@@ -756,7 +759,7 @@ def pay_per_month(request):
       if month == "6":
          diff = usage.totalbill_jun - usage.paidamt_jun
          usage.paidamt_jun += diff
-         usage.commulative_bill -= diff
+         current_record.commulative_bil -= diff
          usage.ior_jun = or_number 
          usage.datepaid_jun = current_date
          usage.save()
@@ -788,7 +791,7 @@ def pay_per_month(request):
       if month == "7":
          diff = usage.totalbill_jul - usage.paidamt_jul
          usage.paidamt_jul += diff
-         usage.commulative_bill -= diff
+         current_record.commulative_bil -= diff
          usage.ior_jul = or_number 
          usage.datepaid_jul = current_date
          usage.save()
@@ -820,7 +823,7 @@ def pay_per_month(request):
       if month == "8":
          diff = usage.totalbill_aug - usage.paidamt_aug
          usage.paidamt_aug += diff
-         usage.commulative_bill -= diff
+         current_record.commulative_bil -= diff
          usage.ior_aug = or_number 
          usage.datepaid_aug = current_date
          usage.save()
@@ -852,7 +855,7 @@ def pay_per_month(request):
       if month == "9":
          diff = usage.totalbill_sept - usage.paidamt_sept
          usage.paidamt_sept += diff
-         usage.commulative_bill -= diff
+         current_record.commulative_bil -= diff
          usage.ior_sept = or_number 
          usage.datepaid_sept = current_date
          usage.save()
@@ -884,7 +887,7 @@ def pay_per_month(request):
       if month == "10":
          diff = usage.totalbill_oct - usage.paidamt_oct
          usage.paidamt_oct += diff
-         usage.commulative_bill -= diff
+         current_record.commulative_bil -= diff
          usage.ior_oct = or_number 
          usage.datepaid_oct = current_date
          usage.save()
@@ -916,7 +919,7 @@ def pay_per_month(request):
       if month == "11":
          diff = usage.totalbill_nov - usage.paidamt_nov
          usage.paidamt_nov += diff
-         usage.commulative_bill -= diff
+         current_record.commulative_bil -= diff
          usage.ior_nov = or_number 
          usage.datepaid_nov = current_date
          usage.save()
@@ -947,7 +950,7 @@ def pay_per_month(request):
       if month == "12":
          diff = usage.totalbill_dec - usage.paidamt_dec
          usage.paidamt_dec += diff
-         usage.commulative_bill -= diff
+         current_record.commulative_bil -= diff
          usage.ior_dec = or_number 
          usage.datepaid_dec = current_date
          usage.save()
