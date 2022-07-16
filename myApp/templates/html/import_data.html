@@ -1,7 +1,7 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
-
+ 
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,11 +9,11 @@
     <meta name="author" content="Dashboard">
     <meta name="keyword" content="Dashboard, Bootstrap, Admin, Template, Theme, Responsive, Fluid, Retina">
     <title>Ginatilan Billing System</title>
-
+ 
     <!-- Favicons -->
     <link href="{% static 'website/img/favicon.ico' %}" rel="icon">
     <link href="{% static 'website/img/apple-touch-icon.ico' %}" rel="apple-touch-icon">
-
+ 
     <!-- Bootstrap core CSS -->
     <link href="{% static 'website/lib/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
     <!--external css-->
@@ -34,28 +34,28 @@
     <script src="{% static 'website/lib/bootstrap/js/bootstrap.min.js' %}"></script>
     <script src="{% static 'website/lib/DataTables/js/mdb.min.js' %}"></script>
     <script src="{% static 'UtilPage/utility.js' %}"></script>
-
+ 
     <!-- Vendor CSS Files -->
   <link href="{% static 'manual/assets/vendor/animate.css/animate.min.css' %}" rel="stylesheet">
   <link href="{% static 'manual/assets/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
   <link href="{% static 'manual/assets/vendor/bootstrap-icons/bootstrap-icons.css' %}" rel="stylesheet">
   <link href="{% static 'manual/assets/vendor/boxicons/css/boxicons.min.css' %}" rel="stylesheet">
   <link href="{% static 'manual/assets/vendor/glightbox/css/glightbox.min.css' %}" rel="stylesheet">
-
+ 
   <link href="{% static 'manual/assets/vendor/swiper/swiper-bundle.min.css' %}" rel="stylesheet">
-
+ 
 </head>
 <style>
   #sticky {
   position: fixed;
   bottom: -4px;
   padding: 7px;
-
-
+ 
+ 
 }
-
+ 
 </style>
-
+ 
 <body onload="show(usertype)">
 <script>
     var usertype = "{{ context.UserType }}";
@@ -64,7 +64,7 @@
     var table_length = "{{context.table_length}}";
 </script>
     <section id="container">
-
+ 
         <!--Header Start-->
         <header class="header black-bg">
             <div class="sidebar-toggle-box">
@@ -87,7 +87,7 @@
                 <ul class="sidebar-menu" id="nav-accordion">
                     <p class="centered"><a href=""><img src="{% static 'website/img/ui-admin.jpg' %}" class="img-circle" width="80"></a></p>
                     <h5 class="centered">{{ context.name }}</h5>
-  
+ 
                     <div id="billspayment" >
                         <li class="sub-menu" >
                           <a href="">
@@ -101,7 +101,7 @@
                           </ul>
                       </li>
                     </div>
-      
+     
                     <div id="input_reading" >
                           <li class="sub-menu" >
                             <a href="" class="active">
@@ -114,7 +114,7 @@
                             </ul>
                         </li>
                     </div>
-    
+   
                       <div id="manage_account" >
                         <li class="sub-menu" >
                             <a class="" href="">
@@ -128,11 +128,11 @@
                             </ul>
                         </li>
                         </div>
-        
-        
-        
+       
+       
+       
                         <div id="reports" >
-        
+       
                          <li class="sub-menu" >
                             <a href="">
                               <i class="fa fa-bar-chart" aria-hidden="true"></i>
@@ -145,7 +145,7 @@
                             </ul>
                         </li>
                         </div>
-        
+       
                         <div id="application" >
                         <li class="sub-menu" >
                             <a href="">
@@ -158,7 +158,7 @@
                             </ul>
                         </li>
                         </div>
-        
+       
                         <div id="usermanagement" >
                         <li class="sub-menu" >
                             <a class= "" href="/source_access/view-system-user">
@@ -167,7 +167,7 @@
                               </a>
                           </li>
                         </div>
-        
+       
                         <div id="usercreation" >
                           <li class="sub-menu" >
                               <a class= "" href="/source_access/add_new_authorized_personel">
@@ -176,7 +176,7 @@
                                 </a>
                             </li>
                           </div>
-        
+       
                         <div id="rates"  >
                         <li class="sub-menu" >
                             <a class= "" href="/source_access/update-revenue-code" class="active">
@@ -185,7 +185,7 @@
                               </a>
                         </li>
                         </div>
-        
+       
                         <div  id="backupdatabase"  >
                         <li class="sub-menu">
                             <!--Temporary disabled -->
@@ -201,7 +201,7 @@
                             </ul>
                         </li>
                     </div>
-                    
+                   
                     <div id="account-settings" >
                       <li class="sub-menu" >
                           <a class="" href="">
@@ -215,11 +215,11 @@
                           </ul>
                       </li>
                   </div>
-          
-                    
+         
+                   
                 </div>
-        
-                
+       
+               
             </aside>
             <br>
             <br>
@@ -232,10 +232,10 @@
             <section class="wrapper">
                 <!-- DATA Section -->
                 <center><h1>BULK METER READING ENTRY</h1></center>
-
+ 
                 <!-- Modal -->
-                
-
+               
+ 
         <form action="/source_access/import_data" method="POST" id="myform">
           <div class="se-pre-con"></div>
                   <script>
@@ -277,9 +277,9 @@
                    
                         </tr>
                     </thead>
-
+ 
                     <tbody>
-
+ 
                         <tr>
                           {% for account in all_accounts %}
                             <td>{{ account.meternumber }}</td>
@@ -289,18 +289,18 @@
                             <td><input type="number" value="" name="current_reading{{account.accountinfoid}}" id="current_reading{{account.accountinfoid}}"></td>
                          
                         </tr>
-
+ 
 {%endfor%}
                     </tbody>
-
+ 
                 </table>
                 <br>
-              
+             
             </div>
                 <center>
                   <button type="submit" class="btn btn-primary" id="sticky" style=""id="send" >Save</button>
                 </center>
-
+ 
               <br>
               <br>
               <br>
@@ -317,24 +317,24 @@
                     btn.disabled = true;
                 }
               </script>
-
-
-        </form>
-
+ 
+ 
+ 
+ 
             </section>
           </div>
         </div>
-
-
-
+ 
+ 
+ 
         </section>
         <!--main content end-->
-
+ 
     </section>
     <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
     <!-- js placed at the end of the document so the pages load faster -->
     <script src="{% static 'website/lib/jquery/jquery.min.js' %}"></script>
-
+ 
     <script src="{% static 'website/lib/bootstrap/js/bootstrap.min.js' %}"></script>
     <script class="include" type="text/javascript" src="{% static 'website/lib/jquery.dcjqaccordion.2.7.js' %} "></script>
     <script src="{% static 'website/lib/jquery.scrollTo.min.js' %}"></script>
@@ -346,7 +346,7 @@
     <!-- Custom styles for this template -->
     <script src="{% static 'website/lib/DataTables/js/jquery.dataTables.min.js' %}"></script>
     <script src="{% static 'website/lib/DataTables/js/dataTables.bootstrap4.min.js' %}"></script>
-
+ 
      <!-- Vendor JS Files -->
   <script src="{% static 'manual/assets/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
   <script src="{% static 'manual/assets/vendor/glightbox/js/glightbox.min.js' %}"></script>
@@ -355,14 +355,11 @@
   <script src="{% static 'manual/assets/vendor/swiper/swiper-bundle.min.js' %}"></script>
   <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
   <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
+ 
   <!-- Template Main JS File -->
   <script src="{% static 'manual/assets/js/main.js' %}"></script>
-
-
-  </body>
   <script>
-  var change_flag = 0
+    var change_flag = 0
     $( document ).ready(function() {
      {% for account in account_record%}
         $( "#current_reading{{account.accountinfoid}}" ).click(function() {
@@ -370,7 +367,7 @@
             this.value = ""
           }
           change_flag += 1
-          
+         
         });
         {% if context.month == "1"%}
           document.getElementById("current_reading{{account.accountinfoid}}").value = "{{account.reading_jan}}"
@@ -429,24 +426,36 @@
     $('.paginate_button').click(function() {
       alert("dfdfdfd")
       } );
-    
-    $(document).ready(function() {
-            $('#tablePagination').DataTable(
-              {
-                "info":false,
-                "lengthchange":false,
-                "paging":true,
-                "searching":true,
-                
-              }
-            );
-        } );
-        $('#tablePagination').on('page.dt', function() {
-          if(change_flag != 0){
-            change_flag = 0
-            Swal.fire({
+   
+  $(document).ready(function() {
+      var table = $('#tablePagination').DataTable(
+        {
+          "info":false,
+          "lengthchange":false,
+          "paging":true,
+          "searching":true,
+         
+        }
+      );
+      table.on( 'preDraw', function (e, settings) {
+       if(change_flag != 0){
+        change_flag = 0
+        if(confirm('Confirm to save your changes')) {
+          $.ajax({
+              type: "POST",
+              url: '/source_access/import_data',
+              data:  $("#myform").serialize(), // serializes the form's elements.
+             
+          });
+         
+ 
+        }else{
+          return false;
+        }
+           
+            /**Swal.fire({
               title: 'Save you changes',
-              text: "Confirm to dave your changes",
+              text: "Confirm to save your changes",
               icon: 'warning',
               showCancelButton: true,
               confirmButtonColor: '#3085d6',
@@ -458,27 +467,34 @@
                 $.ajax({
                   type: "POST",
                   url: '/source_access/import_data',
-                  data: $("#myform").serialize(), // serializes the form's elements.
-                  
+                  data:  $("#myform").serialize(), // serializes the form's elements.
+                 
               });
-
+             
               return false;
               }
-            })
+            })**/
           }
-          
-        });
-        
-    
+      });
+  });
+   
+       
+   
          $(window).on("load",function(){
              $(".loader-wrapper").fadeOut("milliseconds");
         });
-    
-    
+   
+   
         $(window).on("load",function() {
         // Animate loader off screen
         $(".se-pre-con").fadeOut("slow");;
         });
     </script>
-
+          </form>
+  </body>
+ 
+ 
+ 
 </html>
+ 
+
