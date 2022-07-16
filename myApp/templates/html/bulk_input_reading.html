@@ -46,14 +46,7 @@
 
 </head>
 <style>
-  #sticky {
-  position: fixed;
-  bottom: -4px;
-  padding: 7px;
-
-
-}
-
+  
 </style>
 
 <body onload="show(usertype)">
@@ -236,78 +229,81 @@
                 <!-- Modal -->
                 
 
-        <form action="/source_access/import_data" method="POST" id="myform">
+        <form action="/source_access/bulk_input_reading" method="POST">
           <div class="se-pre-con"></div>
                   <script>
                     function load(){
                       document.getElementsByClassName("se-pre-con").style.display = "block"
                     }
                   </script>
+                  <script>
+                      var month = {
+                        "1":"January",
+                        "2":"February",
+                        "3":"March",
+                        "4":"April",
+                        "5":"May",
+                        "6":"June",
+                        "7":"July",
+                        "8":"August",
+                        "9":"September",
+                        "10":"October",
+                        "11":"November",
+                        "12":"December",
+                      }
+                 </script>
             {%csrf_token%}
-            <a href="/source_access/bulk_input_reading"><button type="button" class="btn btn-primary" style="" >Back</button></a>
-            <center>
-            <script>
-             var month = {
-              "1":"January",
-              "2":"February",
-              "3":"March",
-              "4":"April",
-              "5":"May",
-              "6":"June",
-              "7":"July",
-              "8":"August",
-              "9":"September",
-              "10":"October",
-              "11":"November",
-              "12":"December",
-             }
-            </script>
-            <p><strong>Bulk input reading for <script>document.write(month["{{context.month}}"]);</script> {{context.year}}</strong></p>
-            </center>
             <br>
-            <div class="table-responsive">
-                <table id="tablePagination" class="table table-striped table-bordered" style="width:100%">
-                    <thead>
-                        <tr>
-                            <td>Meter Number</td>
-                            <td>Account Number</td>
-                            <td>Customer</td>
-                            <td>Previous Reading</td>
-                            <td>Current Reading</td>
-                   
-                        </tr>
-                    </thead>
-
-                    <tbody>
-
-                        <tr>
-                          {% for account in all_accounts %}
-                            <td>{{ account.meternumber }}</td>
-                            <td>{{ account.accountinfoid }}</td>
-                            <td>{{ account.firstname }} {{ account.middlename }}. {{ account.lastname }}</td>
-                            <td><input type="number" value="" readonly id="prev_reading{{account.accountinfoid}}"></td>
-                            <td><input type="number" value="" name="current_reading{{account.accountinfoid}}" id="current_reading{{account.accountinfoid}}"></td>
-                         
-                        </tr>
-
-{%endfor%}
-                    </tbody>
-
-                </table>
+            <br>
+            <br>
+            <center>    
+                <p><h4>Please specify month and year. </h4></p>
                 <br>
-              
-            </div>
-                <center>
-                  <button type="submit" class="btn btn-primary" id="sticky" style=""id="send" >Save</button>
-                </center>
-
-              <br>
-              <br>
-              <br>
-              <br>
-              <br>
-              <br>
-           
+                    <div class="container">
+                        <div class="row">
+                        <div class="col">
+                            
+                        </div>
+                        <div class="col">
+                        <div class="form-group">
+                                <label for="exampleInputBarangay">Select Year</label>
+                                <select name="year" class="form-control" required>
+                                <option value="{{context.defyear}}" selected>{{context.defyear}}</option>
+                                {% for year in year_list %}
+                                <option value="{{year}}">{{year}}</option>
+                                {%endfor%}
+                                </select>
+                            </div>
+                            
+                        </div>
+                        <div class="col">
+                           <div class="form-group">
+                                <label for="exampleInputBarangay">Select Month</label>
+                                <select name="month" class="form-control" required>
+                                    <option value='{{context.defmonth}}'><script>document.write(month["{{context.defmonth}}"])</script></option>
+                                    <option  value='1'>Janaury</option>
+                                    <option value='2'>February</option>
+                                    <option value='3'>March</option>
+                                    <option value='4'>April</option>
+                                    <option value='5'>May</option>
+                                    <option value='6'>June</option>
+                                    <option value='7'>July</option>
+                                    <option value='8'>August</option>
+                                    <option value='9'>September</option>
+                                    <option value='10'>October</option>
+                                    <option value='11'>November</option>
+                                    <option value='12'>December</option>
+                                </select> 
+                            </div> 
+                        </div>
+                        <div class="col">
+                               
+                        </div>
+                        
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary" >Proceed</button>
+            </center>
           </div>
         </div>
               <!--<button type="button" class="btn btn-primary" id="send" data-toggle="modal" data-target="#confirmation" data-dismiss="modal">Send Bill via Email</button> -->
@@ -319,7 +315,7 @@
               </script>
 
 
-  
+        </form>
 
             </section>
           </div>
@@ -353,132 +349,24 @@
   <script src="{% static 'manual/assets/vendor/isotope-layout/isotope.pkgd.min.js' %}"></script>
   <script src="{% static 'manual/assets/vendor/php-email-form/validate.js' %}"></script>
   <script src="{% static 'manual/assets/vendor/swiper/swiper-bundle.min.js' %}"></script>
-  <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
-  <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
   <!-- Template Main JS File -->
   <script src="{% static 'manual/assets/js/main.js' %}"></script>
-  <script>
-    var change_flag = 0
-    $( document ).ready(function() {
-     {% for account in account_record%}
-        $( "#current_reading{{account.accountinfoid}}" ).click(function() {
-          if(this.value == "0.0"){
-            this.value = ""
-          }
-          change_flag += 1
-          
-        });
-        {% if context.month == "1"%}
-          document.getElementById("current_reading{{account.accountinfoid}}").value = "{{account.reading_jan}}"
-          {% if prev_record%}
-            document.getElementById("prev_reading{{account.accountinfoid}}").value = "{{prev_record.reading_dec}}"
-          {%else%}
-            document.getElementById("prev_reading{{account.accountinfoid}}").value = "0"
-          {%endif%}
-        {%endif%}
-        {% if context.month == "2"%}
-          document.getElementById("current_reading{{account.accountinfoid}}").value = "{{account.reading_feb}}"
-          document.getElementById("prev_reading{{account.accountinfoid}}").value = "{{account.reading_jan}}"
-        {%endif%}
-        {% if context.month == "3"%}
-          document.getElementById("current_reading{{account.accountinfoid}}").value = "{{account.reading_mar}}"
-          document.getElementById("prev_reading{{account.accountinfoid}}").value = "{{account.reading_feb}}"
-        {%endif%}
-        {% if context.month == "4"%}
-          document.getElementById("current_reading{{account.accountinfoid}}").value = "{{account.reading_apr}}"
-          document.getElementById("prev_reading{{account.accountinfoid}}").value = "{{account.reading_mar}}"
-        {%endif%}
-        {% if context.month == "5"%}
-          document.getElementById("current_reading{{account.accountinfoid}}").value = "{{account.reading_may}}"
-          document.getElementById("prev_reading{{account.accountinfoid}}").value = "{{account.reading_apr}}"
-        {%endif%}
-        {% if context.month == "6"%}
-          document.getElementById("current_reading{{account.accountinfoid}}").value = "{{account.reading_jun}}"
-          document.getElementById("prev_reading{{account.accountinfoid}}").value = "{{account.reading_may}}"
-        {%endif%}
-        {% if context.month == "7"%}
-          document.getElementById("current_reading{{account.accountinfoid}}").value = "{{account.reading_jul}}"
-          document.getElementById("prev_reading{{account.accountinfoid}}").value = "{{account.reading_jun}}"
-        {%endif%}
-        {% if context.month == "8"%}
-          document.getElementById("current_reading{{account.accountinfoid}}").value = "{{account.reading_aug}}"
-          document.getElementById("prev_reading{{account.accountinfoid}}").value = "{{account.reading_jul}}"
-        {%endif%}
-        {% if context.month == "9"%}
-          document.getElementById("current_reading{{account.accountinfoid}}").value = "{{account.reading_sept}}"
-          document.getElementById("prev_reading{{account.accountinfoid}}").value = "{{account.reading_aug}}"
-        {%endif%}
-        {% if context.month == "10"%}
-          document.getElementById("current_reading{{account.accountinfoid}}").value = "{{account.reading_oct}}"
-          document.getElementById("prev_reading{{account.accountinfoid}}").value = "{{account.reading_sept}}"
-        {%endif%}
-        {% if context.month == "11"%}
-          document.getElementById("current_reading{{account.accountinfoid}}").value = "{{account.reading_nov}}"
-          document.getElementById("prev_reading{{account.accountinfoid}}").value = "{{account.reading_oct}}"
-        {%endif%}
-        {% if context.month == "12"%}
-          document.getElementById("current_reading{{account.accountinfoid}}").value = "{{account.reading_dec}}"
-          document.getElementById("prev_reading{{account.accountinfoid}}").value = "{{account.reading_nov}}"
-        {%endif%}
-     {% endfor %}
-    });
-    $('.paginate_button').click(function() {
-      alert("dfdfdfd")
-      } );
-    
-  $(document).ready(function() {
-      var table = $('#tablePagination').DataTable(
-        {
-          "info":false,
-          "lengthchange":false,
-          "paging":true,
-          "searching":true,
-          
-        }
-      );
-      table.on( 'preDraw', function (e, settings) {
-       if(change_flag != 0){
-        change_flag = 0
-        if(confirm('Confirm to save your changes')) {
-          $.ajax({
-              type: "POST",
-              url: '/source_access/import_data',
-              data:  $("#myform").serialize(), // serializes the form's elements.
-              
-          });
-        	
 
-        }else{
-          return false;
-        }
-            
-            /**Swal.fire({
-              title: 'Save you changes',
-              text: "Confirm to save your changes",
-              icon: 'warning',
-              showCancelButton: true,
-              confirmButtonColor: '#3085d6',
-              cancelButtonColor: '#d33',
-              confirmButtonText: 'Confirm'
-            }).then((result) => {
-              if (result.isConfirmed) {
-                //document.getElementById('sticky').click()
-                $.ajax({
-                  type: "POST",
-                  url: '/source_access/import_data',
-                  data:  $("#myform").serialize(), // serializes the form's elements.
-                  
-              });
-             
-              return false;
+
+  </body>
+  <script>
+    $(document).ready(function() {
+            $('#tablePagination').DataTable(
+              {
+                "info":false,
+                "lengthchange":false,
+                "paging":false,
+                "searching":false
               }
-            })**/
-          }
-      });
-  });
+            );
+        } );
     
-        
     
          $(window).on("load",function(){
              $(".loader-wrapper").fadeOut("milliseconds");
@@ -490,9 +378,5 @@
         $(".se-pre-con").fadeOut("slow");;
         });
     </script>
-          </form>
-  </body>
-
-  
 
 </html>
