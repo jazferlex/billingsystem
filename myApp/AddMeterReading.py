@@ -2839,6 +2839,14 @@ def add_meter_reading(request,id):
 
 def search(request):
 
+   if "execute" not in request.session:
+      get_stop_meter()
+      request.session["execute"] = "1"
+      print("execute")
+
+   #We call our Auto Create method
+   ReportGenerator.AutoCreate_NewRecord()
+     
    template = ""
    sessionval = ""
    LogInSession = request.session.get(ReqParams.LOGIN_SESSION)
