@@ -34,6 +34,8 @@
     <script src="{% static 'website/lib/bootstrap/js/bootstrap.min.js' %}"></script>
     <script src="{% static 'website/lib/DataTables/js/mdb.min.js' %}"></script>
     <script src="{% static 'UtilPage/utility.js' %}"></script>
+    <script src="{% static 'website/lib/jsPDF/jspdf.min.js' %}"></script>
+    <script src="{% static 'website/lib/jsPDF/jspdf-autotable.js' %}"></script>
 
     <!-- Vendor CSS Files -->
   <link href="{% static 'manual/assets/vendor/animate.css/animate.min.css' %}" rel="stylesheet">
@@ -44,20 +46,15 @@
 
   <link href="{% static 'manual/assets/vendor/swiper/swiper-bundle.min.css' %}" rel="stylesheet">
 
+
 </head>
-<style>
-  
-</style>
+ <style>
 
-<body onload="show(usertype),Disable_PrevBtn(index)">
-<script>
-    var usertype = "{{ context.UserType }}";
-    var index = "{{context.index}}";
-    var max_length = "{{context.max_length}}";
-    var table_length = "{{context.table_length}}";
-</script>
+ </style>
+<body >
+
+</div>
     <section id="container">
-
         <!--Header Start-->
         <header class="header black-bg">
             <div class="sidebar-toggle-box">
@@ -75,277 +72,191 @@
         <!--Header End-->
         <!--sidebar start-->
         <aside>
+            <form action="/source_access/payment-history={{account.accountinfoid}}" method="POST">
             <div id="sidebar" class="nav-collapse ">
                 <!-- sidebar menu start-->
                 <ul class="sidebar-menu" id="nav-accordion">
                     <p class="centered"><a href=""><img src="{% static 'website/img/ui-admin.jpg' %}" class="img-circle" width="80"></a></p>
                     <h5 class="centered">{{ context.name }}</h5>
-  
-                    <div id="billspayment" >
+
+
+
+                    <div id="input_reading" class="active">
                         <li class="sub-menu" >
-                          <a href="">
-                            <i class="fa fa-money" aria-hidden="true"></i>
-                              <span>Billing</span>
-                          </a>
-                          <ul class="sub">
-                            <li><a href="/source_access/Payment">Bills Payment</a></li>                      
-                            <li id=""><a href="/source_access/Send-Bill">Send Bill</a></li>
-                            <li id=""><a href="/source_access/search-payment-history">Payment History</a></li>
-                          </ul>
-                      </li>
+                            <a href="/source_access/search-payment-history" class="active">
+                                <i class="fa fa-arrow-left"></i>
+                                <span>Back</span>
+                            </a>
                     </div>
-      
-                    <div id="input_reading" >
-                          <li class="sub-menu" >
-                            <a href="" class="active">
-                              <i class="fa fa-calculator" aria-hidden="true"></i>
-                                <span>Meter Reading</span>
-                            </a>
-                            <ul class="sub">
-                              <li><a href="/source_access/add-meter-reading">Input Meter Reading</a></li>
-                              <li id="modification"><a href="/source_access/Modify_Reading_Request">Modify Meter Reading</a></li>
-                            </ul>
-                        </li>
-                    </div>
-    
-                      <div id="manage_account" >
-                        <li class="sub-menu" >
-                            <a class="" href="">
-                                <i class="fa fa-address-book"></i>
-                                <span>Consumer Accounts</span>
-                            </a>
-                            <ul class="sub">
-                                <li><a href="/source_access/view-consumer-list">View Consumer List</a></li>
-                                <li><a href="/source_access/add-new-consumer">Consumer Creation</a></li>
-                                <li><a href="/source_access/view-suspended-account">Reactivate Account</a></li>
-                            </ul>
-                        </li>
-                        </div>
-        
-        
-        
-                        <div id="reports" >
-        
-                         <li class="sub-menu" >
-                            <a href="">
-                              <i class="fa fa-bar-chart" aria-hidden="true"></i>
-                                <span>Reports</span>
-                            </a>
-                            <ul class="sub">
-                              <li><a href="/source_access/usage-report-data">Usage Report</a></li>
-                              <li><a href="/source_access/revenue-report-data">Revenue Report</a></li>
-                                <li><a href="/source_access/pending_bills">Unsettled Bills</a></li>
-                            </ul>
-                        </li>
-                        </div>
-        
-                        <div id="application" >
-                        <li class="sub-menu" >
-                            <a href="">
-                              <i class="fa fa-thumbs-up" aria-hidden="true"></i>
-                                <span>Approve Application</span>
-                            </a>
-                            <ul class="sub">
-                              <li id="approve_app"><a href="/source_access/list-applicants">Application Request</a></li>
-                              <li><a href="/source_access/view-approved-applicants">Approved Applicants</a></li>
-                            </ul>
-                        </li>
-                        </div>
-        
-                        <div id="usermanagement" >
-                        <li class="sub-menu" >
-                            <a class= "" href="/source_access/view-system-user">
-                              <i class="fa fa-users" aria-hidden="true"></i>
-                              <span>Users Management</span>
-                              </a>
-                          </li>
-                        </div>
-        
-                        <div id="usercreation" >
-                          <li class="sub-menu" >
-                              <a class= "" href="/source_access/add_new_authorized_personel">
-                                <i class="fa fa-user-plus"></i>
-                                <span>User Creation</span>
-                                </a>
-                            </li>
-                          </div>
-        
-                        <div id="rates"  >
-                        <li class="sub-menu" >
-                            <a class= "" href="/source_access/update-revenue-code" class="active">
-                              <i class="fa fa-book" aria-hidden="true"></i>
-                              <span>Rates Management</span>
-                              </a>
-                        </li>
-                        </div>
-        
-                        <div  id="backupdatabase"  >
-                        <li class="sub-menu">
-                            <!--Temporary disabled -->
-                            <!--<a href="">
-                              <i class="fa fa-database"></i>
-                              <span>Backup Database</span>
-                              </a> -->
-                            <ul class="sub">
-                              <li><a href="html/daily_data">Daily Data</a></li>
-                              <li><a href="">Weekly Data</a></li>
-                              <li><a href="">Monthly Data</a></li>
-                              <li><a href="">Yearly Data</a></li>
-                            </ul>
-                        </li>
-                    </div>
-                    
-                    <div id="account-settings" >
-                      <li class="sub-menu" >
-                          <a class="" href="">
-                              <i class="fa fa-cogs"></i>
-                              <span>Account Settings</span>
-                          </a>
-                          <ul class="sub">
-                              <li><a href="/source_access/My-Account={{context.userid}}">My Account</a></li>
-                              <li><a href="/manual" target="_blank">View User Manual</a></li>
-                              <li><a href="/logout">Log Out</a></li>
-                          </ul>
-                      </li>
-                  </div>
-          
-                    
-                </div>
-        
-                
-            </aside>
-            <br>
-            <br>
-            <br>
-        <!-- bar end-->
+
+
+
+
+
+        </aside>
+        <br>
+        <br>
+        <br>
+        <!--sidebar end-->
         <!--main content start-->
         <section id="main-content">
-          <div class="container">
-            <div class="card1">
+            <div class="container">
+                <div class="card1">
             <section class="wrapper">
+
+            <form action="/source_access/search-payment-history" method="POST">
+
+
+
+
+
+
                 <!-- DATA Section -->
-                <center><h1>INPUT READING</h1></center>
 
-                <!-- Modal -->
-                
-
-        <form action="/source_access/add-meter-reading" method="POST">
-          <div class="se-pre-con"></div>
+                <div class="se-pre-con"></div>
                   <script>
                     function load(){
                       document.getElementsByClassName("se-pre-con").style.display = "block"
                     }
                   </script>
-            {%csrf_token%}
-            <div class="input-group">
-              <div class="form-outline">
-                <input type="search" id="form1" class="form-control" name="{{ReqParams.search_for}}"/>
-                <label class="form-label" for="form1">Search</label>
-              </div>
-              <button type="submit" class="btn btn-primary" value="POST">
-                <i class="fa fa-search"></i>
-              </button>
 
-            </div>
-            <div style="display: flex; justify-content: flex-end">
-                <div>
-                  <a href="/source_access/bulk_input_reading" style="color: black;"> 
-                    <u>Bulk meter Reading</u>
-                  </a>
-                </div>
-              </div>
-            <br>
-            <div class="table-responsive">
-                <table id="tablePagination" class="table table-striped table-bordered" style="width:100%">
-                    <thead>
-                        <tr>
-                            <td>Account ID</td>
-                            <td>Name</td>
-                            <td>Meter Number</td>
-                            <td>Address</td>
-                            <td>Input Reading</td>
-                        </tr>
-                    </thead>
-
-                    <tbody>
-
-                        <tr>
-                          {% for account in all_accounts %}
-                            <td>{{ account.accountinfoid }}</td>
-                            <td>{{ account.firstname }} {{ account.middlename }}. {{ account.lastname }}</td>
-                            <td>{{ account.meternumber }}</td>
-                            <td>{{ account.address }}</td>
-                            <td>
-                                <!-- Call to action buttons -->
-                                <ul class="list-inline m-0">
-                                    <li class="list-inline-item">
-                                        <a href="/source_access/add-meter-reading/{{ account.accountinfoid }}"><button class="btn btn-success btn-sm rounded-0" data-toggle="modal" type="button"     data-placement="top" title="Edit"><i class="fa fa-edit"></i></button></a>
-                                    </li>
-
-                                </ul>
-                            </td>
-                        </tr>
-
-{%endfor%}
-                    </tbody>
-
-                </table>
+                {% csrf_token %}
                 <br>
-                <center>
-                  <div class="fixed-bottom" style="margin-bottom: 20px;">
-                    <input type="submit" name="Post" id="prevbtn" class="btn btn-success" value="Previous" >
-                    <input type="submit" name="Post" id="nextbtn" class="btn btn-success" value="Next" >
-                  </div>
+                <script>
+
+                    const formatter = new Intl.NumberFormat('en-US', {
+                        style: 'currency',
+                        currency: 'Php',
+                        minimumFractionDigits: 2
+                    })
+                    function generate(duration) {
+                        var doc = new jsPDF('p', 'pt', 'letter');
+                        var htmlstring = '';
+                        var tempVarToCheckPageHeight = 0;
+                        var pageHeight = 0;
+
+                        pageHeight = doc.internal.pageSize.height;
+                        specialElementHandlers = {
+                            // element with id of "bypass" - jQuery style selector
+                            '#bypassme': function(element, renderer) {
+                                // true = "handled elsewhere, bypass text extraction"
+                                return true
+                            }
+                        };
+                        margins = {
+                            top: 150,
+                            bottom: 60,
+                            left: 40,
+                            right: 40,
+                            width: 600
+                        };
+                        var y = 20;
+                        var x = 20;
+                        doc.setLineWidth(2);
+                        doc.setFontSize(14);
+                        doc.text(250, y = y + 30,  "Payment History");
+                        doc.text(200, x = x + 50, duration);
+
+                        doc.autoTable({
+                            html: '#tablePagination',
+                            startY: 100,
+                            theme: 'grid',
+                            columnStyles: {
+                                0: {
+                                    cellWidth: 70,
+                                },
+                                1: {
+                                    cellWidth: 70,
+                                },
+                                2: {
+                                    cellWidth: 70,
+                                }
+                            },
+                            styles: {
+                                minCellHeight: 50
+
+                            }
+                        })
+                        doc.save('Payment History.pdf');
+                    }
+
+                </script>
+
+
+                <center><h1>Payment History</h1>
+                    <p>{{context.report_type}}</p>
+                    <br>
                 </center>
-            </div>
-              <br>
-              <br>
-              <br>
-              <br>
-              <br>
-              <br>
-              <div class="modal fade" id="confirmation" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered" role="document">
-                  <div class="modal-content">
-                    <div class="modal-header">
-                      <h5 class="modal-title" id="exampleModalLongTitle">Confirmation</h5>
-                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                      </button>
-                    </div>
-                    <p> Sending Bills via Email......</p>
-                    <strong><p><i> Click Confirm button to continue</i></p></strong>
+
+
                     <br>
                     <br>
-                    <center><a href="/send_bill_via_email"><button type="button" class="btn btn-primary" id="sendbill" >Confirm</button></a></center>
-                    <br>
-                    <br>
-                  </div>
+                     <div class="row">
+
+
+                        <div class="col-sm-offset-10 col-sm-2">
+
+                    <button type="button" class="btn btn-primary"  id="cmd" onclick="generate(duration)">Get A Copy</button>
+                    <script> var duration = "{{context.report_type}}";</script>
                 </div>
-              </div>
-          </div>
-        </div>
-              <!--<button type="button" class="btn btn-primary" id="send" data-toggle="modal" data-target="#confirmation" data-dismiss="modal">Send Bill via Email</button> -->
-              <script>
-                function disableButton() {
-                    var btn = document.getElementById('btn');
-                    btn.disabled = true;
-                }
-              </script>
+                </div>
+                    <br>
+                    <br>
+
+                    <div class="table-responsive" id="content">
+
+                         <table id="tablePagination" class="table table-bordered">
+
+
+                          <thead>
+                              <tr>
+                                  <th scope="col">Amount Paid</th>
+                                  <th scope="col">Date</th>
+                                  <th scope="col">Time</th>
+                                  <th scope="col">OR Number</th>
+                                  <th scope="col">Posted By</th>
+                                  <th scope="col">Consumer</th>
+                                  <th scope="col">Account ID</th>
+                                  <th scope="col">Meter Number</th>
+
+                              </tr>
+                              <i></i>
+                          </thead>
+
+                          <tbody>
+                            {% for payment in  retval %}
+                              <tr>
+
+                                  <th scope="row">Php.{{ payment.amount|floatformat:2 }}</th>
+                                  <th scope="row">{{ payment.date }}</th>
+                                  <td>{{payment.time}}</td>
+                                  <td>{{ payment.or_number }}</td>
+                                  <td>{{payment.postedby}}</td>
+                                  <td>{{ payment.consumer }}</td>
+                                  <td>{{payment.accountinfoid}}</td>
+                                  <td>{{ payment.meternumber }}</td>
+
+                              </tr>
+                              {%endfor %}
+                          </tbody>
+                      </table>
+                 </div>
+                 
+                 <br>
+                 <br>
 
 
         </form>
-
             </section>
-          </div>
-        </div>
+            </div>
+            </div>
 
 
 
         </section>
         <!--main content end-->
-
     </section>
+
     <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
     <!-- js placed at the end of the document so the pages load faster -->
     <script src="{% static 'website/lib/jquery/jquery.min.js' %}"></script>
@@ -358,7 +269,6 @@
     <script src="{% static 'website/lib/common-scripts.js' %}"></script>
     <script type="text/javascript" src="{% static 'website/lib/gritter/js/jquery.gritter.js' %}"></script>
     <script type="text/javascript" src="{% static 'website/lib/gritter-conf.js' %}"></script>
-    <!-- Custom styles for this template -->
     <script src="{% static 'website/lib/DataTables/js/jquery.dataTables.min.js' %}"></script>
     <script src="{% static 'website/lib/DataTables/js/dataTables.bootstrap4.min.js' %}"></script>
 
@@ -372,30 +282,22 @@
   <!-- Template Main JS File -->
   <script src="{% static 'manual/assets/js/main.js' %}"></script>
 
-
-  </body>
-  <script>
-    $(document).ready(function() {
-            $('#tablePagination').DataTable(
-              {
-                "info":false,
-                "lengthchange":false,
-                "paging":false,
-                "searching":false
-              }
-            );
+    <script>
+        {% comment %} $(document).ready(function() {
+            $('#tablePagination').DataTable();
         } );
-    
-    
+
+
          $(window).on("load",function(){
              $(".loader-wrapper").fadeOut("milliseconds");
         });
-    
-    
+       {% endcomment %}
+
         $(window).on("load",function() {
         // Animate loader off screen
         $(".se-pre-con").fadeOut("slow");;
         });
-    </script>
+        </script>
+  </body>
 
 </html>
