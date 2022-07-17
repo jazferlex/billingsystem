@@ -32,19 +32,20 @@
     <script src="{% static 'website/lib/DataTables/js/mdb.min.js' %}"></script>
     <script src="{% static 'website/lib/chart.js' %}"></script>
     <script src="{% static 'UtilPage/utility.js' %}"></script>
-
+    <script src="{% static 'website/lib/jsPDF/jspdf.min.js' %}"></script>
+    <script src="{% static 'website/lib/jsPDF/jspdf-autotable.js' %}"></script>
    <style >
       #polarArea {
         width:"550vw";
         height:"550vw";
-      
-       
+
+
         padding-left: 0;
            padding-right: 0;
            margin-left: auto;
            margin-right: auto;
-          
-          
+
+
     }
       .img{
         max-width: 100%;
@@ -56,14 +57,14 @@
          margin: auto;
          display: block;
          z-index: 5;
-    
+
       }
 
       @media only screen and (max-width: 1200px){
         #polarArea{
           width: 500px;
           height: 500px;
-          
+
         }
 
         .img{
@@ -71,14 +72,14 @@
           height: 700px;
 
         }
-        
+
       }
 
       @media only screen and (max-width: 990px){
         #polarArea{
           width: 500px;
           height: 500px;
-          
+
         }
 
         .img{
@@ -86,11 +87,11 @@
           height: 660px;
 
         }
-        
+
       }
 
-      
-    
+
+
     </style>
 
 </head>
@@ -284,6 +285,81 @@
             minimumFractionDigits: 2
           })
       </script>
+      <script>
+          function this_record() {
+              var doc = new jsPDF('p', 'pt', 'letter');
+              var htmlstring = '';
+              var tempVarToCheckPageHeight = 0;
+              var pageHeight = 0;
+
+              pageHeight = doc.internal.pageSize.height;
+              specialElementHandlers = {
+                  // element with id of "bypass" - jQuery style selector
+                  '#bypassme': function(element, renderer) {
+                      // true = "handled elsewhere, bypass text extraction"
+                      return true
+                  }
+              };
+              margins = {
+                  top: 150,
+                  bottom: 60,
+                  left: 40,
+                  right: 40,
+                  width: 600
+              };
+              const formatter = new Intl.NumberFormat('en-US', {
+                  style: 'currency',
+                  currency: 'Php',
+                  minimumFractionDigits: 2
+              })
+
+              var y = 20;
+              var x = 20;
+
+              doc.setLineWidth(2);
+              doc.setFontSize(14);
+              doc.text(250, y = y + 30,  "Revenue Report");
+              doc.text(265, y = y + 30,  "Year:{{defval}}");
+
+              //doc.text(200, x = x + 50, val);
+
+              doc.autoTable({
+                  html: '.this_table',
+                  startY: 100,
+                  theme: 'grid',
+                  columnStyles: {
+                      0: {
+                          cellWidth: 120,
+                      },
+                      1: {
+                          cellWidth: 132,
+                      },
+                      2: {
+                          cellWidth: 132,
+                      },
+                      3: {
+                          cellWidth: 132,
+                      },
+
+                  },
+                  styles: {
+                      minCellHeight: 50
+
+                  }
+              })
+              doc.save('Revenue_Report.pdf');
+          }
+
+          function CurrencyConverter(amount){
+            var formatter = new Intl.NumberFormat('en-US', {
+              style: 'currency',
+              currency: 'Php',
+
+            });
+            return formatter.format(amount);
+          }
+
+      </script>
 
       {%csrf_token%}
       <br>
@@ -303,6 +379,10 @@
                   </select>
                 </div>
                 <noscript><input type="submit" value="Submit"></noscript>
+                <div class="form-group">
+                  <br>
+                  <button type="button" id="postbtn" class="btn btn-primary"  onclick="this_record()">Get a Copy</button>
+                </div>
         </div>
           <div class = "col-sm">
             <div class="form-group"></div>
@@ -312,7 +392,185 @@
           </div>
           </div>
 
+          <div class="table-responsive" hidden>
+                 <table id="tablePagination" class="table table-bordered this_table" style="width:100%">
+                    <thead>
+                        <tr>
+                            <th scope="col">Month</th>
+                            <th scope="col">Collected</th>
+                            <th scope="col">Collectibles</th>
+                            <th scope="col">Total</th>
 
+                        </tr>
+                    </thead>
+                    <tbody>
+                      <script>
+                      function CurrencyConverter(amount){
+                        var formatter = new Intl.NumberFormat('fil-PH', {
+                          //style: 'currency',
+                          //currency: 'PHP',
+
+                        });
+                        return formatter.format(amount);
+                      }
+                      $(document).ready(function() {
+                      
+                        var jan_amount = parseFloat("{{ report.total_paid_january|floatformat:2}}") +  parseFloat("{{report.total_due_january|floatformat:2}}")
+                        var feb_amount = parseFloat("{{ report.total_paid_february|floatformat:2}}")  +  parseFloat("{{report.total_due_february|floatformat:2}}")
+                        var mar_amount = parseFloat("{{ report.total_paid_march|floatformat:2}}")  + parseFloat( "{{report.total_due_march|floatformat:2}}")
+                        var apr_amount = parseFloat("{{ report.total_paid_april|floatformat:2}}")  +  parseFloat("{{report.total_due_april|floatformat:2}}")
+                        var may_amount = parseFloat("{{ report.total_paid_may|floatformat:2}}")  +  parseFloat("{{report.total_due_may|floatformat:2}}")
+                        var jun_amount = parseFloat("{{ report.total_paid_june}}")  +  parseFloat("{{report.total_due_june}}")
+                        var jul_amount = parseFloat("{{ report.total_paid_july}}")  +  parseFloat("{{report.total_due_july}}")
+                        var aug_amount = parseFloat("{{ report.total_paid_august|floatformat:2}}")  +  parseFloat("{{report.total_due_august|floatformat:2}}")
+                        var sept_amount = parseFloat("{{ report.total_paid_september|floatformat:2}}")  + parseFloat("{{report.total_due_september|floatformat:2}}")
+                        var oct_amount = parseFloat("{{ report.total_paid_october|floatformat:2}}")  +  parseFloat("{{report.total_due_october|floatformat:2}}")
+                        var nov_amount = parseFloat("{{ report.total_paid_november|floatformat:2}}")  +  parseFloat("{{report.total_due_november|floatformat:2}}")
+                        var dec_amount = parseFloat("{{ report.total_paid_december|floatformat:2}}")  +  parseFloat("{{report.total_due_december|floatformat:2}}")
+                        
+                        document.getElementById("jan").innerHTML = "Php." + CurrencyConverter(jan_amount)
+                        document.getElementById("feb").innerHTML = "Php." + CurrencyConverter(feb_amount)
+                        document.getElementById("mar").innerHTML = "Php." + CurrencyConverter(mar_amount)
+                        document.getElementById("apr").innerHTML = "Php." + CurrencyConverter(apr_amount)
+                        document.getElementById("may").innerHTML = "Php." + CurrencyConverter(may_amount)
+                        document.getElementById("jun").innerHTML = "Php." + CurrencyConverter(jun_amount)
+                        document.getElementById("jul").innerHTML = "Php." + CurrencyConverter(jul_amount)
+                        document.getElementById("aug").innerHTML = "Php." + CurrencyConverter(aug_amount)
+                        document.getElementById("sept").innerHTML = "Php." + CurrencyConverter(sept_amount)
+                        document.getElementById("oct").innerHTML = "Php." + CurrencyConverter(oct_amount)
+                        document.getElementById("nov").innerHTML = "Php." + CurrencyConverter(nov_amount)
+                        document.getElementById("dec").innerHTML = "Php." + CurrencyConverter(dec_amount)
+
+                        var jan_amount1 = parseFloat("{{ report.total_due_january|floatformat:2}}") 
+                        var feb_amount1 = parseFloat("{{ report.total_due_february|floatformat:2}}")  
+                        var mar_amount1 = parseFloat("{{ report.total_due_march|floatformat:2}}") 
+                        var apr_amount1 = parseFloat("{{ report.total_due_april|floatformat:2}}") 
+                        var may_amount1 = parseFloat("{{ report.total_due_may|floatformat:2}}")  
+                        var jun_amount1 = parseFloat("{{ report.total_due_june}}")  
+                        var jul_amount1 = parseFloat("{{ report.total_due_july}}")  
+                        var aug_amount1 = parseFloat("{{ report.total_due_august|floatformat:2}}")  
+                        var sept_amount1 = parseFloat("{{ report.total_due_september|floatformat:2}}")  
+                        var oct_amount1 = parseFloat("{{ report.total_due_october|floatformat:2}}")  
+                        var nov_amount1 = parseFloat("{{ report.total_due_november|floatformat:2}}")  
+                        var dec_amount1 = parseFloat("{{ report.total_due_december|floatformat:2}}")  
+
+                        document.getElementById("jan1").innerHTML = "Php." + CurrencyConverter(jan_amount1)
+                        document.getElementById("feb1").innerHTML = "Php." + CurrencyConverter(feb_amount1)
+                        document.getElementById("mar1").innerHTML = "Php." + CurrencyConverter(mar_amount1)
+                        document.getElementById("apr1").innerHTML = "Php." + CurrencyConverter(apr_amount1)
+                        document.getElementById("may1").innerHTML = "Php." + CurrencyConverter(may_amount1)
+                        document.getElementById("jun1").innerHTML = "Php." + CurrencyConverter(jun_amount1)
+                        document.getElementById("jul1").innerHTML = "Php." + CurrencyConverter(jul_amount1)
+                        document.getElementById("aug1").innerHTML = "Php." + CurrencyConverter(aug_amount1)
+                        document.getElementById("sept1").innerHTML = "Php." + CurrencyConverter(sept_amount1)
+                        document.getElementById("oct1").innerHTML = "Php." + CurrencyConverter(oct_amount1)
+                        document.getElementById("nov1").innerHTML = "Php." + CurrencyConverter(nov_amount1)
+                        document.getElementById("dec1").innerHTML = "Php." + CurrencyConverter(dec_amount1)
+
+                        var jan_amount2 = parseFloat("{{ report.total_paid_january|floatformat:2}}") 
+                        var feb_amount2 = parseFloat("{{ report.total_paid_february|floatformat:2}}")  
+                        var mar_amount2 = parseFloat("{{ report.total_paid_march|floatformat:2}}") 
+                        var apr_amount2 = parseFloat("{{ report.total_paid_april|floatformat:2}}") 
+                        var may_amount2 = parseFloat("{{ report.total_paid_may|floatformat:2}}")  
+                        var jun_amount2 = parseFloat("{{ report.total_paid_june}}")  
+                        var jul_amount2 = parseFloat("{{ report.total_paid_july}}")  
+                        var aug_amount2 = parseFloat("{{ report.total_paid_august|floatformat:2}}")  
+                        var sept_amount2 = parseFloat("{{ report.total_paid_september|floatformat:2}}")  
+                        var oct_amount2 = parseFloat("{{ report.total_paid_october|floatformat:2}}")  
+                        var nov_amount2 = parseFloat("{{ report.total_paid_november|floatformat:2}}")  
+                        var dec_amount2 = parseFloat("{{ report.total_paid_december|floatformat:2}}")  
+
+                        document.getElementById("jan2").innerHTML = "Php." + CurrencyConverter(jan_amount2)
+                        document.getElementById("feb2").innerHTML = "Php." + CurrencyConverter(feb_amount2)
+                        document.getElementById("mar2").innerHTML = "Php." + CurrencyConverter(mar_amount2)
+                        document.getElementById("apr2").innerHTML = "Php." + CurrencyConverter(apr_amount2)
+                        document.getElementById("may2").innerHTML = "Php." + CurrencyConverter(may_amount2)
+                        document.getElementById("jun2").innerHTML = "Php." + CurrencyConverter(jun_amount2)
+                        document.getElementById("jul2").innerHTML = "Php." + CurrencyConverter(jul_amount2)
+                        document.getElementById("aug2").innerHTML = "Php." + CurrencyConverter(aug_amount2)
+                        document.getElementById("sept2").innerHTML = "Php." + CurrencyConverter(sept_amount2)
+                        document.getElementById("oct2").innerHTML = "Php." + CurrencyConverter(oct_amount2)
+                        document.getElementById("nov2").innerHTML = "Php." + CurrencyConverter(nov_amount2)
+                        document.getElementById("dec2").innerHTML = "Php." + CurrencyConverter(dec_amount2)
+                      } );
+                      </script>
+                        <tr>
+
+                            <td>January</td>
+                            <td id="jan2"></td>
+                            <td id="jan1"></td>
+                            <td id="jan"> </td>
+                          </tr>
+                            <tr>
+                            <td>February</td>
+                            <td id="feb2"></td>
+                            <td id="feb1"></td>
+                            <td id="feb"></td>
+                          </tr>
+                            <tr>
+                            <td>March</td>
+                            <td id="mar2"></td>
+                            <td id="mar1"></td>
+                            <td id="mar"></td>
+                          </tr>
+                            <tr>
+                            <td>April</td>
+                            <td id="apr2"></td>
+                            <td id="apr1"></td>
+                            <td id="apr"></td>
+                          </tr>
+                            <tr>
+                            <td>May</td>
+                            <td id="may2"></td>
+                            <td id="may1"></td>
+                            <td id="may"></td>
+                          </tr>
+                            <tr>
+                            <td>June</td>
+                            <td id="jun2"></td>
+                            <td id="jun1"></td>
+                            <td id="jun"><td>
+                          </tr>
+                            <tr>
+                            <td>July</td>
+                            <td id="jul2"></td>
+                            <td id="jul1"></td>
+                            <td id="jul"></td>
+                          </tr>
+                            <tr>
+                            <td>August</td>
+                            <td id="aug2"></td>
+                            <td id="aug1"></td>
+                            <td id="aug"></td>
+                          </tr>
+                            <tr>
+                            <td>September</td>
+                            <td id="sept2"></td>
+                            <td id="sept1"></td>
+                            <td id="sept"></td>
+                          </tr>
+                            <tr>
+                            <td>October</td>
+                            <td id="oct2"></td>
+                            <td id="oct1"></td>
+                            <td id="oct"></td>
+                            <tr>
+                          <tr>
+                            <td>November</td>
+                            <td id="nov2"></td>
+                            <td id="nov1"></td>
+                            <td id="nov"></td>
+                            </tr>
+                          <tr>
+                            <td>December</td>
+                            <td id="dec2"></td>
+                            <td id="dec1"></td>
+                            <td id="dec"></td>
+
+                        </tr>
+                    </tbody>
+                </table>
+           </div>
 
       <br>
       <br>
@@ -423,9 +681,10 @@
         <canvas id="polarArea"  width="550vw"
         height="550vw"></canvas>
 
-      
+
       </div>
     </div>
+
 <script>
 
 
@@ -787,9 +1046,9 @@ scale: {
  <script type="text/javascript" src="{% static 'website/lib/gritter/js/jquery.gritter.js' %}"></script>
  <script type="text/javascript" src="{% static 'website/lib/gritter-conf.js' %}"></script>
  <script>
-  $(document).ready(function() {
-      $('#tablePagination').DataTable();
-  } );
+  // $(document).ready(function() {
+  //     $('#tablePagination').DataTable();
+  // } );
 
 
    $(window).on("load",function(){
