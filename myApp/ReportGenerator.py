@@ -118,45 +118,48 @@ def getTotalBills(request):
 
    #set the accountinfoid base on our format
    for consumer in all_consumer:
-      accstr = ""
-      new_consumer.installcount = 1 #we set installcount into 1
-      new_consumer.firstname = consumer.firstname
-      new_consumer.middlename = consumer.middlename
-      new_consumer.lastname = consumer.lastname
-      new_consumer.homeaddress = consumer.address
-
-      #we create the applicantid base on last id used and barangay codes
-      consumerid_len = 10
-      keybasis = Primarykey_Basis.objects.get(pk = "consumerid")
-      lastid = keybasis.lastid_used
-      lastid_len = len(str(lastid + 1))
-      len_zeros = consumerid_len - lastid_len
-
-      while len_zeros != 0:
-         accstr += "0"
-         len_zeros -= 1
-
-      accstr += str(lastid + 1) #new consumerid
-      new_consumer.consumerid = accstr
-      new_consumer.oldconsumerid = consumer.con_id
-      keybasis.lastid_used =  lastid + 1
-
-      #we set the new Accountinfo
-      if len(str(new_consumer.installcount)) < 2:
-         withzero = "0"
-      else:
-         withzero = ""
-
-      account.accountinfoid = accstr + "-" + withzero + str(new_consumer.installcount)#we set account
-      account.firstname = consumer.firstname
-      account.middlename = consumer.middlename
-      account.lastname = consumer.lastname
-      account.address = consumer.address
-      account.rateid = consumer.con_category
-      account.meternumber = consumer.meternumber
-      account.consumerid = new_consumer #Foreign Key
+      # accstr = ""
+      # new_consumer.installcount = 1 #we set installcount into 1
+      # new_consumer.firstname = consumer.firstname
+      # new_consumer.middlename = consumer.middlename
+      # new_consumer.lastname = consumer.lastname
+      # new_consumer.homeaddress = consumer.address
+      #
+      # #we create the applicantid base on last id used and barangay codes
+      # consumerid_len = 10
+      # keybasis = Primarykey_Basis.objects.get(pk = "consumerid")
+      # lastid = keybasis.lastid_used
+      # lastid_len = len(str(lastid + 1))
+      # len_zeros = consumerid_len - lastid_len
+      #
+      # while len_zeros != 0:
+      #    accstr += "0"
+      #    len_zeros -= 1
+      #
+      # accstr += str(lastid + 1) #new consumerid
+      # new_consumer.consumerid = accstr
+      # new_consumer.oldconsumerid = consumer.con_id
+      # keybasis.lastid_used =  lastid + 1
+      #
+      # #we set the new Accountinfo
+      # if len(str(new_consumer.installcount)) < 2:
+      #    withzero = "0"
+      # else:
+      #    withzero = ""
+      #
+      # account.accountinfoid = accstr + "-" + withzero + str(new_consumer.installcount)#we set account
+      # account.firstname = consumer.firstname
+      # account.middlename = consumer.middlename
+      # account.lastname = consumer.lastname
+      # account.address = consumer.address
+      # account.rateid = consumer.con_category
+      # account.meternumber = consumer.meternumber
+      # account.consumerid = new_consumer #Foreign Key
 
       #we get the previous bill using con_id
+      this_consumer = consumers_info.objects.get(oldconsumerid = consumer.con_id)
+      this_id = this_consumer.consumerid + "-0" + str(this_consumer.installcount)
+      account = account_info.objects.get(pk = this_id)
       acc = consumer.con_id
       getID = getTotalBill.objects.filter(con_id = acc)
       totalbill = 0
@@ -184,9 +187,9 @@ def getTotalBills(request):
       new_record.accountinfoid = account.accountinfoid
       #We save
       new_record.save()
-      new_consumer.save()
-      account.save()
-      keybasis.save()
+      # new_consumer.save()
+      # account.save()
+      # keybasis.save()
 
       #yearly record
 
@@ -553,7 +556,7 @@ def pending_bills(request):
             #bills.append(record)
             #names.append(account)
 
-   order_by_bill = usage_record.objects.all()#descending order
+   order_by_bill = usage_record.objects.filter(year = current_date.year)#descending order
    totalbill = 0
 
    for record in order_by_bill:
@@ -571,19 +574,11 @@ def pending_bills(request):
 
 
    retvalobj = zip(bills,credentials)
+   retvalobj1 = zip(bills,credentials)
 
-   if request.method == "POST":
-      data = {}
-      pdf = htmltopdf('html/pending_bills.html',bills)
+   
 
-      response = HttpResponse(pdf, content_type='application/pdf')
-      filename = "pending_bill%s.pdf" %("")
-      content = "attachment; filename=%s" %(filename)
-      response['Content-Disposition'] = content
-
-      return response
-
-   return render(request,template,{"retval":retvalobj,"context":context})
+   return render(request,template,{"retval":retvalobj,"retval1":retvalobj1,"context":context})
 
 
 
@@ -878,7 +873,7 @@ def getUsageRevenue(request):#we get only the record for 2021
 def accountrecord(request):
    accounts = account_info.objects.all()
    current_date = date.today()
-   current_year = 2021
+
    accountrecord = usage_record()
 
    #create year
@@ -887,258 +882,284 @@ def accountrecord(request):
    year_list = []
    year_list.append(2020)
    year_list.append(2021)
+   this_year = 2020
+   while this_year >= 2010:
+       billmonth = 0
+       if current_date.month == 1:
+          billmonth = 12
+       else:
+          billmonth = current_date.month - 1
 
-   #for x in year_list:
-   billmonth = 0
-   if current_date.month == 1:
-      billmonth = 12
-   else:
-      billmonth = current_date.month - 1
+       current_year = this_year
+       for account in accounts:
+          record = usage_record()
+          consumer = consumers_info.objects.get(pk = account.consumerid)
+          #record_check = usage_record.objects.filter(pk = account.accountinfoid + "-" + str(current_year)).exists()
+          #if record_check == False:
+             #record.accountid =  account.accountinfoid + "-" + str(current_year)
+             #record.accountinfoid = account.accountinfoid
+             #record.rateid = account.rateid
+             #record.consumerid = consumer
+             #record.year = current_year
+             #record.save()
 
-   current_year = 2021
-   for account in accounts:
-      record = usage_record()
-      consumer = consumers_info.objects.get(pk = account.consumerid)
-      #record_check = usage_record.objects.filter(pk = account.accountinfoid + "-" + str(current_year)).exists()
-      #if record_check == False:
-         #record.accountid =  account.accountinfoid + "-" + str(current_year)
-         #record.accountinfoid = account.accountinfoid
-         #record.rateid = account.rateid
-         #record.consumerid = consumer
-         #record.year = current_year
-         #record.save()
+          if usage_record.objects.filter(pk = account.accountinfoid + "-" + str(current_year)).exists():
+              pass
+          else:
+              new_record = usage_record()
+              new_record.accountid = account.accountinfoid + "-" + str(current_year) #PK Value
+              new_record.accountinfoid = account.accountinfoid
+              new_record.commulative_bill = 0
+              new_record.consumerid = consumer
+              new_record.rateid = account.rateid
+              new_record.accountinfoid = account.accountinfoid
+              #We save
+              new_record.save()
+
+          account_record = usage_record.objects.get(pk = account.accountinfoid + "-" + str(current_year))
+          account_record.commulative_bill = 0
+          account_record.save()
+
+          prev_record = None
+          #adding the previous balance
+          #if usage_record.objects.filter(pk = account.accountinfoid + "-" + str(current_year - 1)):
+             #prev_record = usage_record.objects.get(pk = account.accountinfoid + "-" + str(current_year - 1))
+             #account_record.commulative_bill += prev_record.commulative_bill
+             #account_record.save()
+
+          #bills and usage for january
+          record_jan = None
+          consumer = consumers_info.objects.get(pk = account.consumerid)
+          oldcon = getTotalBill.objects.filter(con_id = consumer.oldconsumerid)
+          # if billmonth == 1:
+          for con in oldcon:
+             reading = con.reading_date
+             if reading.__contains__(str(current_year) + "-02"):
+                account_record.reading_jan = con.current_reading
+                account_record.reading_date_jan = con.reading_date
+                account_record.usage_jan =  con.consumption
+                if account_record.usage_jan < 20 and account_record.usage_jan > 0:
+                   account_record.bill_jan = 25
+                   account_record.totalbill_jan = 25
+                else:
+                   account_record.bill_jan = con.currentdue
+                   account_record.totalbill_jan = con.currentdue
+
+                if con.paid == "0":
+                   account_record.commulative_bill += account_record.totalbill_jan
+                else:
+                   account_record.paidamt_jan = account_record.totalbill_jan
+                account_record.save()
+
+             if reading.__contains__(str(current_year) + "-03"):
+                account_record.reading_feb = con.current_reading
+                account_record.reading_date_feb = con.reading_date
+                account_record.usage_feb =  con.consumption
+                if account_record.usage_feb < 20 and account_record.usage_feb > 0:
+                   account_record.bill_feb = 25
+                   account_record.totalbill_feb = 25
+                else:
+                   account_record.bill_feb = con.currentdue
+                   account_record.totalbill_feb = con.currentdue
+
+                if con.paid == "0":
+                   account_record.commulative_bill += account_record.totalbill_feb
+                else:
+                   account_record.paidamt_feb = account_record.totalbill_feb
+                account_record.save()
+
+             if reading.__contains__(str(current_year) + "-04"):
+                account_record.reading_mar = con.current_reading
+                account_record.reading_date_mar = con.reading_date
+                account_record.usage_mar =  con.consumption
+                if account_record.usage_mar < 20 and account_record.usage_mar > 0:
+                   account_record.bill_mar = 25
+                   account_record.totalbill_mar = 25
+                else:
+                   account_record.bill_mar = con.currentdue
+                   account_record.totalbill_mar = con.currentdue
+
+                if con.paid == "0":
+                   account_record.commulative_bill += account_record.totalbill_mar
+                else:
+                   account_record.paidamt_mar = account_record.totalbill_mar
+                account_record.save()
+
+             if reading.__contains__(str(current_year) + "-05"):
+                account_record.reading_apr = con.current_reading
+                account_record.reading_date_apr = con.reading_date
+                account_record.usage_apr =  con.consumption
+                if account_record.usage_apr < 20 and account_record.usage_apr > 0:
+                   account_record.bill_apr = 25
+                   account_record.totalbill_apr = 25
+                else:
+                   account_record.bill_apr = con.currentdue
+                   account_record.totalbill_apr = con.currentdue
+
+                if con.paid == "0":
+                   account_record.commulative_bill += account_record.totalbill_apr
+                else:
+                   account_record.paidamt_apr = account_record.totalbill_apr
+                account_record.save()
+
+             if reading.__contains__(str(current_year) + "-06"):
+                account_record.reading_may = con.current_reading
+                account_record.reading_date_may = con.reading_date
+                account_record.usage_may =  con.consumption
+                if account_record.usage_may < 20 and account_record.usage_may > 0:
+                   account_record.bill_may = 25
+                   account_record.totalbill_may = 25
+                else:
+                   account_record.bill_may = con.currentdue
+                   account_record.totalbill_may = con.currentdue
+
+                if con.paid == "0":
+                   account_record.commulative_bill += account_record.totalbill_may
+                else:
+                   account_record.paidamt_may = account_record.totalbill_may
+                account_record.save()
+
+             if reading.__contains__(str(current_year) + "-07"):
+                account_record.reading_jun = con.current_reading
+                account_record.reading_date_jun = con.reading_date
+                account_record.usage_jun =  con.consumption
+                if account_record.usage_jun < 20 and account_record.usage_jun > 0:
+                   account_record.bill_jun = 25
+                   account_record.totalbill_jun = 25
+                else:
+                   account_record.bill_jun = con.currentdue
+                   account_record.totalbill_jun = con.currentdue
+
+                if con.paid == "0":
+                   account_record.commulative_bill += account_record.totalbill_jun
+                else:
+                   account_record.paidamt_jun = account_record.totalbill_jun
+                account_record.save()
+
+             if reading.__contains__(str(current_year) + "-08"):
+                account_record.reading_jul = con.current_reading
+                account_record.reading_date_jul = con.reading_date
+                account_record.usage_jul =  con.consumption
+                if account_record.usage_jul < 20 and account_record.usage_jul > 0:
+                   account_record.bill_jul = 25
+                   account_record.totalbill_jul = 25
+                else:
+                   account_record.bill_jul = con.currentdue
+                   account_record.totalbill_jul = con.currentdue
+
+                if con.paid == "0":
+                   account_record.commulative_bill += account_record.totalbill_jul
+                else:
+                   account_record.paidamt_jul = account_record.totalbill_jul
+                account_record.save()
+
+             if reading.__contains__(str(current_year) + "-09"):
+                account_record.reading_aug = con.current_reading
+                account_record.reading_date_aug = con.reading_date
+                account_record.usage_aug =  con.consumption
+                if account_record.usage_aug < 20 and account_record.usage_aug > 0:
+                   account_record.bill_aug = 25
+                   account_record.totalbill_aug = 25
+                else:
+                   account_record.bill_aug = con.currentdue
+                   account_record.totalbill_aug = con.currentdue
+
+                if con.paid == "0":
+                   account_record.commulative_bill += account_record.totalbill_aug
+                else:
+                   account_record.paidamt_aug = account_record.totalbill_aug
+
+                account_record.save()
+
+             if reading.__contains__(str(current_year) + "-10"):
+                account_record.reading_sept = con.current_reading
+                account_record.reading_date_sept = con.reading_date
+                account_record.usage_sept =  con.consumption
+                if account_record.usage_sept < 20 and account_record.usage_sept > 0:
+                   account_record.bill_sept = 25
+                   account_record.totalbill_sept = 25
+                else:
+                   account_record.bill_sept = con.currentdue
+                   account_record.totalbill_sept = con.currentdue
+
+                if con.paid == "0":
+                   account_record.commulative_bill += account_record.totalbill_sept
+                else:
+                   account_record.paidamt_sept = account_record.totalbill_sept
+                account_record.save()
+
+             if reading.__contains__(str(current_year) + "-11"):
+                account_record.reading_oct = con.current_reading
+                account_record.reading_date_oct = con.reading_date
+                account_record.usage_oct =  con.consumption
+                if account_record.usage_oct < 20 and account_record.usage_oct > 0:
+                   account_record.bill_oct = 25
+                   account_record.totalbill_oct = 25
+                else:
+                   account_record.bill_oct = con.currentdue
+                   account_record.totalbill_oct = con.currentdue
+
+                if con.paid == "0":
+                   account_record.commulative_bill += account_record.totalbill_oct
+                else:
+                   account_record.paidamt_oct = account_record.totalbill_oct
+                account_record.save()
+
+             if reading.__contains__(str(current_year) + "-12"):
+                account_record.reading_nov = con.current_reading
+                account_record.reading_date_nov = con.reading_date
+                account_record.usage_nov =  con.consumption
+                if account_record.usage_nov < 20 and account_record.usage_nov > 0:
+                   account_record.bill_nov = 25
+                   account_record.totalbill_nov = 25
+                else:
+                   account_record.bill_nov = con.currentdue
+                   account_record.totalbill_nov = con.currentdue
+
+                if con.paid == "0":
+                   account_record.commulative_bill += account_record.totalbill_nov
+                else:
+                   account_record.paidamt_nov = account_record.totalbill_nov
+                account_record.save()
+
+             if reading.__contains__(str(current_year + 1) + "-01"):
+                account_record.reading_dec = con.current_reading
+                account_record.reading_date_dec = con.reading_date
+                account_record.usage_dec =  con.consumption
+                if account_record.usage_dec < 20 and account_record.usage_dec > 0:
+                   account_record.bill_dec = 25
+                   account_record.totalbill_dec = 25
+                else:
+                   account_record.bill_dec = con.currentdue
+                   account_record.totalbill_dec = con.currentdue
+
+                if con.paid == "0":
+                   account_record.commulative_bill = account_record.totalbill_dec
+                else:
+                   account_record.paidamt_dec = account_record.totalbill_dec
+                account_record.save()
+       this_year = this_year - 1
 
 
-      account_record = usage_record.objects.get(pk = account.accountinfoid + "-" + str(current_year))
-      account_record.commulative_bill = 0
-      account_record.save()
-
-      prev_record = None
-      #adding the previous balance
-      #if usage_record.objects.filter(pk = account.accountinfoid + "-" + str(current_year - 1)):
-         #prev_record = usage_record.objects.get(pk = account.accountinfoid + "-" + str(current_year - 1))
-         #account_record.commulative_bill += prev_record.commulative_bill
-         #account_record.save()
-
-      #bills and usage for january
-      record_jan = None
-      consumer = consumers_info.objects.get(pk = account.consumerid)
-      oldcon = getTotalBill.objects.filter(con_id = consumer.oldconsumerid)
-      # if billmonth == 1:
-      for con in oldcon:
-         reading = con.reading_date
-         if reading.__contains__(str(current_year) + "-02"):
-            account_record.reading_jan = con.current_reading
-            account_record.reading_date_jan = con.reading_date
-            account_record.usage_jan =  con.consumption
-            if account_record.usage_jan < 20 and account_record.usage_jan > 0:
-               account_record.bill_jan = 25
-               account_record.totalbill_jan = 25
-            else:
-               account_record.bill_jan = con.currentdue
-               account_record.totalbill_jan = con.currentdue
-
-            if con.paid == "0":
-               account_record.commulative_bill += account_record.totalbill_jan
-            else:
-               account_record.paidamt_jan = account_record.totalbill_jan
-            account_record.save()
-
-         if reading.__contains__(str(current_year) + "-03"):
-            account_record.reading_feb = con.current_reading
-            account_record.reading_date_feb = con.reading_date
-            account_record.usage_feb =  con.consumption
-            if account_record.usage_feb < 20 and account_record.usage_feb > 0:
-               account_record.bill_feb = 25
-               account_record.totalbill_feb = 25
-            else:
-               account_record.bill_feb = con.currentdue
-               account_record.totalbill_feb = con.currentdue
-
-            if con.paid == "0":
-               account_record.commulative_bill += account_record.totalbill_feb
-            else:
-               account_record.paidamt_feb = account_record.totalbill_feb
-            account_record.save() 
-
-         if reading.__contains__(str(current_year) + "-04"):
-            account_record.reading_mar = con.current_reading
-            account_record.reading_date_mar = con.reading_date
-            account_record.usage_mar =  con.consumption
-            if account_record.usage_mar < 20 and account_record.usage_mar > 0:
-               account_record.bill_mar = 25
-               account_record.totalbill_mar = 25
-            else:
-               account_record.bill_mar = con.currentdue
-               account_record.totalbill_mar = con.currentdue
-
-            if con.paid == "0":
-               account_record.commulative_bill += account_record.totalbill_mar
-            else:
-               account_record.paidamt_mar = account_record.totalbill_mar
-            account_record.save()     
-
-         if reading.__contains__(str(current_year) + "-05"):
-            account_record.reading_apr = con.current_reading
-            account_record.reading_date_apr = con.reading_date
-            account_record.usage_apr =  con.consumption
-            if account_record.usage_apr < 20 and account_record.usage_apr > 0:
-               account_record.bill_apr = 25
-               account_record.totalbill_apr = 25
-            else:
-               account_record.bill_apr = con.currentdue
-               account_record.totalbill_apr = con.currentdue
-
-            if con.paid == "0":
-               account_record.commulative_bill += account_record.totalbill_apr
-            else:
-               account_record.paidamt_apr = account_record.totalbill_apr
-            account_record.save()
-   
-         if reading.__contains__(str(current_year) + "-06"):
-            account_record.reading_may = con.current_reading
-            account_record.reading_date_may = con.reading_date
-            account_record.usage_may =  con.consumption
-            if account_record.usage_may < 20 and account_record.usage_may > 0:
-               account_record.bill_may = 25
-               account_record.totalbill_may = 25
-            else:
-               account_record.bill_may = con.currentdue
-               account_record.totalbill_may = con.currentdue
-
-            if con.paid == "0":
-               account_record.commulative_bill += account_record.totalbill_may
-            else:
-               account_record.paidamt_may = account_record.totalbill_may
-            account_record.save()
-
-         if reading.__contains__(str(current_year) + "-07"):
-            account_record.reading_jun = con.current_reading
-            account_record.reading_date_jun = con.reading_date
-            account_record.usage_jun =  con.consumption
-            if account_record.usage_jun < 20 and account_record.usage_jun > 0:
-               account_record.bill_jun = 25
-               account_record.totalbill_jun = 25
-            else:
-               account_record.bill_jun = con.currentdue
-               account_record.totalbill_jun = con.currentdue
-
-            if con.paid == "0":
-               account_record.commulative_bill += account_record.totalbill_jun
-            else:
-               account_record.paidamt_jun = account_record.totalbill_jun
-            account_record.save()
-
-         if reading.__contains__(str(current_year) + "-08"):
-            account_record.reading_jul = con.current_reading
-            account_record.reading_date_jul = con.reading_date
-            account_record.usage_jul =  con.consumption
-            if account_record.usage_jul < 20 and account_record.usage_jul > 0:
-               account_record.bill_jul = 25
-               account_record.totalbill_jul = 25
-            else:
-               account_record.bill_jul = con.currentdue
-               account_record.totalbill_jul = con.currentdue
-
-            if con.paid == "0":
-               account_record.commulative_bill += account_record.totalbill_jul
-            else:
-               account_record.paidamt_jul = account_record.totalbill_jul
-            account_record.save()     
-         
-         if reading.__contains__(str(current_year) + "-09"):
-            account_record.reading_aug = con.current_reading
-            account_record.reading_date_aug = con.reading_date
-            account_record.usage_aug =  con.consumption
-            if account_record.usage_aug < 20 and account_record.usage_aug > 0:
-               account_record.bill_aug = 25
-               account_record.totalbill_aug = 25
-            else:
-               account_record.bill_aug = con.currentdue
-               account_record.totalbill_aug = con.currentdue
-
-            if con.paid == "0":
-               account_record.commulative_bill += account_record.totalbill_aug
-            else:
-               account_record.paidamt_aug = account_record.totalbill_aug
-
-            account_record.save()
-
-         if reading.__contains__(str(current_year) + "-10"):
-            account_record.reading_sept = con.current_reading
-            account_record.reading_date_sept = con.reading_date
-            account_record.usage_sept =  con.consumption
-            if account_record.usage_sept < 20 and account_record.usage_sept > 0:
-               account_record.bill_sept = 25
-               account_record.totalbill_sept = 25
-            else:
-               account_record.bill_sept = con.currentdue
-               account_record.totalbill_sept = con.currentdue
-
-            if con.paid == "0":
-               account_record.commulative_bill += account_record.totalbill_sept
-            else:
-               account_record.paidamt_sept = account_record.totalbill_sept
-            account_record.save()   
-
-         if reading.__contains__(str(current_year) + "-11"):
-            account_record.reading_oct = con.current_reading
-            account_record.reading_date_oct = con.reading_date
-            account_record.usage_oct =  con.consumption
-            if account_record.usage_oct < 20 and account_record.usage_oct > 0:
-               account_record.bill_oct = 25
-               account_record.totalbill_oct = 25
-            else:
-               account_record.bill_oct = con.currentdue
-               account_record.totalbill_oct = con.currentdue
-
-            if con.paid == "0":
-               account_record.commulative_bill += account_record.totalbill_oct
-            else:
-               account_record.paidamt_oct = account_record.totalbill_oct
-            account_record.save()
-
-         if reading.__contains__(str(current_year) + "-12"):
-            account_record.reading_nov = con.current_reading
-            account_record.reading_date_nov = con.reading_date
-            account_record.usage_nov =  con.consumption
-            if account_record.usage_nov < 20 and account_record.usage_nov > 0:
-               account_record.bill_nov = 25
-               account_record.totalbill_nov = 25
-            else:
-               account_record.bill_nov = con.currentdue
-               account_record.totalbill_nov = con.currentdue
-
-            if con.paid == "0":
-               account_record.commulative_bill += account_record.totalbill_nov
-            else:
-               account_record.paidamt_nov = account_record.totalbill_nov
-            account_record.save()
-         
-         if reading.__contains__(str(current_year + 1) + "-01"):
-            account_record.reading_dec = con.current_reading
-            account_record.reading_date_dec = con.reading_date
-            account_record.usage_dec =  con.consumption
-            if account_record.usage_dec < 20 and account_record.usage_dec > 0:
-               account_record.bill_dec = 25
-               account_record.totalbill_dec = 25
-            else:
-               account_record.bill_dec = con.currentdue
-               account_record.totalbill_dec = con.currentdue
-
-            if con.paid == "0":
-               account_record.commulative_bill = account_record.totalbill_dec
-            else:
-               account_record.paidamt_dec = account_record.totalbill_dec
-            account_record.save()
-         
 
 
-         
 
 
 
    return render(request,"test.html")
 
 def meternumber(request):
+   return render(request,"test.html")
+
+def testyear(request):
+   all_account = usage_record.objects.all()
+   for account in all_account:
+      this_year = ""
+      this_len = len(account.accountid) -4
+      this_id = account.accountid
+      while len(this_year) != 4:
+         this_year += this_id[this_len]
+         this_len = this_len + 1
+      account.year = int(this_year)
+      account.save()   
    return render(request,"test.html")
