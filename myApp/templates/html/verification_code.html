@@ -1,0 +1,75 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  	<title>Authorize</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+	<link href="https://fonts.googleapis.com/css?family=Lato:300,400,700&display=swap" rel="stylesheet">
+
+	<link rel="stylesheet" href="{% static 'aset/css/bootstrap/bootstrapcdn.css' %}">
+	
+	<link rel="stylesheet" href="{% static 'aset/css/style.css' %}">
+
+
+  
+	</head>
+
+	<body onload="load_div()" class="img js-fullheight" style="background-image: url(static/aset/images/water.jpg);">
+
+
+
+
+	<section class="ftco-section" >
+		<div class="container" >
+			<div class="row justify-content-center">
+				<div class="col-md-6 text-center mb-5">
+					
+				</div>
+			</div>
+			<div class="row justify-content-center" >
+				<div class="col-md-6 col-lg-4">
+					<div class="login-wrap p-0">
+		      	<h3 class="mb-4 text-center">Verification Code</h3>
+		      	<form action="/account-recovery={{context.userid}}/verification_code" method="POST" class="signin-form">
+					{% csrf_token %}
+
+		      		<div class="form-group" >
+						
+		      			<input type="text" class="form-control" placeholder="Verification Code" name= "vcode" value="" autofocus required style="background-color: #6c757d; border: 1px solid transparent;">
+		      		</div>
+	           
+	            <div class="form-group">
+	            	<button type="submit" value="POST" class="form-control btn btn-primary submit px-3">Sign In</button>
+	            </div>
+              <div class="form-group d-md-flex">
+	            	<div class="w-50">
+		            	
+									</label>
+								</div>
+								<div class="w-50 text-md-right">
+                  
+                  <a href="/account-recovery" style="color: #070707" ><- Go Back</a>
+								</div>
+	            </div>
+	           
+	          </form>
+
+	         
+		      </div>
+				</div>
+			</div>
+		</div>
+	</section>
+
+
+	<script src="{% static 'aset/js/jquery.min.js' %}"></script>
+  <script src="{% static 'aset/js/popper.js' %}"></script>
+  <script src="{% static 'aset/js/bootstrap.min.js' %}"></script>
+  <script src="{% static 'aset/js/main.js' %}"></script>
+ 
+
+	</body>
+</html>
+

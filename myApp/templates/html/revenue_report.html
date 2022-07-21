@@ -1,0 +1,1065 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <!-- Favicons -->
+    <link href="{% static 'website/img/favicon.ico' %}" rel="icon">
+    <link href="{% static 'website/img/apple-touch-icon.ico' %}" rel="apple-touch-icon">
+
+    <!-- Bootstrap core CSS -->
+    <link href="{% static 'website/lib/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+    <!--external css-->
+    <link href="{% static 'website/lib/font-awesome/css/font-awesome.css' %}" rel="stylesheet" />
+    <link rel="stylesheet" type="text/css" href="{% static '/website/css/zabuto_calendar.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static '/website/lib/gritter/css/jquery.gritter.css' %}" />
+    <!-- Custom styles for this template -->
+    <link href="{% static 'website/css/styles.css' %}" rel="stylesheet">
+    <link href="{% static 'custom.css' %}" rel="stylesheet">
+    <link href="{% static '/website/css/font.css' %}" rel="stylesheet">
+    <link href="{% static 'website/css/style-responsive.css' %}" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'website/lib/bootstrap/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'website/lib/DataTables/css/mdb.min.css' %}">
+    <link rel="stylesheet" href="{% static 'website/lib/bootstrap/css/ModifiedBootstrap.css' %}">
+    <link rel="stylesheet" href="{% static 'website/lib/DataTables/css/dataTables.bootstrap4.min.css' %}">
+    <script src="{% static 'website/lib/jquery/jquery.min.js' %}"></script>
+    <script src="{% static 'website/lib/DataTables/js/popper.min.js' %}"></script>
+    <script src="{% static 'website/lib/bootstrap/js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'website/lib/DataTables/js/mdb.min.js' %}"></script>
+    <script src="{% static 'website/lib/chart.js' %}"></script>
+    <script src="{% static 'UtilPage/utility.js' %}"></script>
+    <script src="{% static 'website/lib/jsPDF/jspdf.min.js' %}"></script>
+    <script src="{% static 'website/lib/jsPDF/jspdf-autotable.js' %}"></script>
+   <style >
+      #polarArea {
+        width:"550vw";
+        height:"550vw";
+
+
+        padding-left: 0;
+           padding-right: 0;
+           margin-left: auto;
+           margin-right: auto;
+
+
+    }
+      .img{
+        max-width: 100%;
+          width: 62%;
+         position: absolute;
+         top: 50%;
+         left: 50%;
+         transform: translate(-50%, -50%);
+         margin: auto;
+         display: block;
+         z-index: 5;
+
+      }
+
+      @media only screen and (max-width: 1200px){
+        #polarArea{
+          width: 500px;
+          height: 500px;
+
+        }
+
+        .img{
+          width: 700px;
+          height: 700px;
+
+        }
+
+      }
+
+      @media only screen and (max-width: 990px){
+        #polarArea{
+          width: 500px;
+          height: 500px;
+
+        }
+
+        .img{
+          width: 790px;
+          height: 660px;
+
+        }
+
+      }
+
+
+
+    </style>
+
+</head>
+<body onload="show(usertype)">
+  <script>
+    var usertype = "{{ context.UserType }}";
+</script>
+  <section id="container">
+
+    <!--Header Start-->
+    <header class="header black-bg">
+        <div class="sidebar-toggle-box">
+            <div class="fa fa-bars tooltips" data-placement="right" data-original-title="Toggle Navigation"></div>
+        </div>
+        <!--logo start-->
+        <a href="" class="logo"><b>Ginatilan Water Billing<span> Station</span></b></a>
+        <!--logo end-->
+
+        <div class="top-menu">
+            <ul class="nav pull-right top-menu">
+                <li><a class="logout" href="/logout">Logout</a></li>
+            </ul>
+        </div>
+
+    </header>
+    <!--Header End-->
+    <!--sidebar start-->
+    <aside>
+      <div id="sidebar" class="nav-collapse ">
+          <!-- sidebar menu start-->
+          <ul class="sidebar-menu" id="nav-accordion">
+              <p class="centered"><a href=""><img src="{% static 'website/img/ui-admin.jpg' %}" class="img-circle" width="80"></a></p>
+              <h5 class="centered">{{ context.name }}</h5>
+
+
+
+              <div id="billspayment" >
+                <li class="sub-menu" >
+                  <a href="">
+                    <i class="fa fa-money" aria-hidden="true"></i>
+                      <span>Billing</span>
+                  </a>
+                  <ul class="sub">
+                    <li><a href="/source_access/Payment">Bills Payment</a></li>
+                    <li id=""><a href="/source_access/Send-Bill">Send Bill</a></li>
+                    <li id=""><a href="/source_access/search-payment-history">Payment History</a></li>
+                  </ul>
+              </li>
+            </div>
+
+            <div id="input_reading" >
+                  <li class="sub-menu" >
+                    <a href="">
+                      <i class="fa fa-calculator" aria-hidden="true"></i>
+                        <span>Meter Reading</span>
+                    </a>
+                    <ul class="sub">
+                      <li><a href="/source_access/add-meter-reading">Input Meter Reading</a></li>
+                      <li id="modification"><a href="/source_access/Modify_Reading_Request">Modify Meter Reading</a></li>
+                    </ul>
+                </li>
+            </div>
+
+              <div id="manage_account" >
+                <li class="sub-menu" >
+                    <a class="" href="">
+                        <i class="fa fa-address-book"></i>
+                        <span>Consumer Accounts</span>
+                    </a>
+                    <ul class="sub">
+                        <li><a href="/source_access/view-consumer-list">View Consumer List</a></li>
+                        <li><a href="/source_access/add-new-consumer">Consumer Creation</a></li>
+                        <li><a href="/source_access/view-suspended-account">Reactivate Account</a></li>
+                    </ul>
+                </li>
+                </div>
+
+
+
+                <div id="reports" >
+
+                 <li class="sub-menu" >
+                    <a href=""class="active">
+                      <i class="fa fa-bar-chart" aria-hidden="true"></i>
+                        <span>Reports</span>
+                    </a>
+                    <ul class="sub">
+                      <li><a href="/source_access/usage-report-data">Usage Report</a></li>
+                      <li><a href="/source_access/revenue-report-data">Revenue Report</a></li>
+                        <li><a href="/source_access/pending_bills">Unsettled Bills</a></li>
+                    </ul>
+                </li>
+                </div>
+
+                <div id="application" >
+                <li class="sub-menu" >
+                    <a href="">
+                      <i class="fa fa-thumbs-up" aria-hidden="true"></i>
+                        <span>Approve Application</span>
+                    </a>
+                    <ul class="sub">
+                      <li id="approve_app"><a href="/source_access/list-applicants">Application Request</a></li>
+                      <li><a href="/source_access/view-approved-applicants">Approved Applicants</a></li>
+                    </ul>
+                </li>
+                </div>
+
+                <div id="usermanagement" >
+                <li class="sub-menu" >
+                    <a class= "" href="/source_access/view-system-user">
+                      <i class="fa fa-users" aria-hidden="true"></i>
+                      <span>Users Management</span>
+                      </a>
+                  </li>
+                </div>
+
+                <div id="usercreation" >
+                  <li class="sub-menu" >
+                      <a class= "" href="/source_access/add_new_authorized_personel">
+                        <i class="fa fa-user-plus"></i>
+                        <span>User Creation</span>
+                        </a>
+                    </li>
+                  </div>
+
+                <div id="rates"  >
+                <li class="sub-menu" >
+                    <a class= "" href="/source_access/update-revenue-code" class="active">
+                      <i class="fa fa-book" aria-hidden="true"></i>
+                      <span>Rates Management</span>
+                      </a>
+                </li>
+                </div>
+
+                <div  id="backupdatabase"  >
+                <li class="sub-menu">
+                    <!--Temporary disabled -->
+                    <!--<a href="">
+                      <i class="fa fa-database"></i>
+                      <span>Backup Database</span>
+                      </a> -->
+                    <ul class="sub">
+                      <li><a href="html/daily_data">Daily Data</a></li>
+                      <li><a href="">Weekly Data</a></li>
+                      <li><a href="">Monthly Data</a></li>
+                      <li><a href="">Yearly Data</a></li>
+                    </ul>
+                </li>
+            </div>
+
+            <div id="account-settings" >
+              <li class="sub-menu" >
+                  <a class="" href="">
+                      <i class="fa fa-cogs"></i>
+                      <span>Account Settings</span>
+                  </a>
+                  <ul class="sub">
+                      <li><a href="/source_access/My-Account={{context.userid}}">My Account</a></li>
+                      <li><a href="/manual" target="_blank">View User Manual</a></li>
+                      <li><a href="/logout">Log Out</a></li>
+                  </ul>
+              </li>
+          </div>
+
+
+        </div>
+
+
+  </aside>
+
+
+  <section id="main-content">
+    <div class="container">
+    <div class="card1">
+    <section class="wrapper">
+
+    <form  action="/source_access/revenue-report-data" method="POST">
+      <script src="https:cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"> </script>
+      <script>
+        function convertToArray(obj) {
+        return Object.keys(obj).map(function(key) {
+            return obj[key];
+        });
+      }
+      </script>
+
+      <script>
+        const formatter = new Intl.NumberFormat('en-US', {
+            style: 'currency',
+            currency: 'Php',
+            minimumFractionDigits: 2
+          })
+      </script>
+      <script>
+          function this_record() {
+              var doc = new jsPDF('p', 'pt', 'letter');
+              var htmlstring = '';
+              var tempVarToCheckPageHeight = 0;
+              var pageHeight = 0;
+
+              pageHeight = doc.internal.pageSize.height;
+              specialElementHandlers = {
+                  // element with id of "bypass" - jQuery style selector
+                  '#bypassme': function(element, renderer) {
+                      // true = "handled elsewhere, bypass text extraction"
+                      return true
+                  }
+              };
+              margins = {
+                  top: 150,
+                  bottom: 60,
+                  left: 40,
+                  right: 40,
+                  width: 600
+              };
+              const formatter = new Intl.NumberFormat('en-US', {
+                  style: 'currency',
+                  currency: 'Php',
+                  minimumFractionDigits: 2
+              })
+
+              var y = 20;
+              var x = 20;
+
+              doc.setLineWidth(2);
+              doc.setFontSize(14);
+              doc.text(250, y = y + 30,  "Revenue Report");
+              doc.text(265, y = y + 30,  "Year:{{defval}}");
+
+              //doc.text(200, x = x + 50, val);
+
+              doc.autoTable({
+                  html: '.this_table',
+                  startY: 100,
+                  theme: 'grid',
+                  columnStyles: {
+                      0: {
+                          cellWidth: 120,
+                      },
+                      1: {
+                          cellWidth: 132,
+                      },
+                      2: {
+                          cellWidth: 132,
+                      },
+                      3: {
+                          cellWidth: 132,
+                      },
+
+                  },
+                  styles: {
+                      minCellHeight: 50
+
+                  }
+              })
+              doc.save('Revenue_Report.pdf');
+          }
+
+          function CurrencyConverter(amount){
+            var formatter = new Intl.NumberFormat('en-US', {
+              style: 'currency',
+              currency: 'Php',
+
+            });
+            return formatter.format(amount);
+          }
+
+      </script>
+
+      {%csrf_token%}
+      <br>
+      <br>
+      <center><h1>Revenue Reports</h1></center>
+      <br>
+
+      <div class = "row">
+        <div class = "col-sm-offset-7 col-sm-5">
+              <div class="form-group">
+                  <label for="exampleInputBarangay">Select Year</label>
+                  <select name="{{ ReqParams.year }}" class="form-control" onchange='this.form.submit();'>
+                    <option value="{{defval}}" selected>{{defval}}</option>
+                    {% for year in allyear %}
+                    <option value="{{ year.year }}">{{year.year}}</option>
+                    {%endfor%}
+                  </select>
+                </div>
+                <noscript><input type="submit" value="Submit"></noscript>
+                <div class="form-group">
+                  <br>
+                  <button type="button" id="postbtn" class="btn btn-primary"  onclick="this_record()">Get a Copy</button>
+                </div>
+        </div>
+          <div class = "col-sm">
+            <div class="form-group"></div>
+          </div>
+          <div class = "col-sm">
+              <div class="form-group"></div>
+          </div>
+          </div>
+
+          <div class="table-responsive" hidden>
+                 <table id="tablePagination" class="table table-bordered this_table" style="width:100%">
+                    <thead>
+                        <tr>
+                            <th scope="col">Month</th>
+                            <th scope="col">Collected</th>
+                            <th scope="col">Collectibles</th>
+                            <th scope="col">Total</th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                      <script>
+                      function CurrencyConverter(amount){
+                        var formatter = new Intl.NumberFormat('fil-PH', {
+                          //style: 'currency',
+                          //currency: 'PHP',
+
+                        });
+                        return formatter.format(amount);
+                      }
+                      $(document).ready(function() {
+                      
+                        var jan_amount = parseFloat("{{ report.total_paid_january|floatformat:2}}") +  parseFloat("{{report.total_due_january|floatformat:2}}")
+                        var feb_amount = parseFloat("{{ report.total_paid_february|floatformat:2}}")  +  parseFloat("{{report.total_due_february|floatformat:2}}")
+                        var mar_amount = parseFloat("{{ report.total_paid_march|floatformat:2}}")  + parseFloat( "{{report.total_due_march|floatformat:2}}")
+                        var apr_amount = parseFloat("{{ report.total_paid_april|floatformat:2}}")  +  parseFloat("{{report.total_due_april|floatformat:2}}")
+                        var may_amount = parseFloat("{{ report.total_paid_may|floatformat:2}}")  +  parseFloat("{{report.total_due_may|floatformat:2}}")
+                        var jun_amount = parseFloat("{{ report.total_paid_june}}")  +  parseFloat("{{report.total_due_june}}")
+                        var jul_amount = parseFloat("{{ report.total_paid_july}}")  +  parseFloat("{{report.total_due_july}}")
+                        var aug_amount = parseFloat("{{ report.total_paid_august|floatformat:2}}")  +  parseFloat("{{report.total_due_august|floatformat:2}}")
+                        var sept_amount = parseFloat("{{ report.total_paid_september|floatformat:2}}")  + parseFloat("{{report.total_due_september|floatformat:2}}")
+                        var oct_amount = parseFloat("{{ report.total_paid_october|floatformat:2}}")  +  parseFloat("{{report.total_due_october|floatformat:2}}")
+                        var nov_amount = parseFloat("{{ report.total_paid_november|floatformat:2}}")  +  parseFloat("{{report.total_due_november|floatformat:2}}")
+                        var dec_amount = parseFloat("{{ report.total_paid_december|floatformat:2}}")  +  parseFloat("{{report.total_due_december|floatformat:2}}")
+                        
+                        document.getElementById("jan").innerHTML = "Php." + CurrencyConverter(jan_amount)
+                        document.getElementById("feb").innerHTML = "Php." + CurrencyConverter(feb_amount)
+                        document.getElementById("mar").innerHTML = "Php." + CurrencyConverter(mar_amount)
+                        document.getElementById("apr").innerHTML = "Php." + CurrencyConverter(apr_amount)
+                        document.getElementById("may").innerHTML = "Php." + CurrencyConverter(may_amount)
+                        document.getElementById("jun").innerHTML = "Php." + CurrencyConverter(jun_amount)
+                        document.getElementById("jul").innerHTML = "Php." + CurrencyConverter(jul_amount)
+                        document.getElementById("aug").innerHTML = "Php." + CurrencyConverter(aug_amount)
+                        document.getElementById("sept").innerHTML = "Php." + CurrencyConverter(sept_amount)
+                        document.getElementById("oct").innerHTML = "Php." + CurrencyConverter(oct_amount)
+                        document.getElementById("nov").innerHTML = "Php." + CurrencyConverter(nov_amount)
+                        document.getElementById("dec").innerHTML = "Php." + CurrencyConverter(dec_amount)
+
+                        var jan_amount1 = parseFloat("{{ report.total_due_january|floatformat:2}}") 
+                        var feb_amount1 = parseFloat("{{ report.total_due_february|floatformat:2}}")  
+                        var mar_amount1 = parseFloat("{{ report.total_due_march|floatformat:2}}") 
+                        var apr_amount1 = parseFloat("{{ report.total_due_april|floatformat:2}}") 
+                        var may_amount1 = parseFloat("{{ report.total_due_may|floatformat:2}}")  
+                        var jun_amount1 = parseFloat("{{ report.total_due_june}}")  
+                        var jul_amount1 = parseFloat("{{ report.total_due_july}}")  
+                        var aug_amount1 = parseFloat("{{ report.total_due_august|floatformat:2}}")  
+                        var sept_amount1 = parseFloat("{{ report.total_due_september|floatformat:2}}")  
+                        var oct_amount1 = parseFloat("{{ report.total_due_october|floatformat:2}}")  
+                        var nov_amount1 = parseFloat("{{ report.total_due_november|floatformat:2}}")  
+                        var dec_amount1 = parseFloat("{{ report.total_due_december|floatformat:2}}")  
+
+                        document.getElementById("jan1").innerHTML = "Php." + CurrencyConverter(jan_amount1)
+                        document.getElementById("feb1").innerHTML = "Php." + CurrencyConverter(feb_amount1)
+                        document.getElementById("mar1").innerHTML = "Php." + CurrencyConverter(mar_amount1)
+                        document.getElementById("apr1").innerHTML = "Php." + CurrencyConverter(apr_amount1)
+                        document.getElementById("may1").innerHTML = "Php." + CurrencyConverter(may_amount1)
+                        document.getElementById("jun1").innerHTML = "Php." + CurrencyConverter(jun_amount1)
+                        document.getElementById("jul1").innerHTML = "Php." + CurrencyConverter(jul_amount1)
+                        document.getElementById("aug1").innerHTML = "Php." + CurrencyConverter(aug_amount1)
+                        document.getElementById("sept1").innerHTML = "Php." + CurrencyConverter(sept_amount1)
+                        document.getElementById("oct1").innerHTML = "Php." + CurrencyConverter(oct_amount1)
+                        document.getElementById("nov1").innerHTML = "Php." + CurrencyConverter(nov_amount1)
+                        document.getElementById("dec1").innerHTML = "Php." + CurrencyConverter(dec_amount1)
+
+                        var jan_amount2 = parseFloat("{{ report.total_paid_january|floatformat:2}}") 
+                        var feb_amount2 = parseFloat("{{ report.total_paid_february|floatformat:2}}")  
+                        var mar_amount2 = parseFloat("{{ report.total_paid_march|floatformat:2}}") 
+                        var apr_amount2 = parseFloat("{{ report.total_paid_april|floatformat:2}}") 
+                        var may_amount2 = parseFloat("{{ report.total_paid_may|floatformat:2}}")  
+                        var jun_amount2 = parseFloat("{{ report.total_paid_june}}")  
+                        var jul_amount2 = parseFloat("{{ report.total_paid_july}}")  
+                        var aug_amount2 = parseFloat("{{ report.total_paid_august|floatformat:2}}")  
+                        var sept_amount2 = parseFloat("{{ report.total_paid_september|floatformat:2}}")  
+                        var oct_amount2 = parseFloat("{{ report.total_paid_october|floatformat:2}}")  
+                        var nov_amount2 = parseFloat("{{ report.total_paid_november|floatformat:2}}")  
+                        var dec_amount2 = parseFloat("{{ report.total_paid_december|floatformat:2}}")  
+
+                        document.getElementById("jan2").innerHTML = "Php." + CurrencyConverter(jan_amount2)
+                        document.getElementById("feb2").innerHTML = "Php." + CurrencyConverter(feb_amount2)
+                        document.getElementById("mar2").innerHTML = "Php." + CurrencyConverter(mar_amount2)
+                        document.getElementById("apr2").innerHTML = "Php." + CurrencyConverter(apr_amount2)
+                        document.getElementById("may2").innerHTML = "Php." + CurrencyConverter(may_amount2)
+                        document.getElementById("jun2").innerHTML = "Php." + CurrencyConverter(jun_amount2)
+                        document.getElementById("jul2").innerHTML = "Php." + CurrencyConverter(jul_amount2)
+                        document.getElementById("aug2").innerHTML = "Php." + CurrencyConverter(aug_amount2)
+                        document.getElementById("sept2").innerHTML = "Php." + CurrencyConverter(sept_amount2)
+                        document.getElementById("oct2").innerHTML = "Php." + CurrencyConverter(oct_amount2)
+                        document.getElementById("nov2").innerHTML = "Php." + CurrencyConverter(nov_amount2)
+                        document.getElementById("dec2").innerHTML = "Php." + CurrencyConverter(dec_amount2)
+                      } );
+                      </script>
+                        <tr>
+
+                            <td>January</td>
+                            <td id="jan2"></td>
+                            <td id="jan1"></td>
+                            <td id="jan"> </td>
+                          </tr>
+                            <tr>
+                            <td>February</td>
+                            <td id="feb2"></td>
+                            <td id="feb1"></td>
+                            <td id="feb"></td>
+                          </tr>
+                            <tr>
+                            <td>March</td>
+                            <td id="mar2"></td>
+                            <td id="mar1"></td>
+                            <td id="mar"></td>
+                          </tr>
+                            <tr>
+                            <td>April</td>
+                            <td id="apr2"></td>
+                            <td id="apr1"></td>
+                            <td id="apr"></td>
+                          </tr>
+                            <tr>
+                            <td>May</td>
+                            <td id="may2"></td>
+                            <td id="may1"></td>
+                            <td id="may"></td>
+                          </tr>
+                            <tr>
+                            <td>June</td>
+                            <td id="jun2"></td>
+                            <td id="jun1"></td>
+                            <td id="jun"><td>
+                          </tr>
+                            <tr>
+                            <td>July</td>
+                            <td id="jul2"></td>
+                            <td id="jul1"></td>
+                            <td id="jul"></td>
+                          </tr>
+                            <tr>
+                            <td>August</td>
+                            <td id="aug2"></td>
+                            <td id="aug1"></td>
+                            <td id="aug"></td>
+                          </tr>
+                            <tr>
+                            <td>September</td>
+                            <td id="sept2"></td>
+                            <td id="sept1"></td>
+                            <td id="sept"></td>
+                          </tr>
+                            <tr>
+                            <td>October</td>
+                            <td id="oct2"></td>
+                            <td id="oct1"></td>
+                            <td id="oct"></td>
+                            <tr>
+                          <tr>
+                            <td>November</td>
+                            <td id="nov2"></td>
+                            <td id="nov1"></td>
+                            <td id="nov"></td>
+                            </tr>
+                          <tr>
+                            <td>December</td>
+                            <td id="dec2"></td>
+                            <td id="dec1"></td>
+                            <td id="dec"></td>
+
+                        </tr>
+                    </tbody>
+                </table>
+           </div>
+
+      <br>
+      <br>
+    <!--Monthly Report-->
+    <section>
+    <canvas id="monthly_report_collection" width="800" height="150"></canvas>
+    <br>
+    <strong id="totalpaidmonthly">Collection for year {{ defval }}: Php:{{report.total_paid_ytd}}</strong>
+    </section>
+
+    <script>
+      var paid_list = ["{{ report.total_paid_january }}","{{ report.total_paid_february }}","{{ report.total_paid_march }}","{{ report.total_paid_april }}",
+                "{{ report.total_paid_may }}","{{ report.total_paid_june }}","{{ report.total_paid_july }}","{{ report.total_paid_august }}",
+                "{{ report.total_paid_september }}","{{ report.total_paid_october }}","{{ report.total_paid_november }}","{{ report.total_paid_december }}"]
+          var final_paid_list = []
+          for(var i = 0;i < paid_list.length;i++){
+            if(paid_list[i] == 0){
+              final_paid_list.push(null)
+            }else{
+              final_paid_list.push(paid_list[i])
+            }
+          }
+        var chart = new Chart("monthly_report_collection", {
+    type: 'line',
+    data: {
+      labels: ["January", "February", "March", "April","May","June","July","August","September","October","November","December"],
+      datasets: [
+        {
+          fill: false,
+          borderColor: '#20B2AA',
+          tension: 0.1,
+          label: "Collection",
+          backgroundColor: "#3BB9FF",
+          data: final_paid_list,
+        }
+        ]
+        },
+        options: {
+        title: {
+            display: true,
+            text: 'Collection for Year {{ defval }}'
+        }
+        }
+    });
+</script>
+  <br>
+  <br>
+
+
+
+
+
+<section>
+      <canvas id="monthly_report_collectibles" width="800" height="150"></canvas>
+      <br>
+      <strong id="collectiblesmonthly">Collectibles for Year {{ defval }}: Php:{{ report.total_due_ytd}}</strong>
+      <br>
+</section>
+
+<script>
+  var due_list = ["{{ report.total_due_january }}","{{ report.total_due_february }}","{{ report.total_due_march }}","{{ report.total_due_april }}",
+            "{{ report.total_due_may }}","{{ report.total_due_june }}","{{ report.total_due_july }}","{{ report.total_due_august }}",
+            "{{ report.total_due_september }}","{{ report.total_due_october }}","{{ report.total_due_november }}","{{ report.total_due_december }}"]
+  var final_due_list = []
+  for(var i = 0;i < due_list.length;i++){
+    if(due_list[i] == 0){
+      final_due_list.push(null)
+    }else{
+      final_due_list.push(due_list[i])
+    }
+  }
+  var chart = new Chart("monthly_report_collectibles", {
+  type: 'line',
+  data: {
+  labels: ["January", "February", "March", "April","May","June","July","August","September","October","November","December"],
+  datasets: [
+    {
+      fill: false,
+      borderColor: '#20B2AA',
+      tension: 0.1,
+      label: "Collectibles",
+      backgroundColor: "#3BB9FF",
+      data: final_due_list,
+    }
+    ]
+    },
+    options: {
+    title: {
+        display: true,
+        text: 'Collectibles for Year {{ defval }}'
+    }
+    }
+  });
+</script>
+<br>
+<br>
+
+<!--Polar graph Display-->
+
+    <div class="chart-container"  width="550vw"
+    height="550vw" >
+      <br>
+      <br>
+      <br>
+      <br>
+      <div class="col-xs-12">
+        <img class = "img" src="/static/website/img/polarGraphBackground.png">
+        <canvas id="polarArea"  width="550vw"
+        height="550vw"></canvas>
+
+
+      </div>
+    </div>
+
+<script>
+
+
+
+
+//polar Area
+var data = {
+datasets: [{
+  data: [
+    //Anao Dataset
+    "{{anao_record.total_due_ytd}}" - "{{anao_record.total_paid_ytd}}",
+    "{{anao_record.total_due_ytd}}",
+    "{{anao_record.total_paid_ytd}}",
+    //Cagsing Dataset
+    "{{cagsing_record.total_due_ytd}}" - "{{cagsing_record.total_paid_ytd}}",
+    "{{cagsing_record.total_due_ytd}}",
+    "{{cagsing_record.total_paid_ytd}}",
+    //Calabawan Dataset
+    "{{calabawan_record.total_due_ytd}}" - "{{calabawan_record.total_paid_ytd}}",
+    "{{calabawan_record.total_due_ytd}}",
+    "{{calabawan_record.total_paid_ytd}}",
+    //Cambagte Dataset
+    "{{cambagte_record.total_due_ytd}}" - "{{cambagte_record.total_paid_ytd}}",
+    "{{cambagte_record.total_due_ytd}}",
+    "{{cambagte_record.total_paid_ytd}}",
+    //Campisong Dataset
+    "{{campisong_record.total_due_ytd}}" - "{{campisong_record.total_paid_ytd}}",
+    "{{campisong_record.total_due_ytd}}",
+    "{{campisong_record.total_paid_ytd}}",
+    //Cañorong Dataset
+    "{{cañorong_record.total_due_ytd}}" - "{{cañorong_record.total_paid_ytd}}",
+    "{{cañorong_record.total_due_ytd}}",
+    "{{cañorong_record.total_paid_ytd}}",
+    //Guiwanon Dataset
+    "{{guiwanon_record.total_due_ytd}}" - "{{guiwanon_record.total_paid_ytd}}",
+    "{{guiwanon_record.total_due_ytd}}",
+    "{{guiwanon_record.total_paid_ytd}}",
+      //looc Dataset
+    "{{looc_record.total_due_ytd}}" - "{{looc_record.total_paid_ytd}}",
+    "{{looc_record.total_due_ytd}}",
+    "{{looc_record.total_paid_ytd}}",
+      //Malatbo Dataset
+    "{{malatbo_record.total_due_ytd}}" - "{{malatbo_record.total_paid_ytd}}",
+    "{{malatbo_record.total_due_ytd}}",
+    "{{malatbo_record.total_paid_ytd}}",
+      //Mangaco Dataset
+    "{{mangaco_record.total_due_ytd}}" - "{{mangaco_record.total_paid_ytd}}",
+    "{{mangaco_record.total_due_ytd}}",
+    "{{mangaco_record.total_paid_ytd}}",
+      //Palanas Dataset
+    "{{palanas_record.total_due_ytd}}" - "{{palanas_record.total_paid_ytd}}",
+    "{{palanas_record.total_due_ytd}}",
+    "{{palanas_record.total_paid_ytd}}",
+      //Poblacion Dataset
+    "{{poblacion_record.total_due_ytd}}" - "{{poblacion_record.total_paid_ytd}}",
+    "{{poblacion_record.total_due_ytd}}",
+    "{{poblacion_record.total_paid_ytd}}",
+      //Salamanca Dataset
+    "{{salamanca_record.total_due_ytd}}" - "{{salamanca_record.total_paid_ytd}}",
+    "{{salamanca_record.total_due_ytd}}",
+    "{{salamanca_record.total_paid_ytd}}",
+      //San Roque Dataset
+    "{{sanroque_record.total_due_ytd}}" - "{{sanroque_record.total_paid_ytd}}",
+    "{{sanroque_record.total_due_ytd}}",
+    "{{sanroque_record.total_paid_ytd}}",
+  ],
+  backgroundColor: [
+    //Anao Dataset
+      "#f54242",
+      "#20bef7",
+      "#13ed30",
+    //Cagsing Dataset
+      "#f54242",
+      "#20bef7",
+      "#13ed30",
+    //Calabawan Dataset
+      "#f54242",
+      "#20bef7",
+      "#13ed30",
+    //Cambagte Dataset
+      "#f54242",
+      "#20bef7",
+      "#13ed30",
+    //Campisong Dataset
+      "#f54242",
+      "#20bef7",
+      "#13ed30",
+    //Cañorong Dataset
+      "#f54242",
+      "#20bef7",
+      "#13ed30",
+    //Guiwanon Dataset
+      "#f54242",
+      "#20bef7",
+      "#13ed30",
+      //Anao Dataset
+        "#f54242",
+        "#20bef7",
+        "#13ed30",
+      //Cagsing Dataset
+        "#f54242",
+        "#20bef7",
+        "#13ed30",
+      //Calabawan Dataset
+        "#f54242",
+        "#20bef7",
+        "#13ed30",
+      //Cambagte Dataset
+        "#f54242",
+        "#20bef7",
+        "#13ed30",
+      //Campisong Dataset
+        "#f54242",
+        "#20bef7",
+        "#13ed30",
+      //Cañorong Dataset
+        "#f54242",
+        "#20bef7",
+        "#13ed30",
+      //Guiwanon Dataset
+        "#f54242",
+        "#20bef7",
+        "#13ed30",
+  ],
+  label: 'My dataset', // for legend
+}],
+labels: [
+  //Anao Dataset
+    "#13ed30",
+    "#13ed30",
+    "#13ed30",
+  //Cagsing Dataset
+    "#3B5998",
+    "#13ed30",
+    "#13ed30",
+  //Calabawan Dataset
+    "#13ed30",
+    "#13ed30",
+    "#13ed30",
+  //Cambagte Dataset
+    "#a6b1b7",
+    "#13ed30",
+    "#13ed30",
+  //Campisong Dataset
+    "#1da1f2",
+    "#13ed30",
+    "#13ed30",
+  //Cañorong Dataset
+    "#13ed30",
+    "#13ed30",
+    "#13ed30",
+  //Guiwanon Dataset
+    "#13ed30",
+    "#13ed30",
+    "#13ed30",
+    //Anao Dataset
+      "#13ed30",
+      "#13ed30",
+      "#13ed30",
+    //Cagsing Dataset
+      "#3B5998",
+      "#13ed30",
+      "#13ed30",
+    //Calabawan Dataset
+      "#13ed30",
+      "#13ed30",
+      "#13ed30",
+    //Cambagte Dataset
+      "#a6b1b7",
+      "#13ed30",
+      "#13ed30",
+    //Campisong Dataset
+      "#1da1f2",
+      "#13ed30",
+      "#13ed30",
+    //Cañorong Dataset
+      "#13ed30",
+      "#13ed30",
+      "#13ed30",
+    //Guiwanon Dataset
+      "#13ed30",
+      "#13ed30",
+      "#13ed30",
+],
+};
+var ctx = $("#polarArea");
+new Chart(ctx, {
+data: data,
+type: 'polarArea',
+options: {
+  responsive: false,
+  maintainAspectRatio: false,
+legend: {
+  display: false,
+},
+scale: {
+  display: true
+
+}
+}
+});
+</script>
+<!--
+<section>
+    <div class="row">
+      <div class = "col-sm">
+        <div class="form-group">
+          <label for="exampleInputBarangay">Select Barangay</label>
+          <select name="{{ ReqParams.barangay }}" class="form-control" onchange='this.form.submit();'>
+            <option value="{{ brgy_code }}" selected>{{defval_brgycode}} </option>
+            <option value="01">Anao </option>
+            <option value="02">Cagsing</option>
+            <option value="03">Calabawan</option>
+            <option value="04">Cambagte</option>
+            <option value="05">Campisong</option>
+            <option value="06">Cañorong</option>
+            <option value="07">Guiwanon</option>
+            <option value="08">Looc</option>
+            <option value="09">Malatbo</option>
+            <option value="10">Mangaco</option>
+            <option value="11">Palanas</option>
+            <option value="12">Poblacion</option>
+            <option value="13">Salamanca</option>
+            <option value="14">San Roque</option>
+          </select>
+        </div>
+      </div>
+        <div class = "col-sm">
+          <div class="form-group"></div>
+        </div>
+        <div class = "col-sm">
+              <div class="form-group"></div>
+        </div>
+    </div>
+
+
+
+      <canvas id="brgy_monthly_revenue" width="800" height="150"></canvas>
+      <strong>Barangay {{defval_brgycode}} Collection for Year {{ defval }}: Php:{{brgycode.total_paid_ytd}}</strong>
+
+  </section>
+  <script>
+
+  var chart = new Chart("brgy_monthly_revenue", {
+  type: 'line',
+
+  data: {
+    labels: ["January", "February", "March", "April","May","June","July","August","September","October","November","December"],
+    datasets: [
+      {
+        label: "Collection",
+        fill: false,
+        borderColor: 'rgb(75, 192, 192)',
+        tension: 0.1,
+        backgroundColor: "#3090C7",
+        data: ["{{ brgycode.total_paid_january }}","{{ brgycode.total_paid_february }}","{{ brgycode.total_paid_march }}","{{ brgycode.total_paid_april }}",
+              "{{ brgycode.total_paid_may }}","{{ brgycode.total_paid_june }}","{{ brgycode.total_paid_july }}","{{ brgycode.total_paid_august }}",
+              "{{ brgycode.total_paid_september }}","{{ brgycode.total_paid_october }}","{{ brgycode.total_paid_november }}","{{ brgycode.total_paid_december }}"]
+      }
+
+    ]
+  },
+
+  options: {
+    title: {
+      display: true,
+      text: 'Barangay {{defval_brgycode}} Collection This Year',
+    },
+  scales: {
+    xAxes: [{
+      ticks: {
+        beginAtZero: true
+      }
+    }]
+  }
+
+}
+});
+</script>
+<br>
+
+
+
+  <canvas id="brgy_monthly_colletibles" width="800" height="150"></canvas>
+  <br>
+  <strong>Barangay {{defval_brgycode}} Collectibles for Year {{ defval }}: Php:{{brgycode.total_due_ytd}}</strong>
+
+  <script>
+  var chart = new Chart("brgy_monthly_colletibles", {
+  type: 'line',
+
+  data: {
+    labels: ["January", "February", "March", "April","May","June","July","August","September","October","November","December"],
+    datasets: [
+      {
+        label: "Collectibles",
+        fill: false,
+        borderColor: 'rgb(75, 192, 192)',
+        tension: 0.1,
+        backgroundColor: "#3090C7",
+        data: ["{{ brgycode.total_due_january }}","{{ brgycode.total_due_february }}","{{ brgycode.total_due_march }}","{{ brgycode.total_due_april }}",
+              "{{ brgycode.total_due_may }}","{{ brgycode.total_due_june }}","{{ brgycode.total_due_july }}","{{ brgycode.total_due_august }}",
+              "{{ brgycode.total_due_september }}","{{ brgycode.total_due_october }}","{{ brgycode.total_due_november }}","{{ brgycode.total_due_december }}"]
+      }
+
+    ]
+  },
+
+  options: {
+    title: {
+      display: true,
+      text: 'Barangay {{defval_brgycode}} Collectibles This Year',
+    },
+  scales: {
+    xAxes: [{
+      ticks: {
+        beginAtZero: true
+      }
+    }]
+  }
+
+}
+});
+</script>-->
+</section>
+</form>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+</div>
+</div>
+</section>
+<br>
+<br>
+
+
+
+</section>
+</section>
+
+<div class="se-pre-con"></div>
+                  <script>
+                    function load(){
+                      document.getElementsByClassName("se-pre-con").style.display = "block"
+                    }
+                  </script>
+ <!-- js placed at the end of the document so the pages load faster -->
+ <script src="{% static 'website/lib/jquery/jquery.min.js' %}"></script>
+
+ <script src="{% static 'website/lib/bootstrap/js/bootstrap.min.js' %}"></script>
+ <script class="include" type="text/javascript" src="{% static 'website/lib/jquery.dcjqaccordion.2.7.js' %} "></script>
+ <script src="{% static 'website/lib/jquery.scrollTo.min.js' %}"></script>
+ <script src="{% static 'website/lib/jquery.nicescroll.js' %}" type="text/javascript"></script>
+ <script src="{% static 'website/lib/jquery.sparkline.js' %}"></script>
+ <script src="{% static 'website/lib/common-scripts.js' %}"></script>
+ <script type="text/javascript" src="{% static 'website/lib/gritter/js/jquery.gritter.js' %}"></script>
+ <script type="text/javascript" src="{% static 'website/lib/gritter-conf.js' %}"></script>
+ <script>
+  // $(document).ready(function() {
+  //     $('#tablePagination').DataTable();
+  // } );
+
+
+   $(window).on("load",function(){
+       $(".loader-wrapper").fadeOut("milliseconds");
+  });
+
+
+  $(window).on("load",function() {
+  // Animate loader off screen
+  $(".se-pre-con").fadeOut("slow");;
+  });
+  </script>
+</body>
+</html>

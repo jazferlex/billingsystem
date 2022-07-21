@@ -1,0 +1,157 @@
+﻿{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  	<title>Authorize</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+	<link href="https://fonts.googleapis.com/css?family=Lato:300,400,700&display=swap" rel="stylesheet">
+
+	<!-- Favicons -->
+    <link href="{% static 'website/img/favicon.ico' %}" rel="icon">
+    <link href="{% static 'website/img/apple-touch-icon.ico' %}" rel="apple-touch-icon">
+
+	<link rel="stylesheet" href="{% static 'aset/css/bootstrap/bootstrapcdn.css' %}">
+	
+	<link rel="stylesheet" href="{% static 'aset/css/style.css' %}">
+
+	</head>
+	<body class="img js-fullheight" style="background-image: url(static/aset/images/water.jpg);">
+
+
+
+
+	<section class="ftco-section">
+		<div class="container" >
+			<div class="row justify-content-center">
+				<div class="col-md-6 text-center mb-5">
+					<h2 class="heading-section">Login</h2>
+				</div>
+			</div>
+			<div class="row justify-content-center" >
+				<div class="col-md-6 col-lg-4">
+					<div class="login-wrap p-0">
+		      	<h3 class="mb-4 text-center">Enter User Credentials</h3>
+		      	<form action="/" method="POST" class="signin-form">
+					{% csrf_token %}
+
+		      		<div class="form-group">
+						<i  style="color :red;" >{{ context.ErrorMessageId }}</i>
+		      			<input type="text" class="form-control" placeholder="User ID" name = "{{ ReqParams.userid }}" value = "{{ context.userid }}" autofocus required>
+		      		</div>
+	            <div class="form-group">
+					<i  style="color :red;">{{ context.ErrorMessagePass }}</i>
+	              <input id="password-field" type="password" class="form-control" placeholder="Password" name = "{{ ReqParams.PASS }}" value="" required>
+	              <span toggle="#password-field" class="fa fa-fw fa-eye field-icon toggle-password"></span>
+	            </div>
+	            <div class="form-group">
+	            	<button type="submit" class="form-control btn btn-primary submit px-3">Sign In</button>
+	            </div>
+	            <div class="form-group d-md-flex">
+	            	<div class="w-50">
+		            	
+									</label>
+								</div>
+								<div class="w-50 text-md-right">
+									<a href="#" style="color: #fbceb5"  data-toggle="modal" data-target="#staticBackdrop">Forgot Password?</a>
+								</div>
+	            </div>
+	          </form>
+
+	         
+		      </div>
+				</div>
+			</div>
+		</div>
+	</section>
+
+
+
+
+
+
+<!-- Modal1 -->
+<div class="modal fade"  id="staticBackdrop" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true" >
+  <div class="modal-dialog modal-dialog-centered" >
+	<form class="form-login" action="/account-recovery" method="POST">
+		{% csrf_token %}
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="staticBackdropLabel">Account Recovery</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        Enter your e-mail address or User ID to search your account.
+         <br>
+          <br>
+
+      		<div class="form-group">
+      		<input type="text" class="form-control" placeholder="Email/User ID" name = "search_for" value=""  required style="background-color: #6c757d; border: 1px solid transparent;">
+			</div>
+
+
+
+
+
+      </div>
+      <div class="modal-footer">
+      	<button type="submit" value="POST" class="btn btn-primary">Submit</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+       
+      </div>
+    </div>
+	</form>
+  </div>
+</div>
+
+<div class="loader-wrapper">
+	<span class="loader">
+		<img src="{% static '/website/img/loading.gif' %}">
+	</span>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	<script src="{% static 'aset/js/jquery.min.js' %}"></script>
+  <script src="{% static 'aset/js/popper.js' %}"></script>
+  <script src="{% static 'aset/js/bootstrap.min.js' %}"></script>
+  <script src="{% static 'aset/js/main.js' %}"></script>
+
+  <script>
+	$(document).ready(function() {
+	  $('#tablePagination').DataTable( {
+		 "lengthChange": false,
+		 "ordering": false,
+		 "searching": false,
+		 "paging": false,
+		 "info": false,
+	  });
+  } );
+
+  $(window).on("load",function(){
+	  $(".loader-wrapper").fadeOut("milliseconds");
+ });
+  </script>
+</body>
+ 
+
+	</body>
+</html>
+

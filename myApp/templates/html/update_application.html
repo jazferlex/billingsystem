@@ -1,0 +1,322 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="Dashboard">
+    <meta name="keyword" content="Dashboard, Bootstrap, Admin, Template, Theme, Responsive, Fluid, Retina">
+    <title>Ginatilan Water Costumer Services</title>
+
+    <!-- Favicons -->
+    <link href="{% static 'website/img/favicon.ico' %}" rel="icon">
+    <link href="{% static 'website/img/apple-touch-icon.ico' %}" rel="apple-touch-icon">
+
+    <!-- Bootstrap core CSS -->
+    <link href="{% static 'website/lib/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+    <!--external css-->
+    <link href="{% static 'website/lib/font-awesome/css/font-awesome.css' %}" rel="stylesheet" />
+    <link rel="stylesheet" type="text/css" href="{% static '/website/css/zabuto_calendar.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static '/website/lib/gritter/css/jquery.gritter.css' %}" />
+    <!-- Custom styles for this template -->
+    <link href="{% static 'website/css/styles.css' %}" rel="stylesheet">
+    <link href="{% static '/website/css/font.css' %}" rel="stylesheet">
+    <link href="{% static 'website/css/style-responsive.css' %}" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'website/lib/bootstrap/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'website/lib/DataTables/css/mdb.min.css' %}">
+    <link rel="stylesheet" href="{% static 'website/lib/bootstrap/css/ModifiedBootstrap.css' %}">
+    <link rel="stylesheet" href="{% static 'website/lib/DataTables/css/dataTables.bootstrap4.min.css' %}">
+    <script src="{% static 'website/lib/jquery/jquery.min.js' %}"></script>
+    <script src="{% static 'website/lib/DataTables/js/popper.min.js' %}"></script>
+    <script src="{% static 'website/lib/bootstrap/js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'website/lib/DataTables/js/mdb.min.js' %}"></script>
+
+</head>
+
+<body onload="loadchecker()">
+    <section id="container">
+        <!--Header Start-->
+        <header class="header black-bg">
+            <div class="sidebar-toggle-box">
+                <div class="fa fa-bars tooltips" data-placement="right" data-original-title="Toggle Navigation"></div>
+            </div>
+            <!--logo start-->
+            <a href="" class="logo"><b>Ginatilan Water Billing<span> Station</span></b></a>
+            <!--logo end-->
+            
+        </header>
+        <!--Header End-->
+        <!--sidebar start-->
+        <aside>
+            
+            <div id="sidebar" class="nav-collapse ">
+                <!-- sidebar menu start-->
+                <form  method="POST" action="/update-this-application={{applicant.applicantid}}" enctype="multipart/form-data">
+                <ul class="sidebar-menu" id="nav-accordion">
+                    <p class="centered"><a href=""><img src="/static/profilepics/{{applicant.profilepic.name}}" class="img-circle" width="80"></a></p>
+                    <h5 class="centered">{{ applicant.firstname }}</h5>
+
+                    <li class="mt">
+                        <a class="active" href="/costumer-service">
+                            <i class="fa fa-dashboard"></i>
+                            <span>Back</span>
+                        </a>
+                      </li>
+        
+        </aside>
+        <!--sidebar end-->
+        <!--main content start-->
+        <section id="main-content">
+            <section class="wrapper">
+                <!-- DATA Section -->
+                
+                {% csrf_token %}
+                <br>
+                <center><h4>Personal Information</h4></center>
+               
+                <div class = "row">
+                    <div class = "col-sm">
+                      <div class="form-group">
+                        <label for="exampleInputEmail1">Firstname</label>
+                        <input type="text" name="firstname" class="form-control" id="Fname" aria-describedby="fname"  value="{{applicant.firstname}}" placeholder="Firstname" >
+                      </div>
+                    </div>
+                    <div class = "col-sm">
+                      <div class="form-group">
+                        <label for="exampleInputEmail1">Middlename</label>
+                        <input type="text" name="{{ ReqParams.mname }}" class="form-control" id="Mname" aria-describedby="mname"  value="{{applicant.middlename}}" placeholder="Middlename" >
+                      </div>
+                    </div>
+                    <div class = "col-sm">
+                      <div class="form-group">
+                        <label for="exampleInputEmail1">Lastname</label>
+                        <input type="text"  name="{{ ReqParams.lname }}" class="form-control" id="Lname" aria-describedby="lname" value="{{applicant.lastname}}" placeholder="Lastname" >
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class = "row">
+                    <div class = "col-sm">
+                        <div class="form-group">
+                            <label for="exampleInputsex">Sex</label>
+                            <select class="form-control" name="{{ ReqParams.sex }}">
+                                <option selected value="{{ ReqParams.maleval }}">{{ ReqParams.maleval }}</option>
+                              <option value="{{ ReqParams.maleval }}">Male</option>
+                              <option value="{{ ReqParams.femaleval }}">Female</option>
+                            </select>
+                          </div>
+                    </div>
+                    <div class = "col-sm">
+                      <div class="form-group">
+                        
+                      </div>
+                    </div>
+                    <div class = "col-sm">
+                      <div class="form-group">
+                        
+                    </div>
+                  </div>
+                  </div>
+
+                  
+
+                   <div class="form-group">
+                     <label for="exampleInputPassword1">Mobile Number <i style="color: red;" id="mobile1_error"></i></label>
+                     <input type="text" name="{{ ReqParams.mobile1 }}" class="form-control" id="mobile1" aria-describedby="mobile1"  value="{{applicant.mobilenumber}}" placeholder="Mobile Numbmer "  >
+                   </div>
+
+                   <div class="form-group">
+                    <label for="exampleInputPassword1" >Mobile Number <i style="color: red;" id="mobile2_error" ></i></label>
+                    <input type="text" name="{{ ReqParams.mobile2 }}" class="form-control" id="mobile2" aria-describedby="mobile2"  value="{{applicant.mobilenumber2}}" placeholder="Alternate Mobile Number"  >
+                  </div>
+                  
+                  <div class="form-group">
+                    <label for="exampleInputPassword1">Email</label>
+                    <input type="email" name="{{ ReqParams.email }}" class="form-control" id="email" aria-describedby="email"  value="{{applicant.emailaddress}}" placeholder="Email Address" >
+                  </div>
+
+                  <div class="form-group">
+                    <label for="exampleInputPassword1">Birthdate</label>
+                    <input type="date" name="{{ ReqParams.birthday }}" class="form-control" id="birthday" aria-describedby="birthday"  value="{{applicant.birthday}}" placeholder="Birthdate" >
+                  </div>
+
+
+                  <div class="form-group">
+                    <label for="exampleInputsitio">Sitio</label>
+                    <input type="text" name="{{ ReqParams.sitio }}" class="form-control" id="sitio" aria-describedby="sitio"  value="{{applicant.sitio}}" placeholder="Sitio" >
+                  </div>
+
+                  <div class="form-group">
+                    <label for="exampleInputBarangay">Home Address</label>
+                    <select name="{{ ReqParams.barangay }}" class="form-control" > 
+                    <option value="{{applicant.barangay_residence}}">{{applicant.homeaddress}}</option>       
+                     <option value="1">Anao,Ginatilan,Cebu </option>
+                     <option value="2">Cagsing,Ginatilan,Cebu</option>
+                     <option value="3">Calabawan,Ginatilan,Cebu</option>
+                     <option value="4">Cambagte,Ginatilan,Cebu</option>
+                     <option value="5">Campisong,Ginatilan,Cebu</option>                         
+                     <option value="6">Cañorong,Ginatilan,Cebu</option>
+                     <option value="7">Guiwanon,Ginatilan,Cebu</option>
+                     <option value="8">Looc,Ginatilan,Cebu</option>
+                     <option value="9">Malatbo,Ginatilan,Cebu</option>
+                     <option value="10">Mangaco,Ginatilan,Cebu</option>
+                     <option value="11">Palanas,Ginatilan,Cebu</option>
+                     <option value="12">Poblacion,Ginatilan,Cebu</option>
+                     <option value="13">Salamanca,Ginatilan,Cebu</option>
+                     <option value="14">San Roque,Ginatilan,Cebu</option>                        
+                    </select>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="exampleInputBarangay">Address of Installation</label>
+                    <select name="{{ ReqParams.barangay_installation }}" class="form-control" > 
+                    <option value="{{applicant.barangay_installation}}">{{applicant.address_installation}}</option>       
+                     <option value="1">Anao,Ginatilan,Cebu </option>
+                     <option value="2">Cagsing,Ginatilan,Cebu</option>
+                     <option value="3">Calabawan,Ginatilan,Cebu</option>
+                     <option value="4">Cambagte,Ginatilan,Cebu</option>
+                     <option value="5">Campisong,Ginatilan,Cebu</option>                         
+                     <option value="6">Cañorong,Ginatilan,Cebu</option>
+                     <option value="7">Guiwanon,Ginatilan,Cebu</option>
+                     <option value="8">Looc,Ginatilan,Cebu</option>
+                     <option value="9">Malatbo,Ginatilan,Cebu</option>
+                     <option value="10">Mangaco,Ginatilan,Cebu</option>
+                     <option value="11">Palanas,Ginatilan,Cebu</option>
+                     <option value="12">Poblacion,Ginatilan,Cebu</option>
+                     <option value="13">Salamanca,Ginatilan,Cebu</option>
+                     <option value="14">San Roque,Ginatilan,Cebu</option>                        
+                    </select>
+                  </div>
+
+                  <div class="form-group">
+                    <label>Upload File</label>
+                    <input type="file" name="files" class="btn btn-primary" multiple>
+                  </div>
+
+                  <br>
+                  <br>
+
+                  <div class="form-group">
+                            <button type="submit" class="btn btn-primary" id="submitbtn" >Update Info</button>
+                  </div>
+
+                  <br>
+                  <br>
+                  <section>
+                    <center><h2>Approvals</h2></center>
+                    <br>
+                    <div class = "row">
+                      <div class = "col-sm">
+                        <div class="form-group">
+                          <label for="check1">Checker Approval</label>
+                          <input type="checkbox" name="check1"  id="checker" aria-describedby=""  value="" disabled>
+                        </div>
+                      </div>
+                      <div class = "col-sm">
+                        <div class="form-group">
+                          <label for="check2">Engineer's Approval</label>
+                          <input type="checkbox" name="check2"  id="engineer" aria-describedby=""  value="" disabled>
+                        </div>
+                      </div>
+                      <div class = "col-sm">
+                        <div class="form-group">
+                          <label for="check3">Mayor's Approval</label>
+                          <input type="checkbox"  name="check3" id="mayor" aria-describedby="" value="" disabled>
+                        </div>
+                      </div>
+                    </div>
+                    <center><h2>Requirements Uploaded</h2></center>
+
+                      
+                      {% if required_image %}
+                      <p><h3>Images</h3></p>
+                      <div class="table-responsive">               
+                      <table class="table m-0">
+                         
+                              {% for img in required_image %}
+                              <tr>
+                                  <td>
+                                      <a href="/static/images_required/{{img}}" target="_blank"><img src="/static/images_required/{{img}}"  width="300vw" height="400vw"></a>
+                                    
+                                  </td>
+                                  <td>
+                                      <a href="/delete-this-image={{applicant.applicantid}}/{{img}}">Delete</a>
+                                  </td>
+                              </tr>
+                              {%endfor%}
+                              {%endif%}
+                      </table>
+                      <br>
+                      <br>
+                      <br>
+                      <br>
+                      </div>
+                    
+                     <div class="table-responsive" >               
+                      <table class="table m-0">
+                          
+                              {% for file in required_files %}
+                              <tr>
+                                  <td>
+                                      <a href="/static/documents_required/{{file}}" target="_blank">{{file}}</a>
+                                  </td>
+                                  <td>
+                                      <a href="/delete-this-file={{applicant.applicantid}}/{{file}}">Delete</a>
+                                  </td>
+                              </tr>
+                              {%endfor%}
+                          </table>        
+                           
+                      <br>
+                      <br>
+                      <br>
+                      <br>
+                    </div>
+                  </section>
+                    <script>
+                        function loadchecker(){
+                          document.getElementById("checker").checked = false;
+                          document.getElementById("engineer").checked = false;
+                          document.getElementById("mayor").checked = false;
+                          var checker = "{{applicant.checker_approval}}";
+                          var engineer = "{{applicant.engineer_approval}}";
+                          var mayor = "{{applicant.mayor_approval}}";
+                          
+                            if(checker == 1){
+                                document.getElementById("checker").checked = true;
+                            }
+                            if(engineer == 1){
+                              document.getElementById("engineer").checked = true;
+                            }
+                            if(mayor == 1){
+                              document.getElementById("mayor").checked = true;
+                            }
+                        }
+                    </script>
+              </div> 
+              <br>
+              <br>
+  
+                </form>
+            
+            </section>
+        </section>
+        <!--main content end-->
+    </section>
+    <!-- js placed at the end of the document so the pages load faster -->
+    <script src="{% static 'website/lib/jquery/jquery.min.js' %}"></script>
+
+    <script src="{% static 'website/lib/bootstrap/js/bootstrap.min.js' %}"></script>
+    <script class="include" type="text/javascript" src="{% static 'website/lib/jquery.dcjqaccordion.2.7.js' %} "></script>
+    <script src="{% static 'website/lib/jquery.scrollTo.min.js' %}"></script>
+    <script src="{% static 'website/lib/jquery.nicescroll.js' %}" type="text/javascript"></script>
+    <script src="{% static 'website/lib/jquery.sparkline.js' %}"></script>
+    <script src="{% static 'website/lib/common-scripts.js' %}"></script>
+    <script type="text/javascript" src="{% static 'website/lib/gritter/js/jquery.gritter.js' %}"></script>
+    <script type="text/javascript" src="{% static 'website/lib/gritter-conf.js' %}"></script>
+
+</body>
+
+</html>
