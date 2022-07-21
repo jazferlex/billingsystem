@@ -636,7 +636,8 @@ def OldSystemRecordDisplay(request,id):
 
    #for record that has been updated/posted on this new System
    if year_request == None:
-      new_record =  usage_record.objects.get(pk = account.accountinfoid + "-" + str(defval_year))print(new_record.reading_date_jan)
+      new_record =  usage_record.objects.get(pk = account.accountinfoid + "-" + str(defval_year))
+      print(new_record.reading_date_jan)
       datelist = new_record.reading_date_jan.split('-')
       print(datelist)
       yyyy = datelist[0]
