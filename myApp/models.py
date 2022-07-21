@@ -81,6 +81,7 @@ class usage_record(models.Model):
     #january
     reading_jan = models.FloatField(default = 0)
     reading_date_jan = models.CharField(max_length=45,default = " ")
+    reading_date_jan_formatted = models.BooleanField(default=False)
     reading_postedby_jan = models.CharField(max_length=45,default = " ")
     usage_jan = models.FloatField(default = 0)
     penalty_jan = models.FloatField(default = 0)
@@ -96,6 +97,7 @@ class usage_record(models.Model):
     #february
     reading_feb = models.FloatField(default = 0)
     reading_date_feb = models.CharField(max_length=45)
+    reading_date_feb_formatted = models.BooleanField(default=False)
     reading_postedby_feb = models.CharField(max_length=45)
     usage_feb = models.FloatField(default = 0)
     penalty_feb = models.FloatField(default = 0)
@@ -111,6 +113,7 @@ class usage_record(models.Model):
     #march
     reading_mar = models.FloatField(default = 0)
     reading_date_mar = models.CharField(max_length=45)
+    reading_date_mar_formatted = models.BooleanField(default=False)
     reading_postedby_mar = models.CharField(max_length=45)
     usage_mar = models.FloatField(default = 0)
     penalty_mar = models.FloatField(default = 0)
@@ -126,6 +129,7 @@ class usage_record(models.Model):
     #april
     reading_apr = models.FloatField(default = 0)
     reading_date_apr = models.CharField(max_length=45)
+    reading_date_apr_formatted = models.BooleanField(default=False)
     reading_postedby_apr = models.CharField(max_length=45)
     usage_apr = models.FloatField(default = 0)
     penalty_apr = models.FloatField(default = 0)
@@ -141,6 +145,7 @@ class usage_record(models.Model):
     #may
     reading_may = models.FloatField(default = 0)
     reading_date_may = models.CharField(max_length=45)
+    reading_date_may_formatted = models.BooleanField(default=False)
     reading_postedby_may = models.CharField(max_length=45)
     usage_may = models.FloatField(default = 0)
     penalty_may = models.FloatField(default = 0)
@@ -156,6 +161,7 @@ class usage_record(models.Model):
     #june
     reading_jun = models.FloatField(default = 0)
     reading_date_jun = models.CharField(max_length=45)
+    reading_date_jun_formatted = models.BooleanField(default=False)
     reading_postedby_jun = models.CharField(max_length=45)
     usage_jun = models.FloatField(default = 0)
     penalty_jun = models.FloatField(default = 0)
@@ -171,6 +177,7 @@ class usage_record(models.Model):
     #july
     reading_jul = models.FloatField(default = 0)
     reading_date_jul = models.CharField(max_length=45)
+    reading_date_jul_formatted = models.BooleanField(default=False)
     reading_postedby_jul = models.CharField(max_length=45)
     usage_jul = models.FloatField(default = 0)
     penalty_jul = models.FloatField(default = 0)
@@ -186,6 +193,7 @@ class usage_record(models.Model):
     #august
     reading_aug = models.FloatField(default = 0)
     reading_date_aug = models.CharField(max_length=45)
+    reading_date_aug_formatted = models.BooleanField(default=False)
     reading_postedby_aug = models.CharField(max_length=45)
     usage_aug = models.FloatField(default = 0)
     penalty_aug = models.FloatField(default = 0)
@@ -201,6 +209,7 @@ class usage_record(models.Model):
     #september
     reading_sept = models.FloatField(default = 0)
     reading_date_sept = models.CharField(max_length=45)
+    reading_date_sept_formatted = models.BooleanField(default=False)
     reading_postedby_sept = models.CharField(max_length=45)
     usage_sept = models.FloatField(default = 0)
     penalty_sept = models.FloatField(default = 0)
@@ -216,6 +225,7 @@ class usage_record(models.Model):
     #october
     reading_oct = models.FloatField(default = 0)
     reading_date_oct = models.CharField(max_length=45)
+    reading_date_oct_formatted = models.BooleanField(default=False)
     reading_postedby_oct = models.CharField(max_length=45)
     usage_oct = models.FloatField(default = 0)
     penalty_oct = models.FloatField(default = 0)
@@ -231,6 +241,7 @@ class usage_record(models.Model):
     #november
     reading_nov = models.FloatField(default = 0)
     reading_date_nov = models.CharField(max_length=45)
+    reading_date_nov_formatted = models.BooleanField(default=False)
     reading_postedby_nov = models.CharField(max_length=45)
     usage_nov = models.FloatField(default = 0)
     penalty_nov = models.FloatField(default = 0)
@@ -246,6 +257,7 @@ class usage_record(models.Model):
     #december
     reading_dec = models.FloatField(default = 0)
     reading_date_dec = models.CharField(max_length=45)
+    reading_date_dec_formatted = models.BooleanField(default=False)
     reading_postedby_dec = models.CharField(max_length=45)
     usage_dec = models.FloatField(default = 0)
     penalty_dec = models.FloatField(default = 0)

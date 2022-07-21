@@ -638,14 +638,128 @@ def OldSystemRecordDisplay(request,id):
    if year_request == None:
       new_record =  usage_record.objects.get(pk = account.accountinfoid + "-" + str(defval_year))
       print(new_record.reading_date_jan)
-      datelist = new_record.reading_date_jan.split('-')
-      print(datelist)
-      yyyy = datelist[0]
-      dd = datelist[1]
-      mm = datelist[2]
-      newdatestr = mm+'-'+dd+'-'+yyyy
-      new_record.reading_date_jan = newdatestr
-      new_record.save()
+      #date formatter --jaz--
+      if new_record.reading_date_jan.__contains__('-') and not new_record.reading_date_jan_formatted:
+         datelist = new_record.reading_date_jan.split('-')
+         print(datelist)
+         yyyy = datelist[0]
+         dd = datelist[1]
+         mm = datelist[2]
+         newdatestr = mm+'-'+dd+'-'+yyyy
+         new_record.reading_date_jan = newdatestr
+         new_record.reading_date_jan_formatted = 1
+         new_record.save()
+
+      if new_record.reading_date_feb.__contains__('-') and not new_record.reading_date_feb_formatted:
+         datelist = new_record.reading_date_feb.split('-')
+         print(datelist)
+         yyyy = datelist[0]
+         dd = datelist[1]
+         mm = datelist[2]
+         newdatestr = mm+'-'+dd+'-'+yyyy
+         new_record.reading_date_feb = newdatestr
+         new_record.reading_date_feb_formatted = 1
+         new_record.save()
+      if new_record.reading_date_mar.__contains__('-') and not new_record.reading_date_mar_formatted:
+         datelist = new_record.reading_date_mar.split('-')
+         print(datelist)
+         yyyy = datelist[0]
+         dd = datelist[1]
+         mm = datelist[2]
+         newdatestr = mm+'-'+dd+'-'+yyyy
+         new_record.reading_date_mar = newdatestr
+         new_record.reading_date_mar_formatted = 1
+         new_record.save()
+      if new_record.reading_date_apr.__contains__('-') and not new_record.reading_date_apr_formatted:
+         datelist = new_record.reading_date_apr.split('-')
+         print(datelist)
+         yyyy = datelist[0]
+         dd = datelist[1]
+         mm = datelist[2]
+         newdatestr = mm+'-'+dd+'-'+yyyy
+         new_record.reading_date_apr = newdatestr
+         new_record.reading_date_apr_formatted = 1
+         new_record.save()
+      if new_record.reading_date_may.__contains__('-') and not new_record.reading_date_may_formatted:
+         datelist = new_record.reading_date_may.split('-')
+         print(datelist)
+         yyyy = datelist[0]
+         dd = datelist[1]
+         mm = datelist[2]
+         newdatestr = mm+'-'+dd+'-'+yyyy
+         new_record.reading_date_may = newdatestr
+         new_record.reading_date_may_formatted = 1
+         new_record.save()
+      if new_record.reading_date_jun.__contains__('-') and not new_record.reading_date_jun_formatted:
+         datelist = new_record.reading_date_jun.split('-')
+         print(datelist)
+         yyyy = datelist[0]
+         dd = datelist[1]
+         mm = datelist[2]
+         newdatestr = mm+'-'+dd+'-'+yyyy
+         new_record.reading_date_jun = newdatestr
+         new_record.reading_date_jun_formatted = 1
+         new_record.save()
+      if new_record.reading_date_jul.__contains__('-') and not new_record.reading_date_jul_formatted:
+         datelist = new_record.reading_date_jul.split('-')
+         print(datelist)
+         yyyy = datelist[0]
+         dd = datelist[1]
+         mm = datelist[2]
+         newdatestr = mm+'-'+dd+'-'+yyyy
+         new_record.reading_date_jul = newdatestr
+         new_record.reading_date_jul_formatted = 1
+         new_record.save()
+      if new_record.reading_date_aug.__contains__('-') and not new_record.reading_date_aug_formatted:
+         datelist = new_record.reading_date_aug.split('-')
+         print(datelist)
+         yyyy = datelist[0]
+         dd = datelist[1]
+         mm = datelist[2]
+         newdatestr = mm+'-'+dd+'-'+yyyy
+         new_record.reading_date_aug = newdatestr
+         new_record.reading_date_aug_formatted = 1
+         new_record.save()
+      if new_record.reading_date_sept.__contains__('-') and not new_record.reading_date_sept_formatted:
+         datelist = new_record.reading_date_sept.split('-')
+         print(datelist)
+         yyyy = datelist[0]
+         dd = datelist[1]
+         mm = datelist[2]
+         newdatestr = mm+'-'+dd+'-'+yyyy
+         new_record.reading_date_sept = newdatestr
+         new_record.reading_date_sept_formatted = 1
+         new_record.save()
+      if new_record.reading_date_oct.__contains__('-') and not new_record.reading_date_oct_formatted:
+         datelist = new_record.reading_date_oct.split('-')
+         print(datelist)
+         yyyy = datelist[0]
+         dd = datelist[1]
+         mm = datelist[2]
+         newdatestr = mm+'-'+dd+'-'+yyyy
+         new_record.reading_date_oct = newdatestr
+         new_record.reading_date_oct_formatted = 1
+         new_record.save()
+      if new_record.reading_date_nov.__contains__('-') and not new_record.reading_date_nov_formatted:
+         datelist = new_record.reading_date_nov.split('-')
+         print(datelist)
+         yyyy = datelist[0]
+         dd = datelist[1]
+         mm = datelist[2]
+         newdatestr = mm+'-'+dd+'-'+yyyy
+         new_record.reading_date_nov = newdatestr
+         new_record.reading_date_nov_formatted = 1
+         new_record.save()
+      if new_record.reading_date_dec.__contains__('-') and not new_record.reading_date_dec_formatted:
+         datelist = new_record.reading_date_dec.split('-')
+         print(datelist)
+         yyyy = datelist[0]
+         dd = datelist[1]
+         mm = datelist[2]
+         newdatestr = mm+'-'+dd+'-'+yyyy
+         new_record.reading_date_dec = newdatestr
+         new_record.reading_date_dec_formatted = 1
+         new_record.save()
    else:
       new_record = None
 
