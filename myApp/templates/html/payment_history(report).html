@@ -110,7 +110,6 @@
 
 
 
-
                 <!-- DATA Section -->
 
                 <div class="se-pre-con"></div>
@@ -226,7 +225,6 @@
                           <tbody>
                             {% for payment in  retval %}
                               <tr>
-
                                   <th scope="row">Php.{{ payment.amount|floatformat:2 }}</th>
                                   <th scope="row">{{ payment.date }}</th>
                                   <td>{{payment.time}}</td>
@@ -235,7 +233,6 @@
                                   <td>{{ payment.consumer }}</td>
                                   <td>{{payment.accountinfoid}}</td>
                                   <td>{{ payment.meternumber }}</td>
-
                               </tr>
                               {%endfor %}
                           </tbody>
@@ -244,7 +241,6 @@
                  
                  <br>
                  <br>
-
 
         </form>
             </section>
@@ -292,7 +288,6 @@
              $(".loader-wrapper").fadeOut("milliseconds");
         });
        {% endcomment %}
-
         $(window).on("load",function() {
         // Animate loader off screen
         $(".se-pre-con").fadeOut("slow");;

@@ -52,7 +52,6 @@ class account_info(models.Model):
     consumerid = models.ForeignKey(consumers_info,on_delete = models.CASCADE)
 
 
-
     def __str__(self):
         return self.accountinfoid
 
@@ -259,7 +258,6 @@ class usage_record(models.Model):
     txrefnum_dec = models.CharField(max_length=45,default = " ")
     ior_dec = models.CharField(max_length=50,default=" ")
     amountpaid_str_dec = models.TextField(default="")
-
 
     class Meta:
         db_table = "accountrecord"
@@ -506,7 +504,6 @@ class MeterReadingModification(models.Model):
     meternumber = models.CharField(max_length = 50)
     name = models.CharField(max_length = 50)
     postedby = models.CharField(max_length = 50,default = "")
-
 
     class Meta:
         db_table = "meterreadingmodification_table"

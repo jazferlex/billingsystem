@@ -181,7 +181,6 @@ def pay_bill(request,id):
    account_list = []
    getID = account_info.objects.get(accountinfoid = id)
    account_list.append(getID)
-
    idstr = id + "-" + str(current_date.year)
    pkstr = usage_record.objects.get(accountid = idstr)
    usage_list.append(pkstr)
@@ -255,7 +254,6 @@ def pay_bill(request,id):
       get_usageid.datepaid_history = datestr
       or_numberstr = or_number + "|" + get_usageid.or_number_history
       get_usageid.or_number_history = or_numberstr
-
 
       #excess payment and  commulative bill
       if float(amountpaid) > get_usageid.commulative_bill:
@@ -396,7 +394,6 @@ def pay_bill(request,id):
                   yearly_record.total_due_ytd -= float(tobePosted)
 
                yearly_record.save()
-
                get_usageid.save()
 
       #p March
@@ -419,7 +416,6 @@ def pay_bill(request,id):
                      tobePosted = float(amountpaid)
                      get_usageid.paidamt_mar += tobePosted
                      amountpaid = 0
-
 
 
                #March
@@ -999,7 +995,6 @@ def pay_bill(request,id):
                      tobePosted = float(amountpaid)
                      get_usageid.paidamt_dec += tobePosted
                      amountpaid = 0
-
 
 
                get_usageid.paidamt_dec += float(tobePosted)
@@ -1818,7 +1813,6 @@ def pay_bill(request,id):
                yearly_record.save()
 
                get_usageid.save()
-
 
       pathstr = "/source_access"  + "/Payment=" + id
       return HttpResponseRedirect((pathstr))

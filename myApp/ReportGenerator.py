@@ -875,7 +875,6 @@ def accountrecord(request):
    current_date = date.today()
 
 
-
    #create year
 
 

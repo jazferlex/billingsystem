@@ -92,7 +92,6 @@
                     <p class="centered"><a href=""><img src="{% static 'website/img/ui-admin.jpg' %}" class="img-circle" width="80"></a></p>
                     <h5 class="centered">{{ context.name }}</h5>
 
-
                         <div id="billspayment" >
                             <li class="sub-menu" >
                                 <a href="/source_access/Payment={{account.accountinfoid}}" class="active">
@@ -114,7 +113,6 @@
 
                 <form class="form"  action="/source_access/prev-record={{account.accountinfoid}}" method="POST" >
                     {%csrf_token%}
-
                     <!--Consumer Info-->
                     <div class="loader-wrapper">
                         <span class="loader">
@@ -137,14 +135,12 @@
                             </thead>
                             <tbody>
                                 <tr>
-
                                     <td >{{ account.accountinfoid }}</td>
                                     {% comment %} <td>{{ consumer.oldconsumerid }}</td> {% endcomment %}
                                     <td>{{ oldcon.meternumber }}</td>
                                     <td>{{ consumer.firstname }} {{ consumer.middlename }}. {{consumer.lastname}} </td>
                                     <td>{{ consumer.homeaddress }}</td>
                                 </tr>
-
                             </tbody>
 
                         </table>
@@ -169,7 +165,6 @@
                             <option value="{{ year }}">{{year}}</option>
                               {%endfor%}
                             </select>
-
                           <noscript><input type="submit" value="Submit"></noscript>
                   </div>
                     <div class = "col-sm">
@@ -413,7 +408,6 @@
      <script src="{% static 'website/lib/DataTables/js/dataTables.bootstrap4.min.js' %}"></script>
 
         <script>
-
 
         $(window).on("load",function(){
             $(".loader-wrapper").fadeOut("milliseconds");
