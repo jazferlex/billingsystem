@@ -641,8 +641,8 @@ def OldSystemRecordDisplay(request,id):
       datelist = new_record.reading_date_jan.split('-')
       print(datelist)
       yyyy = datelist[0]
-      mm = datelist[1]
-      dd = datelist[2]
+      dd = datelist[1]
+      mm = datelist[2]
       newdatestr = mm+'-'+dd+'-'+yyyy
       new_record.reading_date_jan = newdatestr
       new_record.save()
