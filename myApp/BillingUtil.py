@@ -25,7 +25,6 @@ import string
 import random
 from django.template.loader import get_template, render_to_string
 from django.views import View
-from xhtml2pdf import pisa
 import binascii
 from datetime import datetime, timedelta
 

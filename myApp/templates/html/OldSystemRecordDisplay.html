@@ -121,7 +121,7 @@
                     </div>
 
                         <br>
-                        <table  class="table table-striped table-bordered" style="width:100%" >
+                        <table id="doc_header" class="table table-striped table-bordered" style="width:100%" >
 
 
                             <thead>
@@ -207,18 +207,21 @@
                     })
 
                     var y = 20;
-                    var x = 20;
-
+                    var x = 40;
+                    doc.setLineWidth(2);
+                    doc.setFontSize(11);
+                    doc.autoTable({
+                        html: '#doc_header',
+                        startY: y=y+20,
+                    })
+                    doc.text(400, y=y+80, "Total Balance: Php {{commulative_bill|floatformat:2}}");
                     doc.setLineWidth(2);
                     doc.setFontSize(14);
-                    doc.text(250, y = y + 30,  "");
-                    doc.text(250, y = y + 30,  "Usage Record");
-
-                    //doc.text(200, x = x + 50, val);
+                    doc.text(250, y,  "Usage Record ({{defval_year}})");
 
                     doc.autoTable({
                         html: '.this_table',
-                        startY: 100,
+                        startY: y=y+20,
                         theme: 'grid',
                         columnStyles: {
                             0: {
@@ -227,12 +230,12 @@
                             1: {
                                 cellWidth: 70,
                             },
-                            2: {
+                            4: {
                                 cellWidth: 70,
                             }
                         },
                         styles: {
-                            minCellHeight: 50
+                            minCellHeight: 45
 
                         }
                     })
@@ -252,13 +255,12 @@
                             <tr>
                                 <td>Month</td>
                                 <td>Reading</td>
-                                <td>Reading Date</td>
+                                <td>Reading Date<br>(mm-dd-yyyy)</td>
                                 <td>Consumption</td>
                                 <td>Total Bill</td>
                                 <td>Total Paid</td>
         
                             </tr>
-                        <i></i>
                         </thead>
                         <tbody>
                         <script>var accountid = "{{ new_record.accountid }}";</script>
