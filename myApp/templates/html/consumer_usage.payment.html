@@ -262,15 +262,18 @@
 
               <br>
 
-                <div class="row">
+                <div class="row" >
                   <div class="col-sm">
-
+                    <a href="/source_access/Payment"><button type="button"
+                      class="btn btn-primary"  >
+                      <i class="fa fa-arrow-left" aria-hidden="true"></i>Back
+                    </button></a>
                   </div>
                   <div class="col-sm">
-
                   </div>
                   <div class="col-sm">
-
+                  </div>
+                  <div class="col-sm">
                   </div>
                   <div class="col-sm">
                     <button type="button" id="postbtn" class="btn btn-primary"  onclick="this_record()">Get a Copy</button>
@@ -278,6 +281,13 @@
                   <div class="col-sm">
                         <a href="/source_access/prev-record={{account.accountinfoid}}"><button type="button" id="postbtn" class="btn btn-primary"  >View Usage History</button> </a>
                   </div>
+                  <div class="col-sm">
+                      <a href="/source_access/payment-history={{context.Id}}"><button type="button"
+                        class="btn btn-primary" id="submitbtn"  >
+                        Payment History
+                      </button></a>
+                  </div>
+                  
                 </div>
 
 
@@ -480,24 +490,6 @@
                        </table>
                   </div>
                   <br>
-
-                  <div>
-                    <div class="col-sm-offset-9 col-sm-2">
-
-                    <a href="/source_access/payment-history={{context.Id}}"><button type="button"
-                      class="btn btn-primary" id="submitbtn"  >
-                      Payment History
-                    </button></a>
-                    </div>
-                    <br>
-                    <br>
-                    <div class="col-md-offset-9 col-md-2">
-                      <a href="/source_access/Payment"><button type="button"
-                        class="btn btn-primary"  >
-                        Go Back
-                      </button></a>
-                    </div>
-
 
                     <!-- modal for Official Receipt -->
                     <div class="modal fade" id="officialreceipt" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
