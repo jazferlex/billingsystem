@@ -75,7 +75,6 @@ class usage_record(models.Model):
     postedby_history = models.TextField(default = "")
     or_number_history = models.TextField(default = "")
     previous_reading = models.FloatField(default = 0)
-    reading_date_formatted = models.BooleanField(default=False)
 
 
 
