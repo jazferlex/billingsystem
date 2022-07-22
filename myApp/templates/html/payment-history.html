@@ -37,12 +37,13 @@
     <script src="{% static 'website/lib/jsPDF/jspdf-autotable.js' %}"></script>
 
 </head>
- <style>
+<style>
 
- </style>
-<body >
+</style>
 
-</div>
+<body>
+
+    </div>
     <section id="container">
         <!--Header Start-->
         <header class="header black-bg">
@@ -62,21 +63,22 @@
         <!--sidebar start-->
         <aside>
             <form action="/source_access/payment-history={{account.accountinfoid}}" method="POST">
-            <div id="sidebar" class="nav-collapse ">
-                <!-- sidebar menu start-->
-                <ul class="sidebar-menu" id="nav-accordion">
-                    <p class="centered"><a href=""><img src="{% static 'website/img/ui-admin.jpg' %}" class="img-circle" width="80"></a></p>
-                    <h5 class="centered">{{ context.name }}</h5>
+                <div id="sidebar" class="nav-collapse ">
+                    <!-- sidebar menu start-->
+                    <ul class="sidebar-menu" id="nav-accordion">
+                        <p class="centered"><a href=""><img src="{% static 'website/img/ui-admin.jpg' %}"
+                                    class="img-circle" width="80"></a></p>
+                        <h5 class="centered">{{ context.name }}</h5>
 
 
 
-                    <div id="input_reading" class="active">
-                        <li class="sub-menu" >
-                            <a href="/source_access/Payment={{account.accountinfoid}}" class="active">
-                                <i class="fa fa-arrow-left"></i>
-                                <span>Back</span>
-                            </a>
-                    </div>
+                        <div id="input_reading" class="active">
+                            <li class="sub-menu">
+                                <a href="/source_access/Payment={{account.accountinfoid}}" class="active">
+                                    <i class="fa fa-arrow-left"></i>
+                                    <span>Back</span>
+                                </a>
+                        </div>
 
 
 
@@ -97,224 +99,230 @@
         <section id="main-content">
             <div class="container">
                 <div class="card1">
-            <section class="wrapper">
-                <!-- DATA Section -->
+                    <section class="wrapper">
+                        <!-- DATA Section -->
 
-                {% csrf_token %}
-                <br>
-                <script>
+                        {% csrf_token %}
+                        <br>
+                        <script>
 
-                    const formatter = new Intl.NumberFormat('en-US', {
-                        style: 'currency',
-                        currency: 'Php',
-                        minimumFractionDigits: 2
-                    })
+                            const formatter = new Intl.NumberFormat('en-US', {
+                                style: 'currency',
+                                currency: 'Php',
+                                minimumFractionDigits: 2
+                            })
 
 
-                </script>
-                <script>
-                    function this_record() {
-                        var doc = new jsPDF('p', 'pt', 'letter');
-                        var htmlstring = '';
-                        var tempVarToCheckPageHeight = 0;
-                        var pageHeight = 0;
+                        </script>
+                        <script>
+                            function this_record() {
+                                var doc = new jsPDF('p', 'pt', 'letter');
+                                var htmlstring = '';
+                                var tempVarToCheckPageHeight = 0;
+                                var pageHeight = 0;
 
-                        pageHeight = doc.internal.pageSize.height;
-                        specialElementHandlers = {
-                            // element with id of "bypass" - jQuery style selector
-                            '#bypassme': function(element, renderer) {
-                                // true = "handled elsewhere, bypass text extraction"
-                                return true
+                                pageHeight = doc.internal.pageSize.height;
+                                specialElementHandlers = {
+                                    // element with id of "bypass" - jQuery style selector
+                                    '#bypassme': function (element, renderer) {
+                                        // true = "handled elsewhere, bypass text extraction"
+                                        return true
+                                    }
+                                };
+                                margins = {
+                                    top: 150,
+                                    bottom: 60,
+                                    left: 40,
+                                    right: 40,
+                                    width: 600
+                                };
+                                const formatter = new Intl.NumberFormat('en-US', {
+                                    style: 'currency',
+                                    currency: 'Php',
+                                    minimumFractionDigits: 2
+                                })
+
+                                var y = 20;
+                                var x = 40;
+                                doc.setLineWidth(2);
+                                doc.setFontSize(11);
+                                doc.autoTable({
+                                    html: '#doc_header',
+                                    startY: y = y + 20,
+                                })
+                                doc.setLineWidth(2);
+                                doc.setFontSize(14);
+                                doc.text(250, y = y + 80, "Payment History");
+
+
+                                doc.autoTable({
+                                    html: '.this_table',
+                                    startY: y = y + 20,
+                                    theme: 'grid',
+                                    columnStyles: {
+                                        0: {
+                                            cellWidth: 130,
+                                        },
+                                        1: {
+                                            cellWidth: 130,
+                                        },
+                                        2: {
+                                            cellWidth: 130,
+                                        },
+                                        3: {
+                                            cellWidth: 135,
+                                        }
+                                    },
+                                    styles: {
+                                        minCellHeight: 20
+                                    }
+                                })
+                                doc.save('{{account.firstname}}_{{account.lastname}}_Payment_History.pdf');
                             }
-                        };
-                        margins = {
-                            top: 150,
-                            bottom: 60,
-                            left: 40,
-                            right: 40,
-                            width: 600
-                        };
-                        const formatter = new Intl.NumberFormat('en-US', {
-                            style: 'currency',
-                            currency: 'Php',
-                            minimumFractionDigits: 2
-                        })
 
-                        var y = 20;
-                        var x = 20;
+                            function CurrencyConverter(amount) {
+                                var formatter = new Intl.NumberFormat('en-US', {
+                                    style: 'currency',
+                                    currency: 'Php',
 
-                        doc.setLineWidth(2);
-                        doc.setFontSize(14);
-                        doc.text(250, y = y + 30,  "");
-                        doc.text(250, y = y + 30,  "Usage Record");
-
-                        //doc.text(200, x = x + 50, val);
-
-                        doc.autoTable({
-                            html: '.this_table',
-                            startY: 100,
-                            theme: 'grid',
-                            columnStyles: {
-                                0: {
-                                    cellWidth: 130,
-                                },
-                                1: {
-                                    cellWidth: 130,
-                                },
-                                2: {
-                                    cellWidth: 130,
-                                },
-                                3: {
-                                    cellWidth: 135,
-                                }
-                            },
-                            styles: {
-                                minCellHeight: 50
-
+                                });
+                                return formatter.format(amount);
                             }
-                        })
-                        doc.save('{{account.firstname}} {{account.lastname}}_usage.pdf');
-                    }
 
-                    function CurrencyConverter(amount){
-                      var formatter = new Intl.NumberFormat('en-US', {
-                        style: 'currency',
-                        currency: 'Php',
+                        </script>
 
-                      });
-                      return formatter.format(amount);
-                    }
+                        <div class="loader-wrapper">
+                            <span class="loader">
+                                <img src="{% static '/website/img/loading.gif' %}">
+                            </span>
+                        </div>
+                        <center>Consumer's Information</center>
+                        <br>
+                        <div class="table-responsive">
+                            <table id="doc_header" class="table table-bordered" style="width:100%">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Account ID</th>
+                                        <th scope="col">Meter Number</th>
+                                        <th scope="col">Name</th>
+                                        <th scope="col">Address</th>
 
-                </script>
+                                    </tr>
+                                    <i></i>
+                                </thead>
 
-                <div class="loader-wrapper">
-                    <span class="loader">
-                        <img src="{% static '/website/img/loading.gif' %}">
-                    </span>
-                </div>
-                <center>Consumer's Information</center>
-                    <br>
-                    <div class="table-responsive">
-                         <table id="tablePagination" class="table table-bordered" style="width:100%">
-                          <thead>
-                              <tr>
-                                  <th scope="col">Account ID</th>
-                                  <th scope="col">Meter Number</th>
-                                  <th scope="col">Name</th>
-                                  <th scope="col">Address</th>
+                                <tbody>
 
-                              </tr>
-                              <i></i>
-                          </thead>
+                                    <tr>
 
-                          <tbody>
+                                        <th scope="row">{{ account.accountinfoid }}</th>
+                                        <th scope="row">{{ account.meternumber }}</th>
+                                        <td>{{ account.firstname }} {{ account.middlename }}. {{ account.lastname }}
+                                        </td>
+                                        <td>{{ account.address }}</td>
 
-                              <tr>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <br>
+                        <br>
+                        <center>Payment History </center>
 
-                                  <th scope="row">{{ account.accountinfoid }}</th>
-                                  <th scope="row">{{ account.meternumber }}</th>
-                                  <td>{{ account.firstname }} {{ account.middlename }}. {{ account.lastname }}</td>
-                                  <td>{{ account.address }}</td>
-
-                              </tr>
-                          </tbody>
-                      </table>
-                 </div>
-                 <br>
-                 <br>
-                 <center>Payment History </center>
-
-                 <br>
-                 <div class = "row">
-                    <div class = "col-sm">
-                          <div class="form-group">
-                              <label for="exampleInputBarangay">Select Year</label>
-                              <select name="{{ ReqParams.year }}" class="form-control" onchange='this.form.submit();'>
-                                <option value="{{defval}}" selected>{{defval}}</option>
-                                {% for year in year_list %}
-                                <option value="{{ year }}">{{year}}</option>
-                                {%endfor%}
-                              </select>
+                        <br>
+                        <div class="row">
+                            <div class="col-sm">
+                                <div class="form-group">
+                                    <label for="exampleInputBarangay">Select Year</label>
+                                    <select name="{{ ReqParams.year }}" class="form-control"
+                                        onchange='this.form.submit();'>
+                                        <option value="{{defval}}" selected>{{defval}}</option>
+                                        {% for year in year_list %}
+                                        <option value="{{ year }}">{{year}}</option>
+                                        {%endfor%}
+                                    </select>
+                                </div>
+                                <noscript><input type="submit" value="Submit"></noscript>
                             </div>
-                            <noscript><input type="submit" value="Submit"></noscript>
-                    </div>
-                    <div class = "col-sm">
-                        <div class="form-group">
-                              <br>
+                            <div class="col-sm">
+                                <div class="form-group">
+                                    <br>
 
-                            <button type="button" id="postbtn" class="btn btn-primary"  onclick="this_record()">Get a Copy</button>
+                                    <button type="button" id="postbtn" class="btn btn-primary"
+                                        onclick="this_record()">Get a Copy</button>
+                                </div>
+
+                            </div>
+                            <div class="col-sm">
+                                <div class="form-group"></div>
+                            </div>
+
+                            <div class="col-sm">
+                                <div class="form-group"></div>
+                            </div>
                         </div>
 
-                    </div>
-                      <div class = "col-sm">
-                            <div class="form-group"></div>
-                      </div>
+                        <br>
 
-                      <div class = "col-sm">
-                            <div class="form-group"></div>
-                      </div>
-                </div>
+                        <div class="table-responsive">
+                            <table id="tablePagination" class="table table-bordered" style="width:100%">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Amount Paid</th>
+                                        <th scope="col">Date</th>
+                                        <th scope="col">OR Number</th>
+                                        <th scope="col">Posted By</th>
 
-                      <br>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for element in retval %}
+                                    <tr>
 
-                    <div class="table-responsive">
-                       <table id="tablePagination" class="table table-bordered" style="width:100%">
-                          <thead>
-                              <tr>
-                                  <th scope="col">Amount Paid</th>
-                                  <th scope="col">Date</th>
-                                  <th scope="col">OR Number</th>
-                                  <th scope="col">Posted By</th>
+                                        <th scope="row">
+                                            <script>document.write(CurrencyConverter("{{ element.amount }}"))</script>
+                                        </th>
+                                        <td>{{ element.date }}</td>
+                                        <td>{{ element.or_number }}</td>
+                                        <td>{{ element.postedby }}</td>
+                                    </tr>
+                                    {%endfor %}
+                                </tbody>
+                            </table>
+                        </div>
 
-                              </tr>
-                          </thead>
-                          <tbody>
-                                {% for element in retval %}
-                              <tr>
+                        <div class="table-responsive" hidden>
+                            <table id="tablePagination" class="table table-bordered this_table" style="width:100%">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Amount Paid</th>
+                                        <th scope="col">Date</th>
+                                        <th scope="col">OR Number</th>
+                                        <th scope="col">Posted By</th>
 
-                                  <th scope="row"><script>document.write(CurrencyConverter("{{ element.amount }}"))</script></th>
-                                  <td>{{ element.date }}</td>
-                                  <td>{{ element.or_number }}</td>
-                                  <td>{{ element.postedby }}</td>
-  {%endfor %}
-                              </tr>
-                          </tbody>
-                      </table>
-                 </div>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for element in accountrecord %}
+                                    <tr>
+                                        <th scope="row">{{ element.amount|floatformat:2 }}</th>
+                                        <td>{{ element.date }}</td>
+                                        <td>{{ element.or_number }}</td>
+                                        <td>{{ element.postedby }}</td>
+                                    </tr>
+                                    {%endfor %}
+                                </tbody>
+                            </table>
+                        </div>
 
-                 <div class="table-responsive" hidden>
-                    <table id="tablePagination" class="table table-bordered this_table" style="width:100%">
-                       <thead>
-                           <tr>
-                               <th scope="col">Amount Paid</th>
-                               <th scope="col">Date</th>
-                               <th scope="col">OR Number</th>
-                               <th scope="col">Posted By</th>
+                        <br>
+                        <br>
 
-                           </tr>
-                       </thead>
-                       <tbody>
-                             {% for element in accountrecord %}
-                           <tr>
-
-                               <th scope="row">{{ element.amount|floatformat:2 }}</th>
-                               <td>{{ element.date }}</td>
-                               <td>{{ element.or_number }}</td>
-                               <td>{{ element.postedby }}</td>
-                               {%endfor %}
-                           </tr>
-                       </tbody>
-                   </table>
-              </div>
-
-                 <br>
-                 <br>
-
-        </form>
-            </section>
+                        </form>
+                    </section>
         </section>
-    </div>
-</div>
+        </div>
+        </div>
 
 
         <!--main content end-->
@@ -323,7 +331,8 @@
     <script src="{% static 'website/lib/jquery/jquery.min.js' %}"></script>
 
     <script src="{% static 'website/lib/bootstrap/js/bootstrap.min.js' %}"></script>
-    <script class="include" type="text/javascript" src="{% static 'website/lib/jquery.dcjqaccordion.2.7.js' %} "></script>
+    <script class="include" type="text/javascript"
+        src="{% static 'website/lib/jquery.dcjqaccordion.2.7.js' %} "></script>
     <script src="{% static 'website/lib/jquery.scrollTo.min.js' %}"></script>
     <script src="{% static 'website/lib/jquery.nicescroll.js' %}" type="text/javascript"></script>
     <script src="{% static 'website/lib/jquery.sparkline.js' %}"></script>
@@ -334,20 +343,20 @@
     <script src="{% static 'website/lib/DataTables/js/dataTables.bootstrap4.min.js' %}"></script>
 
     <script>
-      $(document).ready(function() {
-        $('#tablePagination').DataTable( {
-           "lengthChange": false,
-           "ordering": false,
-           "searching": false,
-           "paging": false,
-           "info": false,
+        $(document).ready(function () {
+            $('#tablePagination').DataTable({
+                "lengthChange": false,
+                "ordering": false,
+                "searching": false,
+                "paging": false,
+                "info": false,
+            });
         });
-    } );
 
-    $(window).on("load",function(){
-        $(".loader-wrapper").fadeOut("milliseconds");
-   });
+        $(window).on("load", function () {
+            $(".loader-wrapper").fadeOut("milliseconds");
+        });
     </script>
-  </body>
+</body>
 
 </html>

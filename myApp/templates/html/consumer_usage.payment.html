@@ -220,7 +220,7 @@
                     </span>
                 </div>
                 <div class="table-responsive">
-                  <table id="tablePagination" class="table table-bordered" style="width:100%">
+                  <table id="doc_header" class="table table-bordered" style="width:100%">
                       <thead>
                           <tr>
                               <td>Account ID</td>
@@ -250,13 +250,11 @@
                                   class="btn btn-primary" id="nxtbtn" data-toggle="modal" data-target="#officialreceipt">
                                   Pay
                                  </button></td>
-
                           </tr>
                        </tbody>
                        </table>
                 </div>
                   <br>
-
 
               <!--Disable Field-->
 
@@ -313,18 +311,20 @@
                   })
 
                   var y = 20;
-                  var x = 20;
-
+                  var x = 40;
+                  doc.setLineWidth(2);
+                  doc.setFontSize(11);
+                  doc.autoTable({
+                      html: '#doc_header',
+                      startY: y = y + 20,
+                  })
                   doc.setLineWidth(2);
                   doc.setFontSize(14);
-                  doc.text(250, y = y + 30,  "");
-                  doc.text(250, y = y + 30,  "Usage Record");
-        
-                  //doc.text(200, x = x + 50, val);
+                  doc.text(250, y = y + 80, "Payment History");
 
                   doc.autoTable({
                       html: '.this_table',
-                      startY: 100,
+                      startY: y = y+20,
                       theme: 'grid',
                       columnStyles: {
                           0: {
@@ -338,7 +338,7 @@
                           }
                       },
                       styles: {
-                          minCellHeight: 50
+                          minCellHeight: 20
 
                       }
                   })
