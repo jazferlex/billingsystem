@@ -46,7 +46,7 @@
 
 </head>
 
-<body onload="format_date()">
+<body onload="format_date(); format_date_pdf()">
     <!-- Modal -->
     <div class="modal fade" id="modalbill" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
         aria-hidden="true">
@@ -220,31 +220,37 @@
                                     theme: 'plain',
                                     startY: y = y + 20,
                                 })
-                                doc.text(400, y = y + 80, "Total Balance: Php {{commulative_bill|floatformat:2}}");
+                                y=y+40
+                                doc.text(400, y + 20, "Total Balance: Php {{commulative_bill|floatformat:2}}");
+
                                 doc.setLineWidth(2);
                                 doc.setFontSize(14);
-                                doc.text(250, y, "Usage Record ({{defval_year}})");
+                                var tables = document.getElementsByClassName("this_table")
+                                for(i=0;i<13;i++){
+                                    doc.text(250, y=y+20, "Usage Record ("+(2022-i)+")");
+                                    doc.autoTable({
+                                        html: tables[i],
+                                        startY: y = y + 20,
+                                        theme: 'striped',
+                                        columnStyles: {
+                                            0: {
+                                                cellWidth: 70,
+                                            },
+                                            1: {
+                                                cellWidth: 70,
+                                            },
+                                            4: {
+                                                cellWidth: 70,
+                                            }
+                                        },
+                                        styles: {
+                                            minCellHeight: 20
 
-                                doc.autoTable({
-                                    html: '.this_table',
-                                    startY: y = y + 20,
-                                    theme: 'striped',
-                                    columnStyles: {
-                                        0: {
-                                            cellWidth: 70,
-                                        },
-                                        1: {
-                                            cellWidth: 70,
-                                        },
-                                        4: {
-                                            cellWidth: 70,
                                         }
-                                    },
-                                    styles: {
-                                        minCellHeight: 20
-
-                                    }
-                                })
+                                    })
+                                    y = y + 320
+                                    console.log(y-320)
+                                }
                                 doc.save('{{account.firstname}}_{{account.lastname}}_usage.pdf');
                             }
                         
@@ -264,16 +270,47 @@
                                     "{{ new_record.reading_date_nov }}",
                                     "{{ new_record.reading_date_dec }}"
                                 ]
-                                console.log(to_format.innerText)
-                                console.log(dates)
+                                
                                 for(var i = 0; i < to_format.length; i++){
                                     if(dates[i]==="" || dates[i]===" "){
-                                        console.log("nope")
                                     }
                                     else{
                                         date = new Date(dates[i]);
-                                        console.log(date);
                                         to_format[i].innerHTML = [date.getMonth() + 1, date.getDate(), date.getFullYear()].join('-');
+                                    }
+                                }
+                            }
+                            function format_date_pdf() {
+                                to_format = document.getElementsByClassName("to_format_pdf")
+                                var all_dates=[]
+                                {%for i in records%}
+                                dates = [
+                                    "{{ i.reading_date_jan }}",
+                                    "{{ i.reading_date_feb }}",
+                                    "{{ i.reading_date_mar }}",
+                                    "{{ i.reading_date_apr }}",
+                                    "{{ i.reading_date_may }}",
+                                    "{{ i.reading_date_jun }}",
+                                    "{{ i.reading_date_jul }}",
+                                    "{{ i.reading_date_aug }}",
+                                    "{{ i.reading_date_sept}}",
+                                    "{{ i.reading_date_oct }}",
+                                    "{{ i.reading_date_nov }}",
+                                    "{{ i.reading_date_dec }}"
+                                ]
+                                all_dates.push(dates)
+                                {%endfor%}
+                                console.log(all_dates)
+                                var n = 0;
+                                for(var i = 0; i < all_dates.length; i++){
+                                    for(var j = 0; j < dates.length; j++){
+                                        if(all_dates[i][j]==="" || all_dates[i][j]===" "){
+                                        }
+                                        else{
+                                            date = new Date(all_dates[i][j]);
+                                            to_format[n].innerHTML = [date.getMonth() + 1, date.getDate(), date.getFullYear()].join('-');
+                                        }
+                                        n+=1
                                     }
                                 }
                             }
@@ -283,7 +320,7 @@
 
 
                         <div id="newrecord">
-                            <table id="tablePagination" class="table table-striped table-bordered this_table"
+                            <table id="tablePagination" class="table table-striped table-bordered"
                                 style="width:100%">
                                 <thead>
                                     <tr>
@@ -398,7 +435,120 @@
 
                             </table>
                             <!--Total Balancce-->
-
+                            {% for i in records %}
+                            <table id="tablePagination" class="table table-striped table-bordered this_table" style="width:100%" hidden>
+                                <thead>
+                                    <tr>
+                                        <td>Month</td>
+                                        <td>Reading</td>
+                                        <td>Reading Date<br>(mm-dd-yyyy)</td>
+                                        <td>Consumption</td>
+                                        <td>Total Bill</td>
+                                        <td>Total Paid</td>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <script>var accountid = "{{ i.accountid }}";</script>
+                                    <tr>
+                                        <td>January</td>
+                                        <td>{{ i.reading_jan }}</td>
+                                        <td class="to_format_pdf"></td>
+                                        <td>{{ i.usage_jan }}</td>
+                                        <td>{{i.totalbill_jan}}</td>
+                                        <td>{{ i.paidamt_jan }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>February</td>
+                                        <td>{{ i.reading_feb }}</td>
+                                        <td class="to_format_pdf"></td>
+                                        <td>{{ i.usage_feb }}</td>
+                                        <td>{{i.totalbill_feb}}</td>
+                                        <td>{{ i.paidamt_feb }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>March</td>
+                                        <td>{{ i.reading_mar }}</td>
+                                        <td class="to_format_pdf"></td>
+                                        <td>{{ i.usage_mar }}</td>
+                                        <td>{{i.totalbill_mar}}</td>
+                                        <td>{{ i.paidamt_mar }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>April</td>
+                                        <td>{{ i.reading_apr }}</td>
+                                        <td class="to_format_pdf"></td>
+                                        <td>{{ i.usage_apr }}</td>
+                                        <td>{{i.totalbill_apr }}</td>
+                                        <td>{{ i.paidamt_apr }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>May</td>
+                                        <td>{{ i.reading_may }}</td>
+                                        <td class="to_format_pdf"></td>
+                                        <td>{{ i.usage_may }}</td>
+                                        <td>{{i.totalbill_may }}</td>
+                                        <td>{{ i.paidamt_may }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>June</td>
+                                        <td>{{ i.reading_jun }}</td>
+                                        <td class="to_format_pdf"></td>
+                                        <td>{{ i.usage_jun }}</td>
+                                        <td>{{i.totalbill_jun }}</td>
+                                        <td>{{ i.paidamt_jun }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>July</td>
+                                        <td>{{ i.reading_jul }}</td>
+                                        <td class="to_format_pdf"></td>
+                                        <td>{{ i.usage_jul }}</td>
+                                        <td>{{i.totalbill_jul }}</td>
+                                        <td>{{ i.paidamt_jul }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>August</td>
+                                        <td>{{ i.reading_aug }}</td>
+                                        <td class="to_format_pdf"></td>
+                                        <td>{{ i.usage_aug }}</td>
+                                        <td>{{i.totalbill_aug }}</td>
+                                        <td>{{ i.paidamt_aug }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>September</td>
+                                        <td>{{ i.reading_sept }}</td>
+                                        <td class="to_format_pdf"></td>
+                                        <td>{{ i.usage_sept }}</td>
+                                        <td>{{i.totalbill_sept }}</td>
+                                        <td>{{ i.paidamt_sept }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>October</td>
+                                        <td>{{ i.reading_oct }}</td>
+                                        <td class="to_format_pdf"></td>
+                                        <td>{{ i.usage_oct }}</td>
+                                        <td>{{i.totalbill_oct }}</td>
+                                        <td>{{ i.paidamt_oct }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>November</td>
+                                        <td>{{ i.reading_nov }}</td>
+                                        <td class="to_format_pdf"></td>
+                                        <td>{{ i.usage_nov }}</td>
+                                        <td>{{i.totalbill_nov }}</td>
+                                        <td>{{ i.paidamt_nov }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>December</td>
+                                        <td>{{ i.reading_dec }}</td>
+                                        <td class="to_format_pdf"></td>
+                                        <td>{{ i.usage_dec }}</td>
+                                        <td>{{i.totalbill_dec }}</td>
+                                        <td>{{ i.paidamt_dec }}</td>
+                                    </tr>
+                                </tbody>
+                            
+                            </table>
+                            {% endfor %}
                         </div>
 
                         </form>
