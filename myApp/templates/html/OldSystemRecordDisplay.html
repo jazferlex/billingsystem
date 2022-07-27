@@ -221,16 +221,16 @@
                                     startY: y = y + 20,
                                 })
                                 y=y+40
-                                doc.text(400, y + 20, "Total Balance: Php {{commulative_bill|floatformat:2}}");
+                                doc.text(400, y + 30, "Total Balance: Php {{commulative_bill|floatformat:2}}");
 
                                 doc.setLineWidth(2);
                                 doc.setFontSize(14);
                                 var tables = document.getElementsByClassName("this_table")
                                 for(i=0;i<13;i++){
-                                    doc.text(250, y=y+20,"Usage Record ("+(2022-i)+")");
+                                    doc.text(250, y=y+30,"Usage Record ("+(2022-i)+")");
                                     doc.autoTable({
                                         html: tables[i],
-                                        startY: y=y+20,
+                                        startY: y=y+15,
                                         theme: 'striped',
                                         pageBreak: 'auto',
                                         columnStyles: {
