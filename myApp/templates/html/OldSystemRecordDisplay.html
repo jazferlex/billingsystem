@@ -227,11 +227,12 @@
                                 doc.setFontSize(14);
                                 var tables = document.getElementsByClassName("this_table")
                                 for(i=0;i<13;i++){
-                                    doc.text(250, y=y+20, "Usage Record ("+(2022-i)+")");
+                                    doc.text(250, y=y+20,"Usage Record ("+(2022-i)+")");
                                     doc.autoTable({
                                         html: tables[i],
-                                        startY: y = y + 20,
+                                        startY: y=y+20,
                                         theme: 'striped',
+                                        pageBreak: 'auto',
                                         columnStyles: {
                                             0: {
                                                 cellWidth: 70,
@@ -246,10 +247,14 @@
                                         styles: {
                                             minCellHeight: 20
 
-                                        }
+                                        },
                                     })
-                                    y = y + 320
-                                    console.log(y-320)
+                                    y = doc.lastAutoTable.finalY
+                                    console.log(y);
+                                    if(y>600){
+                                        doc.addPage()
+                                        y=20
+                                    }
                                 }
                                 doc.save('{{account.firstname}}_{{account.lastname}}_usage.pdf');
                             }
@@ -276,7 +281,16 @@
                                     }
                                     else{
                                         date = new Date(dates[i]);
-                                        to_format[i].innerHTML = [date.getMonth() + 1, date.getDate(), date.getFullYear()].join('-');
+                                        m = date.getMonth()+1
+                                        d = date.getDate()
+                                        y = date.getFullYear()
+                                        if(m<10){
+                                            m='0'+m
+                                        }
+                                        if(d<10){
+                                            d='0'+d
+                                        }
+                                        to_format[i].innerHTML = [m, d, y].join('-');
                                     }
                                 }
                             }
@@ -308,7 +322,16 @@
                                         }
                                         else{
                                             date = new Date(all_dates[i][j]);
-                                            to_format[n].innerHTML = [date.getMonth() + 1, date.getDate(), date.getFullYear()].join('-');
+                                            m = date.getMonth()+1
+                                            d = date.getDate()
+                                            y = date.getFullYear()
+                                            if(m<10){
+                                                m='0'+m
+                                            }
+                                            if(d<10){
+                                                d='0'+d
+                                            }
+                                            to_format[n].innerHTML = [m, d, y].join('-');
                                         }
                                         n+=1
                                     }
