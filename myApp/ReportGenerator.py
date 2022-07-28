@@ -628,7 +628,6 @@ def OldSystemRecordDisplay(request,id):
       if record.reading_date.__contains__(str(defval_year)):
          retval.append(record)
          index = index + 1
-
    new_record = None
    #get the latest bill
    latest_record = usage_record.objects.get(pk = account.accountinfoid + "-" + str(current_date.year))
@@ -660,12 +659,18 @@ def OldSystemRecordDisplay(request,id):
          #for record that has been updated/posted on this new System
          if usage_record.objects.filter(pk = account.accountinfoid + "-" + str(defval_year)).exists():
             new_record =  usage_record.objects.get(pk = account.accountinfoid + "-" + str(defval_year))
+   
 
-
-
+   records = []
+   n = 2022
+   for i in range(13):
+      if usage_record.objects.filter(pk = account.accountinfoid + "-" + str(n)).exists():
+         new_record =  usage_record.objects.get(pk = account.accountinfoid + "-" + str(n))
+         records.append(new_record)
+      n-=1
    return render(request,template,{"year_list":year_list,"retval":retval,"consumer":consumer,"ErrorMessagePass":ErrorMessagePass,"context":context,
                         "PaidStatus":PaidStatus,"ReqParams":ReqParams,"defval_year":defval_year,"oldcon":oldconsumer,"account":account,
-                        "new_record":new_record,"index":index,"commulative_bill":commulative_bill})
+                        "new_record":new_record,"index":index,"commulative_bill":commulative_bill,"records":records})
 
 
 def getUsageRevenue(request):#we get only the record for 2021

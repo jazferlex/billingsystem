@@ -4,298 +4,296 @@
 
 <head>
   <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="">
-    <meta name="author" content="Dashboard">
-    <meta name="keyword" content="Dashboard, Bootstrap, Admin, Template, Theme, Responsive, Fluid, Retina">
-    <title>Ginatilan Billing System</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="">
+  <meta name="author" content="Dashboard">
+  <meta name="keyword" content="Dashboard, Bootstrap, Admin, Template, Theme, Responsive, Fluid, Retina">
+  <title>Ginatilan Billing System</title>
 
-    <!-- Favicons -->
-    <link href="{% static 'website/img/favicon.ico' %}" rel="icon">
-    <link href="{% static 'website/img/apple-touch-icon.ico' %}" rel="apple-touch-icon">
+  <!-- Favicons -->
+  <link href="{% static 'website/img/favicon.ico' %}" rel="icon">
+  <link href="{% static 'website/img/apple-touch-icon.ico' %}" rel="apple-touch-icon">
 
-    <!-- Bootstrap core CSS -->
-    <link href="{% static 'website/lib/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
-    <!--external css-->
-    <link href="{% static 'website/lib/font-awesome/css/font-awesome.css' %}" rel="stylesheet" />
-    <link rel="stylesheet" type="text/css" href="{% static '/website/css/zabuto_calendar.css' %}">
-    <link rel="stylesheet" type="text/css" href="{% static '/website/lib/gritter/css/jquery.gritter.css' %}" />
-    <!-- Custom styles for this template -->
-    <link href="{% static 'website/css/styles.css' %}" rel="stylesheet">
-    <link href="{% static 'custom.css' %}" rel="stylesheet">
-    <link href="{% static '/website/css/font.css' %}" rel="stylesheet">
-    <link href="{% static 'website/css/style-responsive.css' %}" rel="stylesheet">
-    <link rel="stylesheet" href="{% static 'website/lib/bootstrap/css/bootstrap.min.css' %}">
-    <link rel="stylesheet" href="{% static 'website/lib/DataTables/css/mdb.min.css' %}">
-    <link rel="stylesheet" href="{% static 'website/lib/bootstrap/css/ModifiedBootstrap.css' %}">
-    <link rel="stylesheet" href="{% static 'website/lib/DataTables/css/dataTables.bootstrap4.min.css' %}">
-    <script src="{% static 'website/lib/jquery/jquery.min.js' %}"></script>
-    <script src="{% static 'website/lib/DataTables/js/popper.min.js' %}"></script>
-    <script src="{% static 'website/lib/bootstrap/js/bootstrap.min.js' %}"></script>
-    <script src="{% static 'website/lib/DataTables/js/mdb.min.js' %}"></script>
-    <script src="{% static 'UtilPage/utility.js' %}"></script>
-    <script src="{% static 'website/lib/jsPDF/jspdf.min.js' %}"></script>
-    <script src="{% static 'website/lib/jsPDF/jspdf-autotable.js' %}"></script>
+  <!-- Bootstrap core CSS -->
+  <link href="{% static 'website/lib/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+  <!--external css-->
+  <link href="{% static 'website/lib/font-awesome/css/font-awesome.css' %}" rel="stylesheet" />
+  <link rel="stylesheet" type="text/css" href="{% static '/website/css/zabuto_calendar.css' %}">
+  <link rel="stylesheet" type="text/css" href="{% static '/website/lib/gritter/css/jquery.gritter.css' %}" />
+  <!-- Custom styles for this template -->
+  <link href="{% static 'website/css/styles.css' %}" rel="stylesheet">
+  <link href="{% static 'custom.css' %}" rel="stylesheet">
+  <link href="{% static '/website/css/font.css' %}" rel="stylesheet">
+  <link href="{% static 'website/css/style-responsive.css' %}" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'website/lib/bootstrap/css/bootstrap.min.css' %}">
+  <link rel="stylesheet" href="{% static 'website/lib/DataTables/css/mdb.min.css' %}">
+  <link rel="stylesheet" href="{% static 'website/lib/bootstrap/css/ModifiedBootstrap.css' %}">
+  <link rel="stylesheet" href="{% static 'website/lib/DataTables/css/dataTables.bootstrap4.min.css' %}">
+  <script src="{% static 'website/lib/jquery/jquery.min.js' %}"></script>
+  <script src="{% static 'website/lib/DataTables/js/popper.min.js' %}"></script>
+  <script src="{% static 'website/lib/bootstrap/js/bootstrap.min.js' %}"></script>
+  <script src="{% static 'website/lib/DataTables/js/mdb.min.js' %}"></script>
+  <script src="{% static 'UtilPage/utility.js' %}"></script>
+  <script src="{% static 'website/lib/jsPDF/jspdf.min.js' %}"></script>
+  <script src="{% static 'website/lib/jsPDF/jspdf-autotable.js' %}"></script>
 
 
 
 </head>
-    <style>
-      i {
-        font-size: 11px;
-        }
+<style>
+  i {
+    font-size: 11px;
+  }
+</style>
 
-
-    </style>
 <body onload="show(usertype)">
   <script>
     var usertype = "{{ context.UserType }}";
   </script>
-    <section id="container">
+  <section id="container">
 
-        <!--Header Start-->
-        <header class="header black-bg">
-            <div class="sidebar-toggle-box">
-                <div class="fa fa-bars tooltips" data-placement="right" data-original-title="Toggle Navigation"></div>
-            </div>
-            <!--logo start-->
-            <a href="" class="logo"><b>Ginatilan Water Billing<span> Station</span></b></a>
-            <!--logo end-->
+    <!--Header Start-->
+    <header class="header black-bg">
+      <div class="sidebar-toggle-box">
+        <div class="fa fa-bars tooltips" data-placement="right" data-original-title="Toggle Navigation"></div>
+      </div>
+      <!--logo start-->
+      <a href="" class="logo"><b>Ginatilan Water Billing<span> Station</span></b></a>
+      <!--logo end-->
 
-            <div class="top-menu">
-                <ul class="nav pull-right top-menu">
-                    <li><a class="logout" href="/logout">Logout</a></li>
-                </ul>
-            </div>
+      <div class="top-menu">
+        <ul class="nav pull-right top-menu">
+          <li><a class="logout" href="/logout">Logout</a></li>
+        </ul>
+      </div>
 
-        </header>
-        <!--Header End-->
-        <!--sidebar start-->
-        <aside>
-          <div id="sidebar" class="nav-collapse ">
-              <!-- sidebar menu start-->
-              <ul class="sidebar-menu" id="nav-accordion">
-                  <p class="centered"><a href=""><img src="{% static 'website/img/ui-admin.jpg' %}" class="img-circle" width="80"></a></p>
-                  <h5 class="centered">{{ context.name }}</h5>
-
-
-
-                <div id="billspayment" >
-                    <li class="sub-menu" >
-                      <a href="" class="active">
-                          <i class="fa fa-newspaper-o"></i>
-                          <span>Billing</span>
-                      </a>
-                      <ul class="sub">
-                        <li><a href="/source_access/Payment">Bills Payment</a></li>
-                        <li id=""><a href="/source_access/Send-Bill">Send Bill</a></li>
-                        <li id=""><a href="/source_access/search-payment-history">Payment History</a></li>
-                      </ul>
-                  </li>
-                </div>
-
-                  <div id="input_reading" >
-                      <li class="sub-menu" >
-                        <a href="">
-                            <i class="fa fa-newspaper-o"></i>
-                            <span>Meter Reading</span>
-                        </a>
-                        <ul class="sub">
-                          <li><a href="/source_access/add-meter-reading">Input Meter Reading</a></li>
-                          <li id="modification"><a href="/source_access/Modify_Reading_Request">Modify Meter Reading</a></li>
-
-                        </ul>
-                    </li>
-                  </div>
-
-                  <div id="manage_account" >
-                    <li class="sub-menu" >
-                        <a class="" href="">
-                            <i class="fa fa-address-book"></i>
-                            <span>Consumer Accounts</span>
-                        </a>
-                        <ul class="sub">
-                            <li><a href="/source_access/view-consumer-list">View Consumer List</a></li>
-                            <li><a href="/source_access/add-new-consumer">Consumer Creation</a></li>
-                            <li><a href="/source_access/view-suspended-account">Reactivate Account</a></li>
-                        </ul>
-                    </li>
-                    </div>
+    </header>
+    <!--Header End-->
+    <!--sidebar start-->
+    <aside>
+      <div id="sidebar" class="nav-collapse ">
+        <!-- sidebar menu start-->
+        <ul class="sidebar-menu" id="nav-accordion">
+          <p class="centered"><a href=""><img src="{% static 'website/img/ui-admin.jpg' %}" class="img-circle"
+                width="80"></a></p>
+          <h5 class="centered">{{ context.name }}</h5>
 
 
 
-                    <div id="reports" >
+          <div id="billspayment">
+            <li class="sub-menu">
+              <a href="" class="active">
+                <i class="fa fa-newspaper-o"></i>
+                <span>Billing</span>
+              </a>
+              <ul class="sub">
+                <li><a href="/source_access/Payment">Bills Payment</a></li>
+                <li id=""><a href="/source_access/Send-Bill">Send Bill</a></li>
+                <li id=""><a href="/source_access/search-payment-history">Payment History</a></li>
+              </ul>
+            </li>
+          </div>
 
-                     <li class="sub-menu" >
-                        <a href="">
-                            <i class="fa fa-newspaper-o"></i>
-                            <span>Reports</span>
-                        </a>
-                        <ul class="sub">
-                          <li><a href="/source_access/usage-report-data">Usage Report</a></li>
-                          <li><a href="/source_access/revenue-report-data">Revenue Report</a></li>
-                            <li><a href="/source_access/pending_bills">Unsettled Bills</a></li>
-                        </ul>
-                    </li>
-                    </div>
+          <div id="input_reading">
+            <li class="sub-menu">
+              <a href="">
+                <i class="fa fa-newspaper-o"></i>
+                <span>Meter Reading</span>
+              </a>
+              <ul class="sub">
+                <li><a href="/source_access/add-meter-reading">Input Meter Reading</a></li>
+                <li id="modification"><a href="/source_access/Modify_Reading_Request">Modify Meter Reading</a></li>
 
-                    <div id="application" >
-                    <li class="sub-menu" >
-                        <a href="">
-                            <i class="fa fa-user-plus"></i>
-                            <span>Approve Application</span>
-                        </a>
-                        <ul class="sub">
-                          <li id="approve_app"><a href="/source_access/list-applicants">Application Request</a></li>
-                          <li><a href="/source_access/view-approved-applicants">Approved Applicants</a></li>
-                        </ul>
-                    </li>
-                    </div>
+              </ul>
+            </li>
+          </div>
 
-                    <div id="usermanagement" >
-                    <li class="sub-menu" >
-                        <a class= "" href="/source_access/view-system-user">
-                          <i class="fa fa-address-book"></i>
-                          <span>Users Management</span>
-                          </a>
-                      </li>
-                    </div>
+          <div id="manage_account">
+            <li class="sub-menu">
+              <a class="" href="">
+                <i class="fa fa-address-book"></i>
+                <span>Consumer Accounts</span>
+              </a>
+              <ul class="sub">
+                <li><a href="/source_access/view-consumer-list">View Consumer List</a></li>
+                <li><a href="/source_access/add-new-consumer">Consumer Creation</a></li>
+                <li><a href="/source_access/view-suspended-account">Reactivate Account</a></li>
+              </ul>
+            </li>
+          </div>
 
-                    <div id="usercreation" >
-                      <li class="sub-menu" >
-                          <a class= "" href="/source_access/add_new_authorized_personel">
-                            <i class="fa fa-address-book"></i>
-                            <span>User Creation</span>
-                            </a>
-                        </li>
-                      </div>
 
-                    <div id="rates"  >
-                    <li class="sub-menu" >
-                        <a class= "" href="/source_access/update-revenue-code">
-                          <i class="fa fa-address-book"></i>
-                          <span>Rates Management</span>
-                          </a>
-                    </li>
-                    </div>
 
-                    <div  id="backupdatabase"  >
-                    <li class="sub-menu">
-                        <!--Temporary disabled -->
-                        <!--<a href="">
+          <div id="reports">
+
+            <li class="sub-menu">
+              <a href="">
+                <i class="fa fa-newspaper-o"></i>
+                <span>Reports</span>
+              </a>
+              <ul class="sub">
+                <li><a href="/source_access/usage-report-data">Usage Report</a></li>
+                <li><a href="/source_access/revenue-report-data">Revenue Report</a></li>
+                <li><a href="/source_access/pending_bills">Unsettled Bills</a></li>
+              </ul>
+            </li>
+          </div>
+
+          <div id="application">
+            <li class="sub-menu">
+              <a href="">
+                <i class="fa fa-user-plus"></i>
+                <span>Approve Application</span>
+              </a>
+              <ul class="sub">
+                <li id="approve_app"><a href="/source_access/list-applicants">Application Request</a></li>
+                <li><a href="/source_access/view-approved-applicants">Approved Applicants</a></li>
+              </ul>
+            </li>
+          </div>
+
+          <div id="usermanagement">
+            <li class="sub-menu">
+              <a class="" href="/source_access/view-system-user">
+                <i class="fa fa-address-book"></i>
+                <span>Users Management</span>
+              </a>
+            </li>
+          </div>
+
+          <div id="usercreation">
+            <li class="sub-menu">
+              <a class="" href="/source_access/add_new_authorized_personel">
+                <i class="fa fa-address-book"></i>
+                <span>User Creation</span>
+              </a>
+            </li>
+          </div>
+
+          <div id="rates">
+            <li class="sub-menu">
+              <a class="" href="/source_access/update-revenue-code">
+                <i class="fa fa-address-book"></i>
+                <span>Rates Management</span>
+              </a>
+            </li>
+          </div>
+
+          <div id="backupdatabase">
+            <li class="sub-menu">
+              <!--Temporary disabled -->
+              <!--<a href="">
                           <i class="fa fa-database"></i>
                           <span>Backup Database</span>
                           </a> -->
-                        <ul class="sub">
-                          <li><a href="html/daily_data">Daily Data</a></li>
-                          <li><a href="">Weekly Data</a></li>
-                          <li><a href="">Monthly Data</a></li>
-                          <li><a href="">Yearly Data</a></li>
-                        </ul>
-                    </li>
-                </div>
+              <ul class="sub">
+                <li><a href="html/daily_data">Daily Data</a></li>
+                <li><a href="">Weekly Data</a></li>
+                <li><a href="">Monthly Data</a></li>
+                <li><a href="">Yearly Data</a></li>
+              </ul>
+            </li>
+          </div>
 
-            </div>
+      </div>
 
-      </aside>
-      <br>
-      <br>
-      <br>
-        <!--sidebar end-->
-        <!--main content start-->
-        <br>
-        <section id="main-content">
-          <div class="container">
-            <div class="card1">
-            <section class="wrapper">
-              <!-- Warining messages -->
-              <!-- Button trigger modal -->
+    </aside>
+    <br>
+    <br>
+    <br>
+    <!--sidebar end-->
+    <!--main content start-->
+    <br>
+    <section id="main-content">
+      <div class="container">
+        <div class="card1">
+          <section class="wrapper">
+            <!-- Warining messages -->
+            <!-- Button trigger modal -->
 
-                <form action="/source_access/Payment={{ context.Id }}" method="POST">
-                {% csrf_token %}
+            <form action="/source_access/Payment={{ context.Id }}" method="POST">
+              {% csrf_token %}
 
-                <div class="loader-wrapper">
-                    <span class="loader">
-                        <img src="{% static '/website/img/loading.gif' %}">
-                    </span>
-                </div>
-                <div class="table-responsive">
-                  <table id="tablePagination" class="table table-bordered" style="width:100%">
-                      <thead>
-                          <tr>
-                              <td>Account ID</td>
-                              <td>FullName</td>
-                              <td>Address of Installation</td>
-                              <td>Balance</td>
-                              <td>Action</td>
-                          </tr>
-                      </thead>
-                      <tbody>
-                          <tr>
-                              <td>{{ context.Id }}</td>
-                              <td>{{ context.Fullname}}</td>
-                              <td>{{ context.address }}</td>
-                              <td id="balance"></td>
-                                  <!--convert to Philippine money-->
-                                  <script>
-                                      const formatter = new Intl.NumberFormat('en-US', {
-                                          style: 'currency',
-                                          currency: 'Php',
-                                          minimumFractionDigits: 2
-                                        })
-                                        var balance = formatter.format(parseInt("{{context.balance}}"));
-                                        document.getElementById("balance").innerHTML = balance;
-                                  </script>
-                              <td><button type="button"
-                                  class="btn btn-primary" id="nxtbtn" data-toggle="modal" data-target="#officialreceipt">
-                                  Pay
-                                 </button></td>
-
-                          </tr>
-                       </tbody>
-                       </table>
-                </div>
-                  <br>
-
+              <div class="loader-wrapper">
+                <span class="loader">
+                  <img src="{% static '/website/img/loading.gif' %}">
+                </span>
+              </div>
+              <div class="table-responsive">
+                <table id="doc_header" class="table table-bordered" style="width:100%">
+                  <thead>
+                    <tr>
+                      <td>Account ID</td>
+                      <td>FullName</td>
+                      <td>Address of Installation</td>
+                      <td>Balance</td>
+                      <td>Action</td>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>{{ context.Id }}</td>
+                      <td>{{ context.Fullname}}</td>
+                      <td>{{ context.address }}</td>
+                      <td id="balance"></td>
+                      <!--convert to Philippine money-->
+                      <script>
+                        const formatter = new Intl.NumberFormat('en-US', {
+                          style: 'currency',
+                          currency: 'Php',
+                          minimumFractionDigits: 2
+                        })
+                        var balance = formatter.format(parseInt("{{context.balance}}"));
+                        document.getElementById("balance").innerHTML = balance;
+                      </script>
+                      <td><button type="button" class="btn btn-primary" id="nxtbtn" data-toggle="modal"
+                          data-target="#officialreceipt">
+                          Pay
+                        </button></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <br>
 
               <!--Disable Field-->
 
               <br>
 
-                <div class="row" >
-                  <div class="col-sm">
-                    <a href="/source_access/Payment"><button type="button"
-                      class="btn btn-primary"  >
-                      <i class="fa fa-arrow-left" aria-hidden="true"></i>Back
+              <div class="row">
+                <div class="col-sm">
+                  <a href="/source_access/Payment"><button type="button" class="btn btn-primary">
+                      <i class="fa fa-arrow-left" aria-hidden="true"></i> Back
                     </button></a>
-                  </div>
-                  <div class="col-sm">
-                  </div>
-                  <div class="col-sm">
-                  </div>
-                  <div class="col-sm">
-                  </div>
-                  <div class="col-sm">
-                    <button type="button" id="postbtn" class="btn btn-primary"  onclick="this_record()">Get a Copy</button>
-                  </div>
-                  <div class="col-sm">
-                        <a href="/source_access/prev-record={{account.accountinfoid}}"><button type="button" id="postbtn" class="btn btn-primary"  >View Usage History</button> </a>
-                  </div>
-                  <div class="col-sm">
-                      <a href="/source_access/payment-history={{context.Id}}"><button type="button"
-                        class="btn btn-primary" id="submitbtn"  >
-                        Payment History
-                      </button></a>
-                  </div>
-                  
+                </div>
+                <div class="col-sm">
+                </div>
+                <div class="col-sm">
+                </div>
+                <div class="col-sm">
+                </div>
+                <div class="col-sm">
+                  <button type="button" id="postbtn" class="btn btn-primary" onclick="this_record()">Get a Copy</button>
+                </div>
+                <div class="col-sm">
+                  <a href="/source_access/prev-record={{account.accountinfoid}}"><button type="button" id="postbtn"
+                      class="btn btn-primary">View Usage History</button> </a>
+                </div>
+                <div class="col-sm">
+                  <a href="/source_access/payment-history={{context.Id}}"><button type="button" class="btn btn-primary"
+                      id="submitbtn">
+                      Payment History
+                    </button></a>
                 </div>
 
+              </div>
 
 
 
-          <br><br>
-          <script>
-              function this_record() {
+
+              <br><br>
+              <script>
+                function this_record() {
                   var doc = new jsPDF('p', 'pt', 'letter');
                   var htmlstring = '';
                   var tempVarToCheckPageHeight = 0;
@@ -303,307 +301,316 @@
 
                   pageHeight = doc.internal.pageSize.height;
                   specialElementHandlers = {
-                      // element with id of "bypass" - jQuery style selector
-                      '#bypassme': function(element, renderer) {
-                          // true = "handled elsewhere, bypass text extraction"
-                          return true
-                      }
+                    // element with id of "bypass" - jQuery style selector
+                    '#bypassme': function (element, renderer) {
+                      // true = "handled elsewhere, bypass text extraction"
+                      return true
+                    }
                   };
                   margins = {
-                      top: 150,
-                      bottom: 60,
-                      left: 40,
-                      right: 40,
-                      width: 600
+                    top: 150,
+                    bottom: 60,
+                    left: 40,
+                    right: 40,
+                    width: 600
                   };
                   const formatter = new Intl.NumberFormat('en-US', {
-                      style: 'currency',
-                      currency: 'Php',
-                      minimumFractionDigits: 2
+                    style: 'currency',
+                    currency: 'Php',
+                    minimumFractionDigits: 2
                   })
 
                   var y = 20;
-                  var x = 20;
-
+                  var x = 40;
+                  doc.setLineWidth(2);
+                  doc.setFontSize(11);
+                  doc.autoTable({
+                    html: '#doc_header',
+                    startY: y = y + 20,
+                    theme: 'plain',
+                  })
                   doc.setLineWidth(2);
                   doc.setFontSize(14);
-                  doc.text(250, y = y + 30,  "");
-                  doc.text(250, y = y + 30,  "Usage Record");
-        
-                  //doc.text(200, x = x + 50, val);
+                  doc.text(250, y = y + 80, "Payment History");
 
                   doc.autoTable({
-                      html: '.this_table',
-                      startY: 100,
-                      theme: 'grid',
-                      columnStyles: {
-                          0: {
-                              cellWidth: 70,
-                          },
-                          1: {
-                              cellWidth: 70,
-                          },
-                          2: {
-                              cellWidth: 70,
-                          }
+                    html: '.this_table',
+                    startY: y = y + 20,
+                    theme: 'striped',
+                    columnStyles: {
+                      0: {
+                        cellWidth: 70,
                       },
-                      styles: {
-                          minCellHeight: 50
-
+                      1: {
+                        cellWidth: 70,
+                      },
+                      2: {
+                        cellWidth: 70,
                       }
+                    },
+                    styles: {
+                      minCellHeight: 20
+
+                    }
                   })
                   doc.save('{{account.firstname}} {{account.lastname}}_usage.pdf');
-              }
+                }
 
 
-          </script>
-          <div class="table-responsive">
-                       <table id="tablePagination" class="table table-bordered this_table" style="width:100%">
-                           <thead>
-                               <tr>
-                                   <td>Month</td>
-                                   <td>Reading</td>
-                                   <th scope="col">Usage</th>
-                                   <th scope="col">Bill</th>
-                                   <th scope="col">Penalty</th>
-                                   <th scope="col">Total Bill</th>
-                                   <th scope="col">Amount Paid</th>
+              </script>
+              <div class="table-responsive">
+                <table id="tablePagination" class="table table-striped table-bordered this_table" style="width:100%">
+                  <thead>
+                    <tr>
+                      <th>Month</th>
+                      <th>Reading</th>
+                      <th scope="col">Usage</th>
+                      <th scope="col">Bill</th>
+                      <th scope="col">Penalty</th>
+                      <th scope="col">Total Bill</th>
+                      <th scope="col">Amount Paid</th>
 
 
-                               </tr>
-                           </thead>
+                    </tr>
+                  </thead>
 
 
-                           <tbody>
-                               <tr>
-                                   <td>January</th>
-                                   <td>{{ usage.reading_jan|floatformat:2 }}</td>
-                                   <td>{{ usage.usage_jan|floatformat:2 }}</td>
-                                   <td>{{usage.bill_jan|floatformat:2 }}</td>
-                                   <td>{{usage.penalty_jan|floatformat:2 }}</td>
-                                   <td>{{usage.totalbill_jan|floatformat:2 }}</td>
-                                   <td>{{usage.paidamt_jan|floatformat:2 }}</td>
+                  <tbody>
+                    <tr>
+                      <td>January</th>
+                      <td>{{ usage.reading_jan|floatformat:2 }}</td>
+                      <td>{{ usage.usage_jan|floatformat:2 }}</td>
+                      <td>{{usage.bill_jan|floatformat:2 }}</td>
+                      <td>{{usage.penalty_jan|floatformat:2 }}</td>
+                      <td>{{usage.totalbill_jan|floatformat:2 }}</td>
+                      <td>{{usage.paidamt_jan|floatformat:2 }}</td>
 
-                               </tr>
-                               <tr>
-                                    <td>February</th>
-                                    <td>{{ usage.reading_feb|floatformat:2 }}</td>
-                                    <td>{{ usage.usage_feb|floatformat:2 }}</td>
-                                    <td>{{usage.bill_feb|floatformat:2 }}</td>
-                                    <td>{{usage.penalty_feb|floatformat:2 }}</td>
-                                    <td>{{usage.totalbill_feb|floatformat:2 }}</td>
-                                    <td>{{usage.paidamt_feb|floatformat:2 }}</td>
+                    </tr>
+                    <tr>
+                      <td>February</th>
+                      <td>{{ usage.reading_feb|floatformat:2 }}</td>
+                      <td>{{ usage.usage_feb|floatformat:2 }}</td>
+                      <td>{{usage.bill_feb|floatformat:2 }}</td>
+                      <td>{{usage.penalty_feb|floatformat:2 }}</td>
+                      <td>{{usage.totalbill_feb|floatformat:2 }}</td>
+                      <td>{{usage.paidamt_feb|floatformat:2 }}</td>
 
-                                </tr>
-                                <tr>
-                                    <td>March</th>
-                                    <td>{{ usage.reading_mar|floatformat:2 }}</td>
-                                    <td>{{ usage.usage_mar|floatformat:2 }}</td>
-                                    <td>{{usage.bill_mar|floatformat:2 }}</td>
-                                    <td>{{usage.penalty_mar|floatformat:2 }}</td>
-                                    <td>{{usage.totalbill_mar|floatformat:2 }}</td>
-                                    <td>{{usage.paidamt_mar|floatformat:2 }}</td>
+                    </tr>
+                    <tr>
+                      <td>March</th>
+                      <td>{{ usage.reading_mar|floatformat:2 }}</td>
+                      <td>{{ usage.usage_mar|floatformat:2 }}</td>
+                      <td>{{usage.bill_mar|floatformat:2 }}</td>
+                      <td>{{usage.penalty_mar|floatformat:2 }}</td>
+                      <td>{{usage.totalbill_mar|floatformat:2 }}</td>
+                      <td>{{usage.paidamt_mar|floatformat:2 }}</td>
 
-                                <tr>
-                                    <td>April</th>
-                                    <td>{{ usage.reading_apr|floatformat:2 }}</td>
-                                    <td>{{ usage.usage_apr|floatformat:2 }}</td>
-                                    <td>{{usage.bill_apr|floatformat:2 }}</td>
-                                    <td>{{usage.penalty_apr|floatformat:2 }}</td>
-                                    <td>{{usage.totalbill_apr|floatformat:2 }}</td>
-                                    <td>{{usage.paidamt_apr|floatformat:2 }}</td>
-                                </tr>
-                                <tr>
-                                    <td>May</th>
-                                    <td>{{ usage.reading_may|floatformat:2 }}</td>
-                                    <td>{{ usage.usage_may|floatformat:2 }}</td>
-                                    <td>{{usage.bill_may|floatformat:2 }}</td>
-                                    <td>{{usage.penalty_may|floatformat:2 }}</td>
-                                    <td>{{usage.totalbill_may|floatformat:2 }}</td>
-                                    <td>{{usage.paidamt_may|floatformat:2 }}</td>
+                    <tr>
+                      <td>April</th>
+                      <td>{{ usage.reading_apr|floatformat:2 }}</td>
+                      <td>{{ usage.usage_apr|floatformat:2 }}</td>
+                      <td>{{usage.bill_apr|floatformat:2 }}</td>
+                      <td>{{usage.penalty_apr|floatformat:2 }}</td>
+                      <td>{{usage.totalbill_apr|floatformat:2 }}</td>
+                      <td>{{usage.paidamt_apr|floatformat:2 }}</td>
+                    </tr>
+                    <tr>
+                      <td>May</th>
+                      <td>{{ usage.reading_may|floatformat:2 }}</td>
+                      <td>{{ usage.usage_may|floatformat:2 }}</td>
+                      <td>{{usage.bill_may|floatformat:2 }}</td>
+                      <td>{{usage.penalty_may|floatformat:2 }}</td>
+                      <td>{{usage.totalbill_may|floatformat:2 }}</td>
+                      <td>{{usage.paidamt_may|floatformat:2 }}</td>
 
-                                <tr>
-                                    <td>June</th>
-                                    <td>{{ usage.reading_jun|floatformat:2 }}</td>
-                                    <td>{{ usage.usage_jun|floatformat:2 }}</td>
-                                    <td>{{usage.bill_jun|floatformat:2 }}</td>
-                                    <td>{{usage.penalty_jun|floatformat:2 }}</td>
-                                    <td>{{usage.totalbill_jun|floatformat:2 }}</td>
-                                    <td>{{usage.paidamt_jun|floatformat:2 }}</td>
+                    <tr>
+                      <td>June</th>
+                      <td>{{ usage.reading_jun|floatformat:2 }}</td>
+                      <td>{{ usage.usage_jun|floatformat:2 }}</td>
+                      <td>{{usage.bill_jun|floatformat:2 }}</td>
+                      <td>{{usage.penalty_jun|floatformat:2 }}</td>
+                      <td>{{usage.totalbill_jun|floatformat:2 }}</td>
+                      <td>{{usage.paidamt_jun|floatformat:2 }}</td>
 
-                                <tr>
-                                    <td>July</th>
-                                    <td>{{ usage.reading_jul|floatformat:2 }}</td>
-                                    <td>{{ usage.usage_jul|floatformat:2 }}</td>
-                                    <td>{{usage.bill_jul|floatformat:2 }}</td>
-                                    <td>{{usage.penalty_jul|floatformat:2 }}</td>
-                                    <td>{{usage.totalbill_jul|floatformat:2 }}</td>
-                                    <td>{{usage.paidamt_jul|floatformat:2 }}</td>
-                                </tr>
-                                <tr>
-                                    <td>August</th>
-                                    <td>{{ usage.reading_aug|floatformat:2 }}</td>
-                                    <td>{{ usage.usage_aug|floatformat:2}}</td>
-                                    <td >{{usage.bill_aug|floatformat:2 }}</td>
-                                    <td>{{usage.penalty_aug|floatformat:2 }}</td>
-                                    <td>{{usage.totalbill_aug|floatformat:2 }}</td>
-                                    <td>{{usage.paidamt_aug|floatformat:2 }}</td>
-                                </tr>
-                                <tr>
-                                    <td>September</th>
-                                    <td>{{ usage.reading_sept|floatformat:2 }}</td>
-                                    <td>{{ usage.usage_sept|floatformat:2 }}</td>
-                                    <td>{{usage.bill_sept|floatformat:2 }}</td>
-                                    <td>{{usage.penalty_sept|floatformat:2 }}</td>
-                                    <td>{{usage.totalbill_sept|floatformat:2 }}</td>
-                                    <td>{{usage.paidamt_sept|floatformat:2 }}</td>
-                                </tr>
-                                <tr>
-                                    <td>October</th>
-                                    <td>{{ usage.reading_oct|floatformat:2 }}</td>
-                                    <td>{{ usage.usage_oct|floatformat:2 }}</td>
-                                    <td>{{usage.bill_oct|floatformat:2 }}</td>
-                                    <td>{{usage.penalty_oct|floatformat:2 }}</td>
-                                    <td>{{usage.totalbill_oct|floatformat:2 }}</td>
-                                    <td>{{usage.paidamt_oct|floatformat:2 }}</td>
-                                </tr>
-                                <tr>
-                                    <td>November</th>
-                                    <td>{{ usage.reading_nov|floatformat:2 }}</td>
-                                    <td>{{ usage.usage_nov|floatformat:2 }}</td>
-                                    <td>{{usage.bill_nov|floatformat:2 }}</td>
-                                    <td>{{usage.penalty_nov|floatformat:2 }}</td>
-                                    <td>{{usage.totalbill_nov|floatformat:2 }}</td>
-                                    <td>{{usage.paidamt_nov|floatformat:2 }}</td>
-                                </tr>
-                                <tr>
-                                    <td>December</th>
-                                    <td>{{ usage.reading_dec|floatformat:2 }}</td>
-                                    <td>{{ usage.usage_dec|floatformat:2 }}</td>
-                                    <td>{{usage.bill_dec|floatformat:2 }}</td>
-                                    <td>{{usage.penalty_dec|floatformat:2 }}</td>
-                                    <td>{{usage.totalbill_dec|floatformat:2 }}</td>
-                                    <td>{{usage.paidamt_dec|floatformat:2 }}</td>
-                                </tr>
+                    <tr>
+                      <td>July</th>
+                      <td>{{ usage.reading_jul|floatformat:2 }}</td>
+                      <td>{{ usage.usage_jul|floatformat:2 }}</td>
+                      <td>{{usage.bill_jul|floatformat:2 }}</td>
+                      <td>{{usage.penalty_jul|floatformat:2 }}</td>
+                      <td>{{usage.totalbill_jul|floatformat:2 }}</td>
+                      <td>{{usage.paidamt_jul|floatformat:2 }}</td>
+                    </tr>
+                    <tr>
+                      <td>August</th>
+                      <td>{{ usage.reading_aug|floatformat:2 }}</td>
+                      <td>{{ usage.usage_aug|floatformat:2}}</td>
+                      <td>{{usage.bill_aug|floatformat:2 }}</td>
+                      <td>{{usage.penalty_aug|floatformat:2 }}</td>
+                      <td>{{usage.totalbill_aug|floatformat:2 }}</td>
+                      <td>{{usage.paidamt_aug|floatformat:2 }}</td>
+                    </tr>
+                    <tr>
+                      <td>September</th>
+                      <td>{{ usage.reading_sept|floatformat:2 }}</td>
+                      <td>{{ usage.usage_sept|floatformat:2 }}</td>
+                      <td>{{usage.bill_sept|floatformat:2 }}</td>
+                      <td>{{usage.penalty_sept|floatformat:2 }}</td>
+                      <td>{{usage.totalbill_sept|floatformat:2 }}</td>
+                      <td>{{usage.paidamt_sept|floatformat:2 }}</td>
+                    </tr>
+                    <tr>
+                      <td>October</th>
+                      <td>{{ usage.reading_oct|floatformat:2 }}</td>
+                      <td>{{ usage.usage_oct|floatformat:2 }}</td>
+                      <td>{{usage.bill_oct|floatformat:2 }}</td>
+                      <td>{{usage.penalty_oct|floatformat:2 }}</td>
+                      <td>{{usage.totalbill_oct|floatformat:2 }}</td>
+                      <td>{{usage.paidamt_oct|floatformat:2 }}</td>
+                    </tr>
+                    <tr>
+                      <td>November</th>
+                      <td>{{ usage.reading_nov|floatformat:2 }}</td>
+                      <td>{{ usage.usage_nov|floatformat:2 }}</td>
+                      <td>{{usage.bill_nov|floatformat:2 }}</td>
+                      <td>{{usage.penalty_nov|floatformat:2 }}</td>
+                      <td>{{usage.totalbill_nov|floatformat:2 }}</td>
+                      <td>{{usage.paidamt_nov|floatformat:2 }}</td>
+                    </tr>
+                    <tr>
+                      <td>December</th>
+                      <td>{{ usage.reading_dec|floatformat:2 }}</td>
+                      <td>{{ usage.usage_dec|floatformat:2 }}</td>
+                      <td>{{usage.bill_dec|floatformat:2 }}</td>
+                      <td>{{usage.penalty_dec|floatformat:2 }}</td>
+                      <td>{{usage.totalbill_dec|floatformat:2 }}</td>
+                      <td>{{usage.paidamt_dec|floatformat:2 }}</td>
+                    </tr>
 
-                           </tbody>
-                       </table>
-                  </div>
-                  <br>
+                  </tbody>
+                </table>
+              </div>
+              <br>
 
-                    <!-- modal for Official Receipt -->
-                    <div class="modal fade" id="officialreceipt" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-                      <div class="modal-dialog modal-dialog-centered" role="document">
-                        <div class="modal-content">
-                          <div class="modal-header">
+              <!-- modal for Official Receipt -->
+              <div class="modal fade" id="officialreceipt" tabindex="-1" role="dialog"
+                aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                  <div class="modal-content">
+                    <div class="modal-header">
 
-                          </div>
+                    </div>
 
-                          <div class="modal-body">
+                    <div class="modal-body">
 
-                            <div class="modal-body mx-3">
+                      <div class="modal-body mx-3">
 
-                              <div class="form-group">
-                                <label for="receipt">Amount</label>
-                                <input type="number" name="amount" class="form-control" id="amount" aria-describedby="ornumber"  value="" placeholder="Enter Amount">
-                              </div>
+                        <div class="form-group">
+                          <label for="receipt">Amount</label>
+                          <input type="number" name="amount" class="form-control" id="amount"
+                            aria-describedby="ornumber" value="" placeholder="Enter Amount">
+                        </div>
 
-                              <div class="form-group">
-                                <label for="receipt">Official Receipt Number</label>
-                                <input type="text" name="or_number" class="form-control" id="ornumber" aria-describedby="ornumber"  value="" placeholder="Official Receipt Number">
-                              </div>
+                        <div class="form-group">
+                          <label for="receipt">Official Receipt Number</label>
+                          <input type="text" name="or_number" class="form-control" id="ornumber"
+                            aria-describedby="ornumber" value="" placeholder="Official Receipt Number">
+                        </div>
 
-                          <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                            <button type="submit" id="postbtn" class="btn btn-primary" onclick="this.form.submit();this.disabled = true;" value="POST" >Submit</button>
-
-                          </div>
+                        <div class="modal-footer">
+                          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                          <button type="submit" id="postbtn" class="btn btn-primary"
+                            onclick="this.form.submit();this.disabled = true;" value="POST">Submit</button>
 
                         </div>
+
                       </div>
                     </div>
+                  </div>
                 </div>
               </div>
 
-            </section>
-            </div>
-            </div>
+          </section>
+        </div>
+      </div>
 
-        </section>
-        <!--main content end-->
+    </section>
+    <!--main content end-->
 
-    <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title" id="exampleModalLongTitle">Payment</h5>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
-            </div>
-
-
-            <div class="modal-body">
-
-              <div class="modal-body mx-3">
-
-                    <div class="form-group">
-
-                    </div>
-                     <div class="form-group">
-                       <label for="exampleInputEmail1">Reading</label>
-                       <input type="text" name="" class="form-control" id="reading" aria-describedby="fname"  value="" placeholder="Firstname" >
-                     </div>
+    <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog"
+      aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLongTitle">Payment</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
 
 
+          <div class="modal-body">
 
-            <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-              <button type="submit" name="month_of_payment"
-              class="btn btn-primary" id="" data-toggle="modal"  data-dismiss="modal" value="POST">
-             Post
-             </button>
+            <div class="modal-body mx-3">
 
+              <div class="form-group">
+
+              </div>
+              <div class="form-group">
+                <label for="exampleInputEmail1">Reading</label>
+                <input type="text" name="" class="form-control" id="reading" aria-describedby="fname" value=""
+                  placeholder="Firstname">
+              </div>
+
+
+
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="submit" name="month_of_payment" class="btn btn-primary" id="" data-toggle="modal"
+                  data-dismiss="modal" value="POST">
+                  Post
+                </button>
+
+              </div>
             </div>
           </div>
         </div>
-       </div>
-       </div>
+      </div>
 
-    </section>
-</form>
-    <!-- js placed at the end of the document so the pages load faster -->
-    <script src="{% static 'website/lib/jquery/jquery.min.js' %}"></script>
+  </section>
+  </form>
+  <!-- js placed at the end of the document so the pages load faster -->
+  <script src="{% static 'website/lib/jquery/jquery.min.js' %}"></script>
 
-    <script src="{% static 'website/lib/bootstrap/js/bootstrap.min.js' %}"></script>
-    <script class="include" type="text/javascript" src="{% static 'website/lib/jquery.dcjqaccordion.2.7.js' %} "></script>
-    <script src="{% static 'website/lib/jquery.scrollTo.min.js' %}"></script>
-    <script src="{% static 'website/lib/jquery.nicescroll.js' %}" type="text/javascript"></script>
-    <script src="{% static 'website/lib/jquery.sparkline.js' %}"></script>
-    <script src="{% static 'website/lib/common-scripts.js' %}"></script>
-    <script type="text/javascript" src="{% static 'website/lib/gritter/js/jquery.gritter.js' %}"></script>
-    <script type="text/javascript" src="{% static 'website/lib/gritter-conf.js' %}"></script>
-    <!-- Custom styles for this template -->
-    <script src="{% static 'website/lib/DataTables/js/jquery.dataTables.min.js' %}"></script>
-    <script src="{% static 'website/lib/DataTables/js/dataTables.bootstrap4.min.js' %}"></script>
+  <script src="{% static 'website/lib/bootstrap/js/bootstrap.min.js' %}"></script>
+  <script class="include" type="text/javascript" src="{% static 'website/lib/jquery.dcjqaccordion.2.7.js' %} "></script>
+  <script src="{% static 'website/lib/jquery.scrollTo.min.js' %}"></script>
+  <script src="{% static 'website/lib/jquery.nicescroll.js' %}" type="text/javascript"></script>
+  <script src="{% static 'website/lib/jquery.sparkline.js' %}"></script>
+  <script src="{% static 'website/lib/common-scripts.js' %}"></script>
+  <script type="text/javascript" src="{% static 'website/lib/gritter/js/jquery.gritter.js' %}"></script>
+  <script type="text/javascript" src="{% static 'website/lib/gritter-conf.js' %}"></script>
+  <!-- Custom styles for this template -->
+  <script src="{% static 'website/lib/DataTables/js/jquery.dataTables.min.js' %}"></script>
+  <script src="{% static 'website/lib/DataTables/js/dataTables.bootstrap4.min.js' %}"></script>
 
-    <script>
-      $(document).ready(function() {
-        $('#tablePagination').DataTable( {
-           "lengthChange": false,
-           "ordering": false,
-           "searching": false,
-           "paging": false,
-           "info": false,
-        });
-    } );
+  <script>
+    $(document).ready(function () {
+      $('#tablePagination').DataTable({
+        "lengthChange": false,
+        "ordering": false,
+        "searching": false,
+        "paging": false,
+        "info": false,
+      });
+    });
 
-    $(window).on("load",function(){
-        $(".loader-wrapper").fadeOut("milliseconds");
-   });
-    </script>
+    $(window).on("load", function () {
+      $(".loader-wrapper").fadeOut("milliseconds");
+    });
+  </script>
 
-  </body>
+</body>
 
 
 

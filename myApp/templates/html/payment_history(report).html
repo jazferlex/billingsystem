@@ -51,7 +51,7 @@
  <style>
 
  </style>
-<body >
+<body onload="to_format()">
 
 </div>
     <section id="container">
@@ -179,6 +179,27 @@
                         doc.save('Payment History.pdf');
                     }
 
+                    function to_format(){
+                        dates_to_format = document.getElementsByClassName('dates')
+                        times_to_format = document.getElementsByClassName('times')
+                        
+                        datetime = [
+                            {%for i in retval%}
+                            "{{ i.date }}",
+                            {%endfor%}
+                        ]
+                        console.log(datetime);
+                        for(var i = 0; i < datetime.length; i++){
+                            if(datetime === "" || datetime === " "){
+                            }else{
+                                date_time = datetime[i].split(', ')
+                                date = date_time[0]+', '+date_time[1]
+                                time = date_time[2]
+                                dates_to_format[i].innerHTML = date
+                                times_to_format[i].innerHTML = time
+                            }
+                        }
+                    }
                 </script>
 
 
@@ -226,15 +247,15 @@
                             {% for payment in  retval %}
                               <tr>
                                   <th scope="row">Php.{{ payment.amount|floatformat:2 }}</th>
-                                  <th scope="row">{{ payment.date }}</th>
-                                  <td>{{payment.time}}</td>
+                                  <th class="dates" scope="row">{{ payment.date }}</th>
+                                  <td class="times">{{payment.time}}</td>
                                   <td>{{ payment.or_number }}</td>
                                   <td>{{payment.postedby}}</td>
                                   <td>{{ payment.consumer }}</td>
                                   <td>{{payment.accountinfoid}}</td>
                                   <td>{{ payment.meternumber }}</td>
                               </tr>
-                              {%endfor %}
+                            {% endfor %}
                           </tbody>
                       </table>
                  </div>
