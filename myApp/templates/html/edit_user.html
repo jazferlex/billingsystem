@@ -153,14 +153,15 @@
                    
                     </div> 
                     <div class="form-group">
+                      <label for="exampleInputPassword1">Password</label>
                       {% for message in messages %}
-                      <label for="exampleInputPassword1">Password {{message}}</label>
+                      <label for="exampleInputPassword1">{{message}}</label>
                       {%endfor%}
                       <input type="password" name="{{ ReqParams.PASS }}" class="form-control" id="email" aria-describedby="email"  value="{{ context.password }}" placeholder="" >
                     </div>   
                       
                     <div class="form-group">
-                      <label for="exampleInputPassword1">repeat Password</label>
+                      <label for="exampleInputPassword1">Confirm Password</label>
                       <input type="password" name="repeatpassword" class="form-control" id="email" aria-describedby="email"  value="{{ context.password }}" placeholder="" >
                     </div>   
 
