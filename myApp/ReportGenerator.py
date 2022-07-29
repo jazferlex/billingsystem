@@ -662,11 +662,11 @@ def OldSystemRecordDisplay(request,id):
    
 
    records = []
-   n = 2022
-   for i in range(13):
+   n = current_date.year
+   while n >= 2010:
       if usage_record.objects.filter(pk = account.accountinfoid + "-" + str(n)).exists():
-         new_record =  usage_record.objects.get(pk = account.accountinfoid + "-" + str(n))
-         records.append(new_record)
+         new_record1 =  usage_record.objects.get(pk = account.accountinfoid + "-" + str(n))
+         records.append(new_record1)
       n-=1
    return render(request,template,{"year_list":year_list,"retval":retval,"consumer":consumer,"ErrorMessagePass":ErrorMessagePass,"context":context,
                         "PaidStatus":PaidStatus,"ReqParams":ReqParams,"defval_year":defval_year,"oldcon":oldconsumer,"account":account,
