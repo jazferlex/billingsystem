@@ -200,7 +200,7 @@ class DB_CREDINTIALS():
     ENGINE = "django.db.backends.mysql"
     NAME = "lgu_ginatilan_db"
     USER = "root"
-    PASSWORD = "yjh434ctuG@-@"
+    PASSWORD = "database2021"
     HOST = "localhost"
     PORT = "3306"
 

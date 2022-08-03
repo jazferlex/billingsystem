@@ -41,6 +41,8 @@ urlpatterns = [
     path('source_access/Payment=<str:id>',Payment.pay_bill),
     path("source_access/list-applicants",BillingUtil.view_list_applicants),
     path("source_access/usage-report-data",ReportGenerator.Usage_Report),
+    path("source_access/barangay-monthly-report-data",ReportGenerator.Barangay_Monthly_Report),
+    path("source_access/barangay-monthly-record-data=<str:id>/<str:year>",ReportGenerator.Barangay_Monthly_Record),
     path("source_access/revenue-report-data",ReportGenerator.Revenue_Report),
     path("source_access/view-suspended-account",BillingUtil.view_suspended_account),
     path("source_access/update-revenue-code",RevenueCode.Update_Revenue),

@@ -240,9 +240,9 @@ def Usage_Report(request):
          template = "html/unavailable.html"
    else:
       return redirect("/")
-
+  
    year_request = request.POST.get(ReqParams.year)
-   brgy_code = request.POST.get(ReqParams.barangay)
+   brgycode = request.POST.get(ReqParams.barangay)
 
 
    current_date = date.today()
@@ -271,7 +271,6 @@ def Usage_Report(request):
    totalbrgy_usage = 0
    totaldue = 0
    totalpaid = 0
-   index = 0
    context = {
       "userid":request.session.get(ReqParams.userid),
       "UserType":request.session.get(ReqParams.LOGIN_SESSION),
@@ -354,10 +353,8 @@ def Usage_Report(request):
    if barangay_report.objects.filter(pk = "13-" + str(year_brgy)).exists():
       salamanca_record = barangay_report.objects.get(pk = "13-" + str(year_brgy))
 
-   if barangay_report.objects.filter(pk = "10-" + str(year_brgy)).exists():
-      sanroque_record = barangay_report.objects.get(pk = "10-" + str(year_brgy))
-
-
+   if barangay_report.objects.filter(pk = "14-" + str(year_brgy)).exists():
+      sanroque_record = barangay_report.objects.get(pk = "14-" + str(year_brgy))
 
 
 
@@ -365,6 +362,329 @@ def Usage_Report(request):
                                     "context":context,"brgy_report":brgy_report,
                                     "brgy_usage":brgy_usage,"allyear":allyear,"ReqParams":ReqParams,
                                     "defval":defval_year,
+                                    "brgycode":brgycode,
+                                    "brgy":brgy,
+                                    "anao_record":anao_record,"cagsing_record":cagsing_record,"calabawan_record":calabawan_record,"campisong_record":campisong_record,"cañorong_record":cañorong_record,"cambagte_record":cambagte_record,
+                                    "guiwanon_record":guiwanon_record,"looc_record":looc_record,"malatbo_record":malatbo_record,"mangaco_record":mangaco_record,
+                                    "palanas_record":palanas_record,"poblacion_record":poblacion_record,"salamanca_record":salamanca_record,"sanroque_record":sanroque_record})
+
+def Barangay_Monthly_Report(request):
+   #rendering page
+   template = ""
+   LogInSession = request.session.get(ReqParams.LOGIN_SESSION)
+   if LogInSession:
+      if LogInSession.__contains__(ReqParams.TELLER_LOGIN_VAL) or LogInSession.__contains__(ReqParams.SUPERVISOR_LOGIN_VAL) or LogInSession.__contains__(ReqParams.MANAGER_LOGIN_VAL):
+
+         template = "html/barangay_monthly_report.html"
+      else:
+         template = "html/unavailable.html"
+   else:
+      return redirect("/")
+
+   year_request = request.POST.get(ReqParams.year)
+   brgycode = request.POST.get(ReqParams.barangay)
+
+
+   current_date = date.today()
+
+   #default value(year)
+   current_date = date.today()
+   defval_year = str(current_date.year)
+
+   report = Year_Report.objects.get(pk = current_date.year)
+   if year_request != None:
+      defval_year = year_request
+      if Year_Report.objects.filter(pk = year_request).exists():
+          report = Year_Report.objects.get(pk = year_request)
+      else:
+          report = None
+
+
+   #year dropdown value
+   allyear = Year_Report.objects.all()
+
+
+   brgy_report = barangay_report.objects.all()
+   brgy_due = []
+   brgy_paid = []
+   brgy_usage = []
+   brgy_rate = []
+   totalbrgy_usage = 0
+   totaldue = 0
+   totalpaid = 0
+   rate = 0
+   context = {
+      "userid":request.session.get(ReqParams.userid),
+      "UserType":request.session.get(ReqParams.LOGIN_SESSION),
+      "name":request.session.get(ReqParams.name)
+   }
+
+   #usage per baranggay
+   year_brgy = 0
+   if year_request != None:
+      year_brgy = year_request
+   else:
+      year_brgy = current_date.year
+
+   for brgy in brgy_report:
+      totaldue = 0
+      totalpaid = 0
+      totalbrgy_usage = 0
+      rate = 0
+
+      if brgy.year == int(year_brgy):
+         totaldue = brgy.total_due_ytd
+         totalpaid = brgy.total_paid_ytd
+         totalbrgy_usage = brgy.total_usage
+         brgy_usage.append(totalbrgy_usage)
+         brgy_due.append(totaldue)
+         brgy_paid.append(totalpaid)
+
+   #get monthly report in in Every Barangay
+   #default value(brgycode)
+   anao_record = None
+   cagsing_record = None
+   calabawan_record = None
+   cambagte_record = None
+   campisong_record = None
+   cañorong_record = None
+   guiwanon_record = None
+   looc_record = None
+   malatbo_record = None
+   mangaco_record = None
+   palanas_record = None
+   poblacion_record = None
+   salamanca_record = None
+   sanroque_record = None
+
+   if barangay_report.objects.filter(pk = "1-" + str(year_brgy)).exists():
+      anao_record = barangay_report.objects.get(pk = "1-" + str(year_brgy))
+
+   if barangay_report.objects.filter(pk = "2-" + str(year_brgy)).exists():
+      cagsing_record = barangay_report.objects.get(pk = "2-" + str(year_brgy))
+
+   if barangay_report.objects.filter(pk = "3-" + str(year_brgy)).exists():
+      calabawan_record = barangay_report.objects.get(pk = "3-" + str(year_brgy))
+
+   if barangay_report.objects.filter(pk = "4-" + str(year_brgy)).exists():
+      cambagte_record = barangay_report.objects.get(pk = "4-" + str(year_brgy))
+
+   if barangay_report.objects.filter(pk = "5-" + str(year_brgy)).exists():
+      campisong_record = barangay_report.objects.get(pk = "5-" + str(year_brgy))
+
+   if barangay_report.objects.filter(pk = "6-" + str(year_brgy)).exists():
+      cañorong_record = barangay_report.objects.get(pk = "6-" + str(year_brgy))
+
+   if barangay_report.objects.filter(pk = "7-" + str(year_brgy)).exists():
+      guiwanon_record = barangay_report.objects.get(pk = "7-" + str(year_brgy))
+
+   if barangay_report.objects.filter(pk = "8-" + str(year_brgy)).exists():
+      looc_record = barangay_report.objects.get(pk = "8-" + str(year_brgy))
+
+   if barangay_report.objects.filter(pk = "9-" + str(year_brgy)).exists():
+      malatbo_record = barangay_report.objects.get(pk = "9-" + str(year_brgy))
+
+   if barangay_report.objects.filter(pk = "10-" + str(year_brgy)).exists():
+      mangaco_record = barangay_report.objects.get(pk = "10-" + str(year_brgy))
+
+   if barangay_report.objects.filter(pk = "11-" + str(year_brgy)).exists():
+      palanas_record = barangay_report.objects.get(pk = "11-" + str(year_brgy))
+
+   if barangay_report.objects.filter(pk = "12-" + str(year_brgy)).exists():
+      poblacion_record = barangay_report.objects.get(pk = "12-" + str(year_brgy))
+
+   if barangay_report.objects.filter(pk = "13-" + str(year_brgy)).exists():
+      salamanca_record = barangay_report.objects.get(pk = "13-" + str(year_brgy))
+
+   if barangay_report.objects.filter(pk = "14-" + str(year_brgy)).exists():
+      sanroque_record = barangay_report.objects.get(pk = "14-" + str(year_brgy))
+   
+
+
+   return render(request,template,{"report":report,"brgy_due":brgy_due,"brgy_paid":brgy_paid,"rate":rate,
+                                    "context":context,"brgy_report":brgy_report,
+                                    "brgy_usage":brgy_usage,"allyear":allyear,"ReqParams":ReqParams,
+                                    "defval":defval_year,
+                                    "brgycode":brgycode,
+                                    "brgy":brgy,
+                                    "anao_record":anao_record,"cagsing_record":cagsing_record,"calabawan_record":calabawan_record,"campisong_record":campisong_record,"cañorong_record":cañorong_record,"cambagte_record":cambagte_record,
+                                    "guiwanon_record":guiwanon_record,"looc_record":looc_record,"malatbo_record":malatbo_record,"mangaco_record":mangaco_record,
+                                    "palanas_record":palanas_record,"poblacion_record":poblacion_record,"salamanca_record":salamanca_record,"sanroque_record":sanroque_record})
+
+def Barangay_Monthly_Record(request,year,id):
+   #rendering page
+   template = ""
+   LogInSession = request.session.get(ReqParams.LOGIN_SESSION)
+   if LogInSession:
+      if LogInSession.__contains__(ReqParams.TELLER_LOGIN_VAL) or LogInSession.__contains__(ReqParams.SUPERVISOR_LOGIN_VAL) or LogInSession.__contains__(ReqParams.MANAGER_LOGIN_VAL):
+
+         template = "html/barangay_monthly_record.html"
+      else:
+         template = "html/unavailable.html"
+   else:
+      return redirect("/")
+
+   brgycode = id
+
+   #default value(year)
+   current_date = date.today()
+   defval_year = year
+   year_brgy = defval_year
+   if request.method == 'POST':
+      year_request = request.POST.get(ReqParams.year)
+      defval_year = year_request
+      year_brgy = year_request
+      if Year_Report.objects.filter(pk = year_request).exists():
+         report = Year_Report.objects.get(pk = year_request)
+      else:
+         report = None
+   else:
+      report = Year_Report.objects.get(pk = defval_year)
+
+
+
+   #year dropdown value
+   allyear = Year_Report.objects.all()
+
+
+   brgy_report = barangay_report.objects.all()
+   brgy_due = []
+   brgy_paid = []
+   brgy_usage = []
+   totalbrgy_usage = 0
+   totaldue = 0
+   totalpaid = 0
+   context = {
+      "userid":request.session.get(ReqParams.userid),
+      "UserType":request.session.get(ReqParams.LOGIN_SESSION),
+      "name":request.session.get(ReqParams.name)
+   }
+
+
+   for brgy in brgy_report:
+      totaldue = 0
+      totalpaid = 0
+      totalbrgy_usage = 0
+
+      if brgy.year == int(year_brgy):
+         totaldue = brgy.total_due_ytd
+         totalpaid = brgy.total_paid_ytd
+         totalbrgy_usage = brgy.total_usage
+         brgy_usage.append(totalbrgy_usage)
+         brgy_due.append(totaldue)
+         brgy_paid.append(totalpaid)
+
+   #get monthly report in in Every Barangay
+   #default value(brgycode)
+   anao_record = None
+   cagsing_record = None
+   calabawan_record = None
+   cambagte_record = None
+   campisong_record = None
+   cañorong_record = None
+   guiwanon_record = None
+   looc_record = None
+   malatbo_record = None
+   mangaco_record = None
+   palanas_record = None
+   poblacion_record = None
+   salamanca_record = None
+   sanroque_record = None
+
+   print(year_brgy)
+   if barangay_report.objects.filter(pk = "1-" + str(year_brgy)).exists():
+      anao_record = barangay_report.objects.get(pk = "1-" + str(year_brgy))
+
+   if barangay_report.objects.filter(pk = "2-" + str(year_brgy)).exists():
+      cagsing_record = barangay_report.objects.get(pk = "2-" + str(year_brgy))
+
+   if barangay_report.objects.filter(pk = "3-" + str(year_brgy)).exists():
+      calabawan_record = barangay_report.objects.get(pk = "3-" + str(year_brgy))
+
+   if barangay_report.objects.filter(pk = "4-" + str(year_brgy)).exists():
+      cambagte_record = barangay_report.objects.get(pk = "4-" + str(year_brgy))
+
+   if barangay_report.objects.filter(pk = "5-" + str(year_brgy)).exists():
+      campisong_record = barangay_report.objects.get(pk = "5-" + str(year_brgy))
+
+   if barangay_report.objects.filter(pk = "6-" + str(year_brgy)).exists():
+      cañorong_record = barangay_report.objects.get(pk = "6-" + str(year_brgy))
+
+   if barangay_report.objects.filter(pk = "7-" + str(year_brgy)).exists():
+      guiwanon_record = barangay_report.objects.get(pk = "7-" + str(year_brgy))
+
+   if barangay_report.objects.filter(pk = "8-" + str(year_brgy)).exists():
+      looc_record = barangay_report.objects.get(pk = "8-" + str(year_brgy))
+
+   if barangay_report.objects.filter(pk = "9-" + str(year_brgy)).exists():
+      malatbo_record = barangay_report.objects.get(pk = "9-" + str(year_brgy))
+
+   if barangay_report.objects.filter(pk = "10-" + str(year_brgy)).exists():
+      mangaco_record = barangay_report.objects.get(pk = "10-" + str(year_brgy))
+
+   if barangay_report.objects.filter(pk = "11-" + str(year_brgy)).exists():
+      palanas_record = barangay_report.objects.get(pk = "11-" + str(year_brgy))
+
+   if barangay_report.objects.filter(pk = "12-" + str(year_brgy)).exists():
+      poblacion_record = barangay_report.objects.get(pk = "12-" + str(year_brgy))
+
+   if barangay_report.objects.filter(pk = "13-" + str(year_brgy)).exists():
+      salamanca_record = barangay_report.objects.get(pk = "13-" + str(year_brgy))
+
+   if barangay_report.objects.filter(pk = "14-" + str(year_brgy)).exists():
+      sanroque_record = barangay_report.objects.get(pk = "14-" + str(year_brgy))
+   barangay_name = ReqParams.barangay_list
+   if brgycode != None or brgycode != "" or brgycode != '':
+      defval_brgycode = brgycode
+      defval_brgyname = barangay_name[int(defval_brgycode) - 1]
+      if brgycode == "1":
+         brgy = anao_record
+      if brgycode == "2":
+         brgy = cagsing_record
+      if brgycode == "3":
+         brgy = calabawan_record
+      if brgycode == "4":
+         brgy = cambagte_record
+      if brgycode == "5":
+         brgy = campisong_record
+      if brgycode == "6":
+         brgy = cañorong_record
+      if brgycode == "7":
+         brgy = guiwanon_record
+      if brgycode == "8":
+         brgy = looc_record
+      if brgycode == "9":
+         brgy = malatbo_record
+      if brgycode == "10":
+         brgy = mangaco_record
+      if brgycode == "11":
+         brgy = palanas_record
+      if brgycode == "12":
+         brgy = poblacion_record
+      if brgycode == "13":
+         brgy = salamanca_record
+      if brgycode == "14":
+         brgy = sanroque_record
+   else:
+      defval_brgycode = "14"
+      brgycode = "14"
+      defval_brgyname = barangay_name[int(defval_brgycode) - 1]
+
+   records = []
+   for n in range(current_date.year, 2017, -1):
+      new_record1 =  barangay_report.objects.get(pk = (brgycode + "-" + str(n)))
+      records.append(new_record1)
+   for n in range(2011, 2009, -1):
+      new_record1 =  barangay_report.objects.get(pk = (brgycode + "-" + str(n)))
+      records.append(new_record1)
+
+   return render(request,template,{"report":report,"brgy_due":brgy_due,"brgy_paid":brgy_paid,
+                                    "context":context,"brgy_report":brgy_report,
+                                    "brgy_usage":brgy_usage,"allyear":allyear,"ReqParams":ReqParams,
+                                    "defval":defval_year,
+                                    "brgycode":brgycode,
+                                    "brgy":brgy,"records":records,
+                                    "defval_brgyname":defval_brgyname,
                                     "anao_record":anao_record,"cagsing_record":cagsing_record,"calabawan_record":calabawan_record,"campisong_record":campisong_record,"cañorong_record":cañorong_record,"cambagte_record":cambagte_record,
                                     "guiwanon_record":guiwanon_record,"looc_record":looc_record,"malatbo_record":malatbo_record,"mangaco_record":mangaco_record,
                                     "palanas_record":palanas_record,"poblacion_record":poblacion_record,"salamanca_record":salamanca_record,"sanroque_record":sanroque_record})
@@ -412,7 +732,6 @@ def Revenue_Report(request):
    totalbrgy_usage = 0
    totaldue = 0
    totalpaid = 0
-   index = 0
    context = {
       "userid":request.session.get(ReqParams.userid),
       "UserType":request.session.get(ReqParams.LOGIN_SESSION),
@@ -495,8 +814,8 @@ def Revenue_Report(request):
    if barangay_report.objects.filter(pk = "13-" + str(year_brgy)).exists():
       salamanca_record = barangay_report.objects.get(pk = "13-" + str(year_brgy))
 
-   if barangay_report.objects.filter(pk = "10-" + str(year_brgy)).exists():
-      sanroque_record = barangay_report.objects.get(pk = "10-" + str(year_brgy))
+   if barangay_report.objects.filter(pk = "14-" + str(year_brgy)).exists():
+      sanroque_record = barangay_report.objects.get(pk = "14-" + str(year_brgy))
 
    #unuse next line of code
    #monthname = ReqParams.barangay_list
