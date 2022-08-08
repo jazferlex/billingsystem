@@ -1894,6 +1894,7 @@ def paymenthistory(request,id):
 
 
    account = account_info.objects.get(pk = id)
+   # history = getTotalBill.objects.get(pk = id)
    accountrecord = payment_history.objects.filter(accountinfoid = id)
    for record in accountrecord:
       #for dropdown values(year)
@@ -1903,7 +1904,6 @@ def paymenthistory(request,id):
       if record.year == current_date.year:
          retval_list.append(record)
 
-   print(retval_list)
    accountrecord = payment_history.objects.filter(accountinfoid = id)
    if year_request:
       accountrecord = payment_history.objects.filter(accountinfoid = id)
@@ -1913,11 +1913,131 @@ def paymenthistory(request,id):
          if record.year == int(year_request):
             retval_list.append(record)
       defval_year = year_request
-      print(retval_list)
-
 
 
    return render(request,template,{"retval":retval_list,"account":account,"accoutrecord":accountrecord,"context":context,"defval":defval_year,"year_list":year_list,"ReqParams":ReqParams,"accountrecord":accountrecord})
+
+def history(request,id):
+
+   loginsession = request.session.get(ReqParams.LOGIN_SESSION)
+   template = ""
+   if loginsession:
+      if loginsession.__contains__(ReqParams.TELLER_LOGIN_VAL) or loginsession.__contains__(ReqParams.SUPERVISOR_LOGIN_VAL):
+         template = "html/history.html"
+      else:
+         template = "html/unavailable.html"
+   else:
+      return redirect("/")
+
+   context = {
+      "UserType":request.session.get(ReqParams.LOGIN_SESSION),
+      "name":request.session.get(ReqParams.name),
+      "0":"Not Paid",
+      "1":"Paid"
+   }
+   PaidStatus = ["Not Paid","Paid"]
+   ErrorMessagePass = ""
+   index = 0
+   commulative_bill = 0
+   current_date = date.today()
+   year_request = request.POST.get(ReqParams.year)
+   account = account_info.objects.get(pk = id)
+   consumer = consumers_info.objects.get(pk = account.consumerid)
+
+   oldconsumer = None
+   if OldCosumerInfo.objects.filter(pk = consumer.oldconsumerid).exists():
+      oldconsumer = OldCosumerInfo.objects.get(pk = consumer.oldconsumerid)
+
+   accountidstr = account.accountinfoid + "-" + str(current_date.year)
+   accountrecord = usage_record.objects.get(pk = accountidstr)
+   #dropdown values
+   current_year = current_date.year
+   year_list = []
+   #default value
+   retval_list = []
+   defval_year = str(current_year)
+   prev_record = getTotalBill.objects.filter(con_id = consumer.oldconsumerid)
+   readingdate = ""
+   for record in  prev_record:
+      if record.reading_date.__contains__(str(defval_year)):
+         retval_list.append(record)
+         index = index + 1
+   new_record = None
+   #get the latest bill
+   latest_record = usage_record.objects.get(pk = account.accountinfoid + "-" + str(current_date.year))
+   commulative_bill = latest_record.commulative_bill
+
+   #for record that has been updated/posted on this new System
+   if year_request == None:
+      new_record =  usage_record.objects.get(pk = account.accountinfoid + "-" + str(defval_year))
+   else:
+      new_record = None
+
+   #year to choose,from year 2010 until today
+   while current_year >= 2018:
+      year_list.append(current_year)
+      current_year = current_year - 1
+
+   current_year = 2011
+   while current_year >= 2010:
+      year_list.append(current_year)
+      current_year = current_year - 1
+
+   account = account_info.objects.get(pk = id)
+   accountrecord = payment_history.objects.filter(accountinfoid = id)
+   for record in accountrecord:
+      #for dropdown values(year)
+      if record.year not in year_list:
+         year_list.append(record.year)
+      #default display, current year
+      if record.year == current_date.year:
+         retval_list.append(record)
+
+   accountrecord = payment_history.objects.filter(accountinfoid = id)
+   if year_request:
+      accountrecord = payment_history.objects.filter(accountinfoid = id)
+      for record in accountrecord:
+
+         #default display, current year
+         if record.year == int(year_request):
+            retval_list.append(record)
+      defval_year = year_request
+
+
+   if request.method == "POST":
+      retval_list = []
+      index = 0
+      if year_request:
+         prev_record = getTotalBill.objects.filter(con_id = consumer.oldconsumerid)
+         defval_year = year_request
+         for record in  prev_record:
+            if record.reading_date.__contains__(str(year_request)):
+               retval_list.append(record)
+               index = index + 1
+
+         #for record that has been updated/posted on this new System
+         if usage_record.objects.filter(pk = account.accountinfoid + "-" + str(defval_year)).exists():
+            new_record =  usage_record.objects.get(pk = account.accountinfoid + "-" + str(defval_year))
+   
+
+   newrecord = []
+   for n in range(current_date.year, 2017, -1):
+      if usage_record.objects.filter(pk = account.accountinfoid + "-" + str(n)).exists():
+         new_record1 =  usage_record.objects.get(pk = account.accountinfoid + "-" + str(n))
+         newrecord.append(new_record1)
+   for n in range(2011, 2009, -1):
+      if usage_record.objects.filter(pk = account.accountinfoid + "-" + str(n)).exists():
+         new_record1 =  usage_record.objects.get(pk = account.accountinfoid + "-" + str(n))
+         newrecord.append(new_record1)
+
+         
+   return render(request,template,{"year_list":year_list,"retval":retval_list,
+                                    "consumer":consumer,"ErrorMessagePass":ErrorMessagePass,"context":context,
+                                     "PaidStatus":PaidStatus,"ReqParams":ReqParams,"defval_year":defval_year,
+                                     "oldcon":oldconsumer,"account":account,"accountrecord":accountrecord,
+                                     "new_record":new_record, "index":index,"commulative_bill":commulative_bill,
+                                     "newrecord":newrecord })
+                                    
 
 
 def UnpaidMonth(id,year):

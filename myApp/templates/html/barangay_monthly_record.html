@@ -93,7 +93,7 @@
         <div class="card1" style="margin-right: -30px">
           <section class="wrapper">
 
-            <form action="/source_access/barangay-monthly-record-data={{brgycode}}/{{report.year}}" method="POST">
+            <form action="/source_access/barangay-monthly-record-data={{brgycode}}/{{defval_brgyname}}" method="POST">
               <script src="https:cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"> </script>
               <script>
                 function convertToArray(obj) {
@@ -137,7 +137,7 @@
                 <br>
                 <br>
                 <center>
-                  <h1>Barangay Reports</h1>
+                  <h1>Water Usage Per Barangay</h1>
                 </center>
                 <br>
 
@@ -148,7 +148,7 @@
                       <select name="{{ ReqParams.year }}" class="form-control" onchange='this.form.submit();'>
                         <option value="{{defval}}" selected>{{defval}}</option>
                         {% for year in allyear %}
-                        <option value="{{ year.year }}">{{year.year}}</option>
+                        <option value="{{ year }}">{{year}}</option>
                         {%endfor%}
                       </select>
                     </div>

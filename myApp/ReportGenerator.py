@@ -251,6 +251,10 @@ def Usage_Report(request):
    current_date = date.today()
    defval_year = str(current_date.year)
 
+   current_year = current_date.year
+   allyear = []
+   defval_year = str(current_year)
+
    report = Year_Report.objects.get(pk = current_date.year)
    if year_request != None:
       defval_year = year_request
@@ -260,8 +264,17 @@ def Usage_Report(request):
           report = None
 
 
-   #year dropdown value
-   allyear = Year_Report.objects.all()
+   # #year dropdown value
+   # allyear = Year_Report.objects.all()
+
+   #year to choose,from year 2010 until today
+   while current_year >= 2018:
+      allyear.append(current_year)
+      current_year = current_year - 1
+   current_year = 2011
+   while current_year >= 2010:
+      allyear.append(current_year)
+      current_year = current_year - 1
 
 
    brgy_report = barangay_report.objects.all()
@@ -391,6 +404,10 @@ def Barangay_Monthly_Report(request):
    current_date = date.today()
    defval_year = str(current_date.year)
 
+   current_year = current_date.year
+   allyear = []
+   defval_year = str(current_year)
+
    report = Year_Report.objects.get(pk = current_date.year)
    if year_request != None:
       defval_year = year_request
@@ -400,8 +417,17 @@ def Barangay_Monthly_Report(request):
           report = None
 
 
-   #year dropdown value
-   allyear = Year_Report.objects.all()
+   # #year dropdown value
+   # allyear = Year_Report.objects.all()
+
+   #year to choose,from year 2010 until today
+   while current_year >= 2018:
+      allyear.append(current_year)
+      current_year = current_year - 1
+   current_year = 2011
+   while current_year >= 2010:
+      allyear.append(current_year)
+      current_year = current_year - 1
 
 
    brgy_report = barangay_report.objects.all()
@@ -524,27 +550,45 @@ def Barangay_Monthly_Record(request,year,id):
    else:
       return redirect("/")
 
+
    brgycode = id
+
+   current_date = date.today()
 
    #default value(year)
    current_date = date.today()
-   defval_year = year
-   year_brgy = defval_year
+   defval = str(year)
+
+   current_year = current_date.year
+   allyear = []
+   defval = str(current_year)
+
+   #default value(year)
+   current_date = date.today()
+   year_brgy = year
+   defval = year_brgy
    if request.method == 'POST':
       year_request = request.POST.get(ReqParams.year)
-      defval_year = year_request
+      defval = year_request
       year_brgy = year_request
       if Year_Report.objects.filter(pk = year_request).exists():
          report = Year_Report.objects.get(pk = year_request)
       else:
          report = None
    else:
-      report = Year_Report.objects.get(pk = defval_year)
+      report = Year_Report.objects.get(pk = defval)
 
+   # #year dropdown value
+   # allyear = Year_Report.objects.all()
 
-
-   #year dropdown value
-   allyear = Year_Report.objects.all()
+   #year to choose,from year 2010 until today
+   while current_year >= 2018:
+      allyear.append(current_year)
+      current_year = current_year - 1
+   current_year = 2011
+   while current_year >= 2010:
+      allyear.append(current_year)
+      current_year = current_year - 1
 
 
    brgy_report = barangay_report.objects.all()
@@ -591,7 +635,6 @@ def Barangay_Monthly_Record(request,year,id):
    salamanca_record = None
    sanroque_record = None
 
-   print(year_brgy)
    if barangay_report.objects.filter(pk = "1-" + str(year_brgy)).exists():
       anao_record = barangay_report.objects.get(pk = "1-" + str(year_brgy))
 
@@ -677,11 +720,12 @@ def Barangay_Monthly_Record(request,year,id):
    for n in range(2011, 2009, -1):
       new_record1 =  barangay_report.objects.get(pk = (brgycode + "-" + str(n)))
       records.append(new_record1)
+   
 
    return render(request,template,{"report":report,"brgy_due":brgy_due,"brgy_paid":brgy_paid,
                                     "context":context,"brgy_report":brgy_report,
                                     "brgy_usage":brgy_usage,"allyear":allyear,"ReqParams":ReqParams,
-                                    "defval":defval_year,
+                                    "defval":defval,
                                     "brgycode":brgycode,
                                     "brgy":brgy,"records":records,
                                     "defval_brgyname":defval_brgyname,
@@ -709,9 +753,15 @@ def Revenue_Report(request):
    brgy_code = request.POST.get(ReqParams.barangay)
    current_date = date.today()
 
+   current_date = date.today()
+
    #default value(year)
    current_date = date.today()
    defval_year = str(current_date.year)
+
+   current_year = current_date.year
+   allyear = []
+   defval_year = str(current_year)
 
    report = Year_Report.objects.get(pk = current_date.year)
    if year_request != None:
@@ -722,8 +772,19 @@ def Revenue_Report(request):
           report = None
 
 
-   #year dropdown value
-   allyear = Year_Report.objects.all()
+   # #year dropdown value
+   # allyear = Year_Report.objects.all()
+
+   #year to choose,from year 2010 until today
+   while current_year >= 2018:
+      allyear.append(current_year)
+      current_year = current_year - 1
+   current_year = 2011
+   while current_year >= 2010:
+      allyear.append(current_year)
+      current_year = current_year - 1
+
+
 
    brgy_report = barangay_report.objects.all()
    brgy_due = []
@@ -939,13 +1000,13 @@ def OldSystemRecordDisplay(request,id):
    current_year = current_date.year
    year_list = []
    #default value
-   retval = []
+   retval_list = []
    defval_year = str(current_year)
    prev_record = getTotalBill.objects.filter(con_id = consumer.oldconsumerid)
-   readingdate = ""
+   readingdate = usage_record.objects.get(pk = accountidstr)
    for record in  prev_record:
       if record.reading_date.__contains__(str(defval_year)):
-         retval.append(record)
+         retval_list.append(record)
          index = index + 1
    new_record = None
    #get the latest bill
@@ -959,20 +1020,45 @@ def OldSystemRecordDisplay(request,id):
       new_record = None
 
    #year to choose,from year 2010 until today
+   while current_year >= 2018:
+      year_list.append(current_year)
+      current_year = current_year - 1
+
+   current_year = 2011
    while current_year >= 2010:
       year_list.append(current_year)
       current_year = current_year - 1
 
+   account = account_info.objects.get(pk = id)
+   accountrecord = payment_history.objects.filter(accountinfoid = id)
+   for record in accountrecord:
+      #for dropdown values(year)
+      if record.year not in year_list:
+         year_list.append(record.year)
+      #default display, current year
+      if record.year == current_date.year:
+         retval_list.append(record)
+
+   # accountrecord = payment_history.objects.filter(accountinfoid = id)
+   # if year_request:
+   #    accountrecord = payment_history.objects.filter(accountinfoid = id)
+   #    for record in accountrecord:
+
+   #       #default display, current year
+   #       if record.year == int(year_request):
+   #          retval_list.append(record)
+   #    defval_year = year_request
+
 
    if request.method == "POST":
-      retval = []
+      retval_list = []
       index = 0
       if year_request:
          prev_record = getTotalBill.objects.filter(con_id = consumer.oldconsumerid)
          defval_year = year_request
          for record in  prev_record:
             if record.reading_date.__contains__(str(year_request)):
-               retval.append(record)
+               retval_list.append(record)
                index = index + 1
 
          #for record that has been updated/posted on this new System
@@ -980,16 +1066,23 @@ def OldSystemRecordDisplay(request,id):
             new_record =  usage_record.objects.get(pk = account.accountinfoid + "-" + str(defval_year))
    
 
-   records = []
-   n = current_date.year
-   while n >= 2010:
+   newrecord = []
+   for n in range(current_date.year, 2017, -1):
       if usage_record.objects.filter(pk = account.accountinfoid + "-" + str(n)).exists():
          new_record1 =  usage_record.objects.get(pk = account.accountinfoid + "-" + str(n))
-         records.append(new_record1)
-      n-=1
-   return render(request,template,{"year_list":year_list,"retval":retval,"consumer":consumer,"ErrorMessagePass":ErrorMessagePass,"context":context,
-                        "PaidStatus":PaidStatus,"ReqParams":ReqParams,"defval_year":defval_year,"oldcon":oldconsumer,"account":account,
-                        "new_record":new_record,"index":index,"commulative_bill":commulative_bill,"records":records})
+         newrecord.append(new_record1)
+   for n in range(2011, 2009, -1):
+      if usage_record.objects.filter(pk = account.accountinfoid + "-" + str(n)).exists():
+         new_record1 =  usage_record.objects.get(pk = account.accountinfoid + "-" + str(n))
+         newrecord.append(new_record1)
+
+         
+   return render(request,template,{"year_list":year_list,"retval":retval_list,
+                                    "consumer":consumer,"ErrorMessagePass":ErrorMessagePass,"context":context,
+                                     "PaidStatus":PaidStatus,"ReqParams":ReqParams,"defval_year":defval_year,
+                                     "oldcon":oldconsumer,"account":account,"accountrecord":accountrecord,
+                                     "new_record":new_record, "index":index,"commulative_bill":commulative_bill,
+                                     "newrecord":newrecord })
 
 
 def getUsageRevenue(request):#we get only the record for 2021
@@ -1001,6 +1094,12 @@ def getUsageRevenue(request):#we get only the record for 2021
    year_report = Year_Report()
    current_year = current_date.year
 
+   while current_year >= 2018:
+      record = Year_Report.objects.filter(pk = str(current_year)).exists()
+      if record == False:
+         year_report.year = current_year
+         year_report.save()
+   current_year = 2011
    while current_year >= 2010:
       record = Year_Report.objects.filter(pk = str(current_year)).exists()
       if record == False:

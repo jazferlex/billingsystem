@@ -1,0 +1,643 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="Dashboard">
+    <meta name="keyword" content="Dashboard, Bootstrap, Admin, Template, Theme, Responsive, Fluid, Retina">
+    <title>Ginatilan Billing System</title>
+
+    <!-- Favicons -->
+    <link href="{% static 'website/img/favicon.ico' %}" rel="icon">
+    <link href="{% static 'website/img/apple-touch-icon.ico' %}" rel="apple-touch-icon">
+
+    <!-- Bootstrap core CSS -->
+    <link href="{% static 'website/lib/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+    <!--external css-->
+    <link href="{% static 'website/lib/font-awesome/css/font-awesome.css' %}" rel="stylesheet" />
+    <link rel="stylesheet" type="text/css" href="{% static '/website/css/zabuto_calendar.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static '/website/lib/gritter/css/jquery.gritter.css' %}" />
+    <!-- Custom styles for this template -->
+    <link href="{% static 'website/css/styles.css' %}" rel="stylesheet">
+    <link href="{% static 'custom.css' %}" rel="stylesheet">
+    <link href="{% static '/website/css/font.css' %}" rel="stylesheet">
+    <link href="{% static 'website/css/style-responsive.css' %}" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'website/lib/bootstrap/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'website/lib/DataTables/css/mdb.min.css' %}">
+    <link rel="stylesheet" href="{% static 'website/lib/bootstrap/css/ModifiedBootstrap.css' %}">
+    <link rel="stylesheet" href="{% static 'website/lib/DataTables/css/dataTables.bootstrap4.min.css' %}">
+    <script src="{% static 'website/lib/jquery/jquery.min.js' %}"></script>
+    <script src="{% static 'website/lib/DataTables/js/popper.min.js' %}"></script>
+    <script src="{% static 'website/lib/bootstrap/js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'website/lib/DataTables/js/mdb.min.js' %}"></script>
+    <script src="{% static 'website/lib/jsPDF/jspdf.min.js' %}"></script>
+    <script src="{% static 'website/lib/jsPDF/jspdf-autotable.js' %}"></script>
+
+</head>
+<style>
+
+</style>
+
+<body>
+
+    </div>
+    <section id="container">
+        <!--Header Start-->
+        <header class="header black-bg">
+            <div class="sidebar-toggle-box">
+                <div class="fa fa-bars tooltips" data-placement="right" data-original-title="Toggle Navigation"></div>
+            </div>
+            <!--logo start-->
+            <a href="index.html" class="logo"><b>Ginatilan Water Billing<span> Station</span></b></a>
+            <!--logo end-->
+            <div class="top-menu">
+                <ul class="nav pull-right top-menu">
+                    <li><a class="logout" href="/logout">Logout</a></li>
+                </ul>
+            </div>
+        </header>
+        <!--Header End-->
+        <!--sidebar start-->
+        <aside>
+            <form action="/source_access/history={{account.accountinfoid}}" method="POST">
+                <div id="sidebar" class="nav-collapse ">
+                    <!-- sidebar menu start-->
+                    <ul class="sidebar-menu" id="nav-accordion">
+                        <p class="centered"><a href=""><img src="{% static 'website/img/ui-admin.jpg' %}"
+                                    class="img-circle" width="80"></a></p>
+                        <h5 class="centered">{{ context.name }}</h5>
+
+
+
+                        <div id="input_reading" class="active">
+                            <li class="sub-menu">
+                                <a href="/source_access/Payment={{account.accountinfoid}}" class="active">
+                                    <i class="fa fa-arrow-left"></i>
+                                    <span>Back</span>
+                                </a>
+                        </div>
+
+
+
+
+
+        </aside>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <!--sidebar end-->
+        <!--main content start-->
+        <section id="main-content">
+            <div class="container">
+                <div class="card1">
+                    <section class="wrapper">
+                        <!-- DATA Section -->
+
+                        {% csrf_token %}
+                        <br>
+                        <script>
+
+                            const formatter = new Intl.NumberFormat('en-US', {
+                                style: 'currency',
+                                currency: 'Php',
+                                minimumFractionDigits: 2
+                            })
+
+
+                        </script>
+                        <script>
+                            function this_record() {
+                                var doc = new jsPDF('p', 'pt', 'letter');
+                                var htmlstring = '';
+                                var tempVarToCheckPageHeight = 0;
+                                var pageHeight = 0;
+
+                                pageHeight = doc.internal.pageSize.height;
+                                specialElementHandlers = {
+                                    // element with id of "bypass" - jQuery style selector
+                                    '#bypassme': function (element, renderer) {
+                                        // true = "handled elsewhere, bypass text extraction"
+                                        return true
+                                    }
+                                };
+                                margins = {
+                                    top: 150,
+                                    bottom: 60,
+                                    left: 40,
+                                    right: 40,
+                                    width: 600
+                                };
+                                const formatter = new Intl.NumberFormat('en-US', {
+                                    style: 'currency',
+                                    currency: 'Php',
+                                    minimumFractionDigits: 2
+                                })
+
+                                var y = 20;
+                                var x = 40;
+                                doc.setLineWidth(2);
+                                doc.setFontSize(11);
+                                doc.autoTable({
+                                    html: '#doc_header',
+                                    startY: y = y + 20,
+                                    theme: 'plain',
+                                })
+                                doc.setLineWidth(2);
+                                doc.setFontSize(14);
+                                doc.text(250, y = y + 80, "Payment History");
+
+
+                                doc.autoTable({
+                                    html: '.this_table',
+                                    startY: y = y + 20,
+                                    theme: 'striped',
+                                    columnStyles: {
+                                        0: {
+                                            cellWidth: 130,
+                                        },
+                                        1: {
+                                            cellWidth: 130,
+                                        },
+                                        2: {
+                                            cellWidth: 130,
+                                        },
+                                        3: {
+                                            cellWidth: 135,
+                                        }
+                                    },
+                                    styles: {
+                                        minCellHeight: 20
+                                    }
+                                })
+                                doc.save('{{account.firstname}}_{{account.lastname}}_Payment_History.pdf');
+                            }
+
+                            function CurrencyConverter(amount) {
+                                var formatter = new Intl.NumberFormat('en-US', {
+                                    style: 'currency',
+                                    currency: 'Php',
+
+                                });
+                                return formatter.format(amount);
+                            }
+
+                        </script>
+
+                        <div class="loader-wrapper">
+                            <span class="loader">
+                                <img src="{% static '/website/img/loading.gif' %}">
+                            </span>
+                        </div>
+                        <center>Consumer's Information</center>
+                        <br>
+                        <div class="table-responsive">
+                            <table id="doc_header" class="table table-bordered" style="width:100%">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Account ID</th>
+                                        <th scope="col">Meter Number</th>
+                                        <th scope="col">Name</th>
+                                        <th scope="col">Address</th>
+
+                                    </tr>
+                                    <i></i>
+                                </thead>
+
+                                <tbody>
+
+                                    <tr>
+
+                                        <th scope="row">{{ account.accountinfoid }}</th>
+                                        <th scope="row">{{ account.meternumber }}</th>
+                                        <td>{{ account.firstname }} {{ account.middlename }}. {{ account.lastname }}
+                                        </td>
+                                        <td>{{ account.address }}</td>
+
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <br>
+                        <br>
+                        <script>
+                            function this_record() {
+                                var doc = new jsPDF('p', 'pt', 'letter');
+                                var htmlstring = '';
+                                var tempVarToCheckPageHeight = 0;
+                                var pageHeight = 0;
+
+                                pageHeight = doc.internal.pageSize.height;
+                                specialElementHandlers = {
+                                    // element with id of "bypass" - jQuery style selector
+                                    '#bypassme': function (element, renderer) {
+                                        // true = "handled elsewhere, bypass text extraction"
+                                        return true
+                                    }
+                                };
+                                margins = {
+                                    top: 150,
+                                    bottom: 60,
+                                    left: 40,
+                                    right: 40,
+                                    width: 600
+                                };
+                                const formatter = new Intl.NumberFormat('en-US', {
+                                    style: 'currency',
+                                    currency: 'Php',
+                                    minimumFractionDigits: 2
+                                })
+
+                                var y = 20;
+                                var x = 40;
+                                doc.setLineWidth(2);
+                                doc.setFontSize(11);
+                                doc.autoTable({
+                                    html: '#doc_header',
+                                    theme: 'plain',
+                                    startY: y = y + 20,
+                                })
+                                y=y+40
+                                doc.text(400, y + 30, "Total Balance: Php {{commulative_bill|floatformat:2}}");
+
+                                doc.setLineWidth(2);
+                                doc.setFontSize(14);
+                                var tables = document.getElementsByClassName("this_table")
+                                for(i=0;i<13;i++){
+                                    doc.text(250, y=y+30,"Usage Record ("+(2022-i)+")");
+                                    doc.autoTable({
+                                        html: tables[i],
+                                        startY: y=y+15,
+                                        theme: 'striped',
+                                        pageBreak: 'auto',
+                                        columnStyles: {
+                                            0: {
+                                                cellWidth: 70,
+                                            },
+                                            1: {
+                                                cellWidth: 70,
+                                            },
+                                            4: {
+                                                cellWidth: 70,
+                                            }
+                                        },
+                                        styles: {
+                                            minCellHeight: 20
+
+                                        },
+                                    })
+                                    y = doc.lastAutoTable.finalY
+                                    console.log(y);
+                                    if(y>600){
+                                        doc.addPage()
+                                        y=20
+                                    }
+                                }
+                                doc.save('{{account.firstname}}_{{account.lastname}}_usage.pdf');
+                            }
+                        
+                            function format_date() {
+                                to_format = document.getElementsByClassName("to_format")
+                                dates = [
+                                    "{{ new_record.reading_date_jan}}",
+                                    "{{ new_record.reading_date_feb}}",
+                                    "{{ new_record.reading_date_mar}}",
+                                    "{{ new_record.reading_date_apr }}",
+                                    "{{ new_record.reading_date_may }}",
+                                    "{{ new_record.reading_date_jun }}",
+                                    "{{ new_record.reading_date_jul }}",
+                                    "{{ new_record.reading_date_aug }}",
+                                    "{{ new_record.reading_date_sept }}",
+                                    "{{ new_record.reading_date_oct }}",
+                                    "{{ new_record.reading_date_nov }}",
+                                    "{{ new_record.reading_date_dec }}"
+                                ]
+                                
+                                for(var i = 0; i < to_format.length; i++){
+                                    if(dates[i]==="" || dates[i]===" "){
+                                    }
+                                    else{
+                                        date = new Date(dates[i]);
+                                        m = date.getMonth()+1
+                                        d = date.getDate()
+                                        y = date.getFullYear()
+                                        if(m<10){
+                                            m='0'+m
+                                        }
+                                        if(d<10){
+                                            d='0'+d
+                                        }
+                                        to_format[i].innerHTML = [m, d, y].join('-');
+                                    }
+                                }
+                            }
+                            function format_date_pdf() {
+                                to_format = document.getElementsByClassName("to_format_pdf")
+                                var all_dates=[]
+                                {%for i in newrecord%}
+                                dates = [
+                                    "{{ i.reading_date_jan }}",
+                                    "{{ i.reading_date_feb }}",
+                                    "{{ i.reading_date_mar }}",
+                                    "{{ i.reading_date_apr }}",
+                                    "{{ i.reading_date_may }}",
+                                    "{{ i.reading_date_jun }}",
+                                    "{{ i.reading_date_jul }}",
+                                    "{{ i.reading_date_aug }}",
+                                    "{{ i.reading_date_sept}}",
+                                    "{{ i.reading_date_oct }}",
+                                    "{{ i.reading_date_nov }}",
+                                    "{{ i.reading_date_dec }}"
+                                ]
+                                all_dates.push(dates)
+                                {%endfor%}
+                                console.log(all_dates)
+                                var n = 0;
+                                for(var i = 0; i < all_dates.length; i++){
+                                    for(var j = 0; j < dates.length; j++){
+                                        if(all_dates[i][j]==="" || all_dates[i][j]===" "){
+                                        }
+                                        else{
+                                            date = new Date(all_dates[i][j]);
+                                            m = date.getMonth()+1
+                                            d = date.getDate()
+                                            y = date.getFullYear()
+                                            if(m<10){
+                                                m='0'+m
+                                            }
+                                            if(d<10){
+                                                d='0'+d
+                                            }
+                                            to_format[n].innerHTML = [m, d, y].join('-');
+                                        }
+                                        n+=1
+                                    }
+                                }
+                            }
+                        </script>
+                        <center>Payment History </center>
+
+                        <br>
+                        <div class="row">
+                            <div class="col-sm">
+                                <div class="form-group">
+                                    <label for="exampleInputBarangay">Select Year</label>
+                                    <select name="{{ ReqParams.year }}" class="form-control"
+                                        onchange='this.form.submit();'>
+                                        <option value="{{defval}}" selected>{{defval}}</option>
+                                        {% for year in year_list %}
+                                        <option value="{{ year }}">{{year}}</option>
+                                        {%endfor%}
+                                    </select>
+                                </div>
+                                <noscript><input type="submit" value="Submit"></noscript>
+                            </div>
+                            <div class="col-sm">
+                                <!-- <div class="form-group">
+                                    <br>
+
+                                    <button type="button" id="postbtn" class="btn btn-primary"
+                                        onclick="this_record()">Get a Copy</button>
+                                </div> -->
+
+                            </div>
+                            <div class="col-sm">
+                                <div class="form-group"></div>
+                            </div>
+
+                            <div class="col-sm">
+                                <div class="form-group"></div>
+                            </div>
+                        </div>
+
+                        <br>
+
+                        <div class="table-responsive">
+                            {% for i in newrecord %}
+                            <table id="tablePagination" class="table table-striped table-bordered this_table" style="width:100%">
+                                <thead>
+                                    <tr>
+                                        <td>Month</td>
+                                        <td>Current Reading</td>
+                                        <td>Current Reading</td>
+                                        <td>Reading Date<br>(mm-dd-yyyy)</td>
+                                        <td>Consumption</td>
+                                        <td>Total Bill</td>
+                                        <td>Total Paid</td>
+                                        <td>Payment</td>
+                                        <td>Processed By</td>
+                                        <td>OR Number</td>
+                                        <td>Current Balance</td>
+
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <script>var accountid = "{{ i.accountid }}";</script>
+                                    <tr>
+                                        <td>January</td>
+                                        <td>{{ i.reading_jan }}</td>
+                                        <td>{{ i.reading_jan }}</td>
+                                        <td class="to_format_pdf"></td>
+                                        <td>{{ i.usage_jan }}</td>
+                                        <td>{{i.totalbill_jan}}</td>
+                                        <td>{{ i.paidamt_jan }}</td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+
+                                    </tr>
+                                    <tr>
+                                        <td>February</td>
+                                        <td>{{ i.reading_feb }}</td>
+                                        <td>{{ i.reading_jan }}</td>
+                                        <td class="to_format_pdf"></td>
+                                        <td>{{ i.usage_feb }}</td>
+                                        <td>{{i.totalbill_feb}}</td>
+                                        <td>{{ i.paidamt_feb }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>March</td>
+                                        <td>{{ i.reading_mar }}</td>
+                                        <td>{{ i.reading_feb }}</td>
+                                        <td class="to_format_pdf"></td>
+                                        <td>{{ i.usage_mar }}</td>
+                                        <td>{{i.totalbill_mar}}</td>
+                                        <td>{{ i.paidamt_mar }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>April</td>
+                                        <td>{{ i.reading_apr }}</td>
+                                        <td>{{ i.reading_mar }}</td>
+                                        <td class="to_format_pdf"></td>
+                                        <td>{{ i.usage_apr }}</td>
+                                        <td>{{i.totalbill_apr }}</td>
+                                        <td>{{ i.paidamt_apr }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>May</td>
+                                        <td>{{ i.reading_may }}</td>
+                                        <td>{{ i.reading_apr }}</td>
+                                        <td class="to_format_pdf"></td>
+                                        <td>{{ i.usage_may }}</td>
+                                        <td>{{i.totalbill_may }}</td>
+                                        <td>{{ i.paidamt_may }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>June</td>
+                                        <td>{{ i.reading_jun }}</td>
+                                        <td>{{ i.reading_may }}</td>
+                                        <td class="to_format_pdf"></td>
+                                        <td>{{ i.usage_jun }}</td>
+                                        <td>{{i.totalbill_jun }}</td>
+                                        <td>{{ i.paidamt_jun }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>July</td>
+                                        <td>{{ i.reading_jul }}</td>
+                                        <td>{{ i.reading_jun }}</td>
+                                        <td class="to_format_pdf"></td>
+                                        <td>{{ i.usage_jul }}</td>
+                                        <td>{{i.totalbill_jul }}</td>
+                                        <td>{{ i.paidamt_jul }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>August</td>
+                                        <td>{{ i.reading_aug }}</td>
+                                        <td>{{ i.reading_jul }}</td>
+                                        <td class="to_format_pdf"></td>
+                                        <td>{{ i.usage_aug }}</td>
+                                        <td>{{i.totalbill_aug }}</td>
+                                        <td>{{ i.paidamt_aug }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>September</td>
+                                        <td>{{ i.reading_sept }}</td>
+                                        <td>{{ i.reading_aug }}</td>
+                                        <td class="to_format_pdf"></td>
+                                        <td>{{ i.usage_sept }}</td>
+                                        <td>{{i.totalbill_sept }}</td>
+                                        <td>{{ i.paidamt_sept }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>October</td>
+                                        <td>{{ i.reading_oct }}</td>
+                                        <td>{{ i.reading_sept }}</td>
+                                        <td class="to_format_pdf"></td>
+                                        <td>{{ i.usage_oct }}</td>
+                                        <td>{{i.totalbill_oct }}</td>
+                                        <td>{{ i.paidamt_oct }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>November</td>
+                                        <td>{{ i.reading_nov }}</td>
+                                        <td>{{ i.reading_oct }}</td>
+                                        <td class="to_format_pdf"></td>
+                                        <td>{{ i.usage_nov }}</td>
+                                        <td>{{i.totalbill_nov }}</td>
+                                        <td>{{ i.paidamt_nov }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>December</td>
+                                        <td>{{ i.reading_dec }}</td>
+                                        <td>{{ i.reading_nov }}</td>
+                                        <td class="to_format_pdf"></td>
+                                        <td>{{ i.usage_dec }}</td>
+                                        <td>{{i.totalbill_dec }}</td>
+                                        <td>{{ i.paidamt_dec }}</td>
+                                    </tr>
+                                </tbody>
+                            
+                            </table>
+                            {% endfor %}
+                        </div>
+
+                        <div class="table-responsive">
+                            <table id="tablePagination" class="table table-bordered this_table" style="width:100%">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Date/Time</th>
+                                        <th scope="col">Current Reading</th>
+                                        <th scope="col">Previous Reading</th>
+                                        <th scope="col">Cu. Meter Used</th>
+                                        <th scope="col">Amount Billed</th>
+                                        <th scope="col">Payment</th>
+                                        <th scope="col">OR Number</th>
+                                        <th scope="col">Processed By</th>
+                                        <th scope="col">Current Balance</th>
+
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for element in accountrecord %}
+                                    <tr>
+                                        <td>{{ element.date }}</td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <th scope="row">
+                                            <script>document.write(CurrencyConverter("{{ element.amount }}"))</script>
+                                        </th>
+                                        <td>{{ element.or_number }}</td>
+                                        <td>{{ element.postedby }}</td>
+                                        <td></td>
+                                    </tr>
+                                    {%endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <br>
+                        <br>
+
+                        </form>
+                    </section>
+        </section>
+        </div>
+        </div>
+
+
+        <!--main content end-->
+    </section>
+    <!-- js placed at the end of the document so the pages load faster -->
+    <script src="{% static 'website/lib/jquery/jquery.min.js' %}"></script>
+
+    <script src="{% static 'website/lib/bootstrap/js/bootstrap.min.js' %}"></script>
+    <script class="include" type="text/javascript"
+        src="{% static 'website/lib/jquery.dcjqaccordion.2.7.js' %} "></script>
+    <script src="{% static 'website/lib/jquery.scrollTo.min.js' %}"></script>
+    <script src="{% static 'website/lib/jquery.nicescroll.js' %}" type="text/javascript"></script>
+    <script src="{% static 'website/lib/jquery.sparkline.js' %}"></script>
+    <script src="{% static 'website/lib/common-scripts.js' %}"></script>
+    <script type="text/javascript" src="{% static 'website/lib/gritter/js/jquery.gritter.js' %}"></script>
+    <script type="text/javascript" src="{% static 'website/lib/gritter-conf.js' %}"></script>
+    <script src="{% static 'website/lib/DataTables/js/jquery.dataTables.min.js' %}"></script>
+    <script src="{% static 'website/lib/DataTables/js/dataTables.bootstrap4.min.js' %}"></script>
+
+    <script>
+        $(document).ready(function () {
+            $('#tablePagination').DataTable({
+                "lengthChange": false,
+                "ordering": false,
+                "searching": false,
+                "paging": false,
+                "info": false,
+            });
+        });
+
+        $(window).on("load", function () {
+            $(".loader-wrapper").fadeOut("milliseconds");
+        });
+    </script>
+</body>
+
+</html>
