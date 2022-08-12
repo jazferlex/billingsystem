@@ -164,8 +164,8 @@
                         <div class="row">
                             <div class="col-sm-offset-9 col-sm-3">
 
-                                <button type="button" id="postbtn" class="btn btn-primary" onclick="this_record()">Get a
-                                    Copy</button>
+                                <!-- <button type="button" id="postbtn" class="btn btn-primary" onclick="this_record()">Get a
+                                    Copy</button> -->
                             </div>
                             <noscript><input type="submit" value="Submit"></noscript>
 
@@ -368,6 +368,7 @@
                                 October = document.getElementsByClassName("oct")
                                 November = document.getElementsByClassName("nov")
                                 December = document.getElementsByClassName("dec")
+                                
 
 
 
@@ -377,7 +378,10 @@
 
 
                         </script>
-                        <center><strong>Total Balance:Php {{commulative_bill|floatformat:2}}</strong></center>
+                        <div class="centered">
+                            <strong>Total Balance:Php {{commulative_bill|floatformat:2}}</strong>
+                        </div>
+                        
                         <br>
                         <div class="table-responsive">
                             <table id="tablePagination" class="table table-bordered this_table" style="width:100%">
@@ -541,6 +545,7 @@
                                         <td>Reading Date<br>(mm-dd-yyyy)</td>
                                         <td>Cu. Meter Used</td>
                                         <td>Amount Billed</td>
+                                        <td>Payment</td>
                                         <td>OR Number</td>
                                         <td>Posted By</td>
                                         <td>Current Balance</td>
@@ -555,6 +560,7 @@
                                         <td class="to_format_pdf"></td>
                                         <td>{{ i.usage_jan }}</td>
                                         <td class = "bill">{{i.totalbill_jan|floatformat:2}}</td>
+                                        <td>{{ i.paidamt_jan|floatformat:2 }}</td>
                                         <td></td>
                                         <td></td>
                                         <td class = "to_bill">{{ i.commulative_bill|floatformat:2 }}</td>
@@ -566,6 +572,7 @@
                                         <td class="to_format_pdf"></td>
                                         <td>{{ i.usage_feb }}</td>
                                         <td class = "bill">{{i.totalbill_feb|floatformat:2}}</td>
+                                        <td>{{ i.paidamt_feb|floatformat:2 }}</td>
                                         <td></td>
                                         <td></td>
                                         <td class = "to_bill">{{ i.commulative_bill |floatformat:2}}</td>
@@ -577,6 +584,7 @@
                                         <td class="to_format_pdf"></td>
                                         <td>{{ i.usage_mar }}</td>
                                         <td class = "bill">{{i.totalbill_mar|floatformat:2}}</td>
+                                        <td>{{ i.paidamt_mar|floatformat:2 }}</td>
                                         <td></td>
                                         <td></td>
                                         <td class = "to_bill">{{ i.commulative_bill |floatformat:2}}</td>
@@ -588,6 +596,7 @@
                                         <td class="to_format_pdf"></td>
                                         <td>{{ i.usage_apr }}</td>
                                         <td class = "bill">{{i.totalbill_apr |floatformat:2}}</td>
+                                        <td>{{ i.paidamt_apr|floatformat:2 }}</td>
                                         <td></td>
                                         <td></td>
                                         <td class = "to_bill">{{ i.commulative_bill|floatformat:2 }}</td>
@@ -599,6 +608,7 @@
                                         <td class="to_format_pdf"></td>
                                         <td>{{ i.usage_may }}</td>
                                         <td class = "bill">{{i.totalbill_may|floatformat:2 }}</td>
+                                        <td>{{ i.paidamt_may|floatformat:2 }}</td>
                                         <td></td>
                                         <td></td>
                                         <td class = "to_bill">{{ i.commulative_bill |floatformat:2}}</td>
@@ -610,6 +620,7 @@
                                         <td class="to_format_pdf"></td>
                                         <td>{{ i.usage_jun }}</td>
                                         <td class = "bill">{{i.totalbill_jun |floatformat:2}}</td>
+                                        <td>{{ i.paidamt_jun|floatformat:2 }}</td>
                                         <td></td>
                                         <td></td>
                                         <td class = "to_bill">{{ i.commulative_bill |floatformat:2}}</td>
@@ -621,6 +632,7 @@
                                         <td class="to_format_pdf"></td>
                                         <td>{{ i.usage_jul }}</td>
                                         <td class = "bill">{{i.totalbill_jul |floatformat:2}}</td>
+                                        <td>{{ i.paidamt_jul|floatformat:2 }}</td>
                                         <td></td>
                                         <td></td>
                                         <td class = "to_bill">{{ i.commulative_bill |floatformat:2}}</td>
@@ -632,6 +644,7 @@
                                         <td class="to_format_pdf"></td>
                                         <td>{{ i.usage_aug }}</td>
                                         <td class = "bill">{{i.totalbill_aug |floatformat:2}}</td>
+                                        <td>{{ i.paidamt_aug|floatformat:2 }}</td>
                                         <td></td>
                                         <td></td>
                                         <td class = "to_bill">{{ i.commulative_bill |floatformat:2}}</td>
@@ -643,6 +656,7 @@
                                         <td class="to_format_pdf"></td>
                                         <td>{{ i.usage_sept }}</td>
                                         <td class = "bill">{{i.totalbill_sept|floatformat:2 }}</td>
+                                        <td>{{ i.paidamt_sept|floatformat:2 }}</td>
                                         <td></td>
                                         <td></td>
                                         <td class = "to_bill">{{ i.commulative_bill |floatformat:2}}</td>
@@ -654,6 +668,7 @@
                                         <td class="to_format_pdf"></td>
                                         <td>{{ i.usage_oct }}</td>
                                         <td class = "bill">{{i.totalbill_oct |floatformat:2}}</td>
+                                        <td>{{ i.paidamt_oct|floatformat:2 }}</td>
                                         <td></td>
                                         <td></td>
                                         <td class = "to_bill">{{ i.commulative_bill|floatformat:2 }}</td>
@@ -665,6 +680,7 @@
                                         <td class="to_format_pdf"></td>
                                         <td>{{ i.usage_nov }}</td>
                                         <td class = "bill">{{i.totalbill_nov |floatformat:2}}</td>
+                                        <td>{{ i.paidamt_nov|floatformat:2 }}</td>
                                         <td></td>
                                         <td></td>
                                         <td class = "to_bill">{{ i.commulative_bill|floatformat:2 }}</td>
@@ -676,6 +692,7 @@
                                         <td class="to_format_pdf"></td>
                                         <td>{{ i.usage_dec }}</td>
                                         <td class = "bill">{{i.totalbill_dec |floatformat:2}}</td>
+                                        <td>{{ i.paidamt_dec|floatformat:2 }}</td>
                                         <td></td>
                                         <td></td>
                                         <td class = "to_bill">{{ i.commulative_bill |floatformat:2}}</td>

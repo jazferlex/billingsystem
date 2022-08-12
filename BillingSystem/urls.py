@@ -17,7 +17,7 @@ from django.contrib import admin
 from django.urls import path
 from django.conf import settings
 from django.conf.urls.static import static
-from myApp import Payment_Installment, views,AddMeterReading, Payment, ReportGenerator,BillingUtil,update_account,RevenueCode,MeterReadingModification,Application,Utility,DataTransfer,PdfGen,ImportData
+from myApp import Payment_Installment, views,AddMeterReading, Payment, BillingLedger, ReportGenerator,BillingUtil,update_account,RevenueCode,MeterReadingModification,Application,Utility,DataTransfer,PdfGen,ImportData
 
 
 
@@ -53,6 +53,7 @@ urlpatterns = [
     path("source_access/add-this-applicant=<str:id>",Application.add_this_applicant),
     path("source_access/history=<str:id>",Payment.history),
     path("source_access/payment-history=<str:id>",Payment.paymenthistory),
+    path("source_access/billing-ledger=<str:id>",BillingLedger.GenerateGeneralLedger),
     path("source_access/pending_bills=<str:id>",BillingUtil.Deliquent),
     path("source_access/confirmed-meter-reading",AddMeterReading.add_meter_reading),
     path("source_access/prev-record=<str:id>",ReportGenerator.OldSystemRecordDisplay),

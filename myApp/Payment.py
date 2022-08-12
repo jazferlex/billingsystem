@@ -212,8 +212,7 @@ def pay_bill(request,id):
    #amount paid
    amountpaid = request.POST.get('amount')
    or_number = request.POST.get("or_number")
-
-   postedby = request.session.get(ReqParams.name)
+   postedby = request.session.get("postedby")
 
 
    #Totals
@@ -229,6 +228,7 @@ def pay_bill(request,id):
       prev_list = UnpaidMonth(id,str(current_date.year - 1))#list of unpaid month previous year
       current_list = UnpaidMonth(id,str(current_date.year))#list of unpaid this year
       ziplist = (prev_list,current_list)
+
       print(current_list)
 
       #Payment History
@@ -1855,7 +1855,6 @@ def pay_bill(request,id):
       if record.year == current_date.year:
          retval_list.append(record)
 
-   print(retval_list)
 
    if year_request:
       accountrecord = payment_history.objects.filter(accountinfoid = id)
@@ -1892,6 +1891,7 @@ def paymenthistory(request,id):
    year_list = []
    retval_list = []
 
+  
 
    account = account_info.objects.get(pk = id)
    # history = getTotalBill.objects.get(pk = id)
@@ -1913,7 +1913,6 @@ def paymenthistory(request,id):
          if record.year == int(year_request):
             retval_list.append(record)
       defval_year = year_request
-
 
    return render(request,template,{"retval":retval_list,"account":account,"accoutrecord":accountrecord,"context":context,"defval":defval_year,"year_list":year_list,"ReqParams":ReqParams,"accountrecord":accountrecord})
 

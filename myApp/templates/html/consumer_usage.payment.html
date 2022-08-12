@@ -273,8 +273,8 @@
                 </div>
                 <div class="col-sm">
                   <div class="col-sm">
-                    <a href="/source_access/history={{context.Id}}"><button type="button" id="postbtn"
-                        class="btn btn-primary">View History</button> </a>
+                    <a href="/source_access/billing-ledger={{account.accountinfoid}}"><button type="button" id="postbtn"
+                        class="btn btn-primary">View Consumer Billing Ledger</button> </a>
                   </div>
                 </div>
                 <div class="col-sm">
@@ -368,12 +368,14 @@
                   <thead>
                     <tr>
                       <th>Month</th>
-                      <th scope="col">Previous Reading</th>
-                      <th scope="col">Current Reading</th>
-                      <th scope="col">Cubic Meter Used</th>
+                      <th scope="col">Reading</th>
+                      <th scope="col">Usage</th>
                       <th scope="col">Bill</th>
+                      <th scope="col">Penalty</th>
                       <th scope="col">Total Bill</th>
                       <th scope="col">Amount Paid</th>
+                      <th scope="col">Or Number</th>
+                      <th scope="col">Current Balance</th>
 
 
                     </tr>
@@ -384,19 +386,21 @@
                     <tr>
                       <td>January</th>
                       <td>{{ usage.reading_jan|floatformat:2 }}</td>
-                      <td>{{ usage.reading_jan|floatformat:2 }}</td>
                       <td>{{ usage.usage_jan|floatformat:2 }}</td>
                       <td>{{usage.bill_jan|floatformat:2 }}</td>
+                      <td>{{usage.penalty_jan|floatformat:2 }}</td>
                       <td>{{usage.totalbill_jan|floatformat:2 }}</td>
                       <td>{{usage.paidamt_jan|floatformat:2 }}</td>
+                      <td>{{usage.ior_jan }}</td>
+                      <td>{{context.balance|floatformat:2 }}</td>
 
                     </tr>
                     <tr>
                       <td>February</th>
                       <td>{{ usage.reading_feb|floatformat:2 }}</td>
-                      <td>{{ usage.reading_jan|floatformat:2 }}</td>
                       <td>{{ usage.usage_feb|floatformat:2 }}</td>
                       <td>{{usage.bill_feb|floatformat:2 }}</td>
+                      <td>{{usage.penalty_feb|floatformat:2 }}</td>
                       <td>{{usage.totalbill_feb|floatformat:2 }}</td>
                       <td>{{usage.paidamt_feb|floatformat:2 }}</td>
 
@@ -404,90 +408,90 @@
                     <tr>
                       <td>March</th>
                       <td>{{ usage.reading_mar|floatformat:2 }}</td>
-                      <td>{{ usage.reading_feb|floatformat:2 }}</td>
                       <td>{{ usage.usage_mar|floatformat:2 }}</td>
                       <td>{{usage.bill_mar|floatformat:2 }}</td>
+                      <td>{{usage.penalty_mar|floatformat:2 }}</td>
                       <td>{{usage.totalbill_mar|floatformat:2 }}</td>
                       <td>{{usage.paidamt_mar|floatformat:2 }}</td>
 
                     <tr>
                       <td>April</th>
                       <td>{{ usage.reading_apr|floatformat:2 }}</td>
-                      <td>{{ usage.reading_mar|floatformat:2 }}</td>
                       <td>{{ usage.usage_apr|floatformat:2 }}</td>
                       <td>{{usage.bill_apr|floatformat:2 }}</td>
+                      <td>{{usage.penalty_apr|floatformat:2 }}</td>
                       <td>{{usage.totalbill_apr|floatformat:2 }}</td>
                       <td>{{usage.paidamt_apr|floatformat:2 }}</td>
                     </tr>
                     <tr>
                       <td>May</th>
                       <td>{{ usage.reading_may|floatformat:2 }}</td>
-                      <td>{{ usage.reading_apr|floatformat:2 }}</td>
                       <td>{{ usage.usage_may|floatformat:2 }}</td>
                       <td>{{usage.bill_may|floatformat:2 }}</td>
+                      <td>{{usage.penalty_may|floatformat:2 }}</td>
                       <td>{{usage.totalbill_may|floatformat:2 }}</td>
                       <td>{{usage.paidamt_may|floatformat:2 }}</td>
 
                     <tr>
                       <td>June</th>
                       <td>{{ usage.reading_jun|floatformat:2 }}</td>
-                      <td>{{ usage.reading_may|floatformat:2 }}</td>
                       <td>{{ usage.usage_jun|floatformat:2 }}</td>
                       <td>{{usage.bill_jun|floatformat:2 }}</td>
+                      <td>{{usage.penalty_jun|floatformat:2 }}</td>
                       <td>{{usage.totalbill_jun|floatformat:2 }}</td>
                       <td>{{usage.paidamt_jun|floatformat:2 }}</td>
 
                     <tr>
                       <td>July</th>
                       <td>{{ usage.reading_jul|floatformat:2 }}</td>
-                      <td>{{ usage.reading_jun|floatformat:2 }}</td>
                       <td>{{ usage.usage_jul|floatformat:2 }}</td>
                       <td>{{usage.bill_jul|floatformat:2 }}</td>
+                      <td>{{usage.penalty_jul|floatformat:2 }}</td>
                       <td>{{usage.totalbill_jul|floatformat:2 }}</td>
                       <td>{{usage.paidamt_jul|floatformat:2 }}</td>
                     </tr>
                     <tr>
                       <td>August</th>
                       <td>{{ usage.reading_aug|floatformat:2 }}</td>
-                      <td>{{ usage.reading_july|floatformat:2 }}</td>
                       <td>{{ usage.usage_aug|floatformat:2}}</td>
                       <td>{{usage.bill_aug|floatformat:2 }}</td>
+                      <td>{{usage.penalty_aug|floatformat:2 }}</td>
                       <td>{{usage.totalbill_aug|floatformat:2 }}</td>
                       <td>{{usage.paidamt_aug|floatformat:2 }}</td>
                     </tr>
                     <tr>
                       <td>September</th>
                       <td>{{ usage.reading_sept|floatformat:2 }}</td>
-                      <td>{{ usage.reading_aug|floatformat:2 }}</td>
                       <td>{{ usage.usage_sept|floatformat:2 }}</td>
                       <td>{{usage.bill_sept|floatformat:2 }}</td>
+                      <td>{{usage.penalty_sept|floatformat:2 }}</td>
                       <td>{{usage.totalbill_sept|floatformat:2 }}</td>
                       <td>{{usage.paidamt_sept|floatformat:2 }}</td>
                     </tr>
                     <tr>
                       <td>October</th>
                       <td>{{ usage.reading_oct|floatformat:2 }}</td>
-                      <td>{{ usage.reading_sept|floatformat:2 }}</td>
                       <td>{{ usage.usage_oct|floatformat:2 }}</td>
                       <td>{{usage.bill_oct|floatformat:2 }}</td>
+                      <td>{{usage.penalty_oct|floatformat:2 }}</td>
                       <td>{{usage.totalbill_oct|floatformat:2 }}</td>
                       <td>{{usage.paidamt_oct|floatformat:2 }}</td>
                     </tr>
                     <tr>
                       <td>November</th>
                       <td>{{ usage.reading_nov|floatformat:2 }}</td>
-                      <td>{{ usage.reading_oct|floatformat:2 }}</td>
                       <td>{{ usage.usage_nov|floatformat:2 }}</td>
                       <td>{{usage.bill_nov|floatformat:2 }}</td>
+                      <td>{{usage.penalty_nov|floatformat:2 }}</td>
                       <td>{{usage.totalbill_nov|floatformat:2 }}</td>
                       <td>{{usage.paidamt_nov|floatformat:2 }}</td>
                     </tr>
                     <tr>
                       <td>December</th>
                       <td>{{ usage.reading_dec|floatformat:2 }}</td>
-                      <td>{{ usage.reading_nov|floatformat:2 }}</td>
                       <td>{{ usage.usage_dec|floatformat:2 }}</td>
                       <td>{{usage.bill_dec|floatformat:2 }}</td>
+                      <td>{{usage.penalty_dec|floatformat:2 }}</td>
                       <td>{{usage.totalbill_dec|floatformat:2 }}</td>
                       <td>{{usage.paidamt_dec|floatformat:2 }}</td>
                     </tr>
