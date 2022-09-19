@@ -17,7 +17,7 @@ from django.contrib import admin
 from django.urls import path
 from django.conf import settings
 from django.conf.urls.static import static
-from myApp import Payment_Installment, views,AddMeterReading, Payment, ReportGenerator,BillingUtil,update_account,RevenueCode,MeterReadingModification,Application,Utility,DataTransfer,PdfGen,ImportData
+from myApp import Payment_Installment, views,AddMeterReading, Payment, BillingLedger, ReportGenerator,BillingUtil,update_account,RevenueCode,MeterReadingModification,Application,Utility,DataTransfer,PdfGen,ImportData
 
 
 
@@ -37,10 +37,12 @@ urlpatterns = [
     path('source_access/search',views.search_to_update_account),
     path('source_access/update-this-consumer=<str:id>',update_account.update_consumer),
     path('source_access/update-this-account=<str:id>',update_account.update_account),
-    path('source_access/Payment',Payment.Search),
+    path('source_access/Payment',Payment.Search), 
     path('source_access/Payment=<str:id>',Payment.pay_bill),
     path("source_access/list-applicants",BillingUtil.view_list_applicants),
     path("source_access/usage-report-data",ReportGenerator.Usage_Report),
+    path("source_access/barangay-monthly-report-data",ReportGenerator.Barangay_Monthly_Report),
+    path("source_access/barangay-monthly-record-data=<str:id>/<str:year>",ReportGenerator.Barangay_Monthly_Record),
     path("source_access/revenue-report-data",ReportGenerator.Revenue_Report),
     path("source_access/view-suspended-account",BillingUtil.view_suspended_account),
     path("source_access/update-revenue-code",RevenueCode.Update_Revenue),
@@ -49,7 +51,9 @@ urlpatterns = [
     path("source_access/view-applicants-request=<str:id>",Application.view_applicants),
     path("source_access/view-approved-applicants",Application.view_approved_applicants),
     path("source_access/add-this-applicant=<str:id>",Application.add_this_applicant),
+    path("source_access/history=<str:id>",Payment.history),
     path("source_access/payment-history=<str:id>",Payment.paymenthistory),
+    path("source_access/billing-ledger=<str:id>",BillingLedger.GenerateGeneralLedger),
     path("source_access/pending_bills=<str:id>",BillingUtil.Deliquent),
     path("source_access/confirmed-meter-reading",AddMeterReading.add_meter_reading),
     path("source_access/prev-record=<str:id>",ReportGenerator.OldSystemRecordDisplay),
@@ -87,7 +91,7 @@ urlpatterns = [
     path("delete-this-image=<str:id>/<str:filename>",Application.delete_images),
     path("delete-this-account=<str:id>",views.delete_account),
     path("get_csv",views.get_csv),
-    path("send_bill_via_email",AddMeterReading.send_bill),
+    path("send_bill_via_email",AddMeterReading.send_bill), 
     path("Confirm_Modification_Request/<str:id>",MeterReadingModification.Confirm_Modification_Request),
     path("account_record",ReportGenerator.accountrecord),
     path("source_access/Send-Bill",BillingUtil.SendBill),

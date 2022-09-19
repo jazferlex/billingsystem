@@ -136,9 +136,10 @@
                                 <span>Reports</span>
                             </a>
                             <ul class="sub">
+                              <li><a href="/source_access/barangay-monthly-report-data">Barangay Report</a></li>
                               <li><a href="/source_access/usage-report-data">Usage Report</a></li>
                               <li><a href="/source_access/revenue-report-data">Revenue Report</a></li>
-                                <li><a href="/source_access/pending_bills">Unsettled Bills</a></li>
+                              <li><a href="/source_access/pending_bills">Unsettled Bills</a></li>
                             </ul>
                         </li>
                         </div>
@@ -438,27 +439,17 @@
         $('#tablePagination').on('page.dt', function() {
           if(change_flag != 0){
             change_flag = 0
-            Swal.fire({
-              title: 'Save you changes',
-              text: "Confirm to dave your changes",
-              icon: 'warning',
-              showCancelButton: true,
-              confirmButtonColor: '#3085d6',
-              cancelButtonColor: '#d33',
-              confirmButtonText: 'Confirm'
-            }).then((result) => {
-              if (result.isConfirmed) {
-                //document.getElementById('sticky').click()
-                $.ajax({
+            if(confirm("Confirm to save your changes.")){
+              $.ajax({
                   type: "POST",
                   url: '/source_access/import_data',
                   data: $("#myform").serialize(), // serializes the form's elements.
                   
-              });
-
+              }); 
+            }else{
               return false;
-              }
-            })
+            }
+          
           }
           
         });

@@ -132,6 +132,7 @@
                 <span>Reports</span>
               </a>
               <ul class="sub">
+                <li><a href="/source_access/barangay-monthly-report-data">Barangay Report</a></li>
                 <li><a href="/source_access/usage-report-data">Usage Report</a></li>
                 <li><a href="/source_access/revenue-report-data">Revenue Report</a></li>
                 <li><a href="/source_access/pending_bills">Unsettled Bills</a></li>
@@ -271,6 +272,10 @@
                 <div class="col-sm">
                 </div>
                 <div class="col-sm">
+                  <div class="col-sm">
+                    <a href="/source_access/billing-ledger={{account.accountinfoid}}"><button type="button" id="postbtn"
+                        class="btn btn-primary">View Consumer Billing Ledger</button> </a>
+                  </div>
                 </div>
                 <div class="col-sm">
                   <button type="button" id="postbtn" class="btn btn-primary" onclick="this_record()">Get a Copy</button>
@@ -363,12 +368,14 @@
                   <thead>
                     <tr>
                       <th>Month</th>
-                      <th>Reading</th>
+                      <th scope="col">Reading</th>
                       <th scope="col">Usage</th>
                       <th scope="col">Bill</th>
                       <th scope="col">Penalty</th>
                       <th scope="col">Total Bill</th>
                       <th scope="col">Amount Paid</th>
+                      <th scope="col">Or Number</th>
+                      <th scope="col">Current Balance</th>
 
 
                     </tr>
@@ -384,6 +391,8 @@
                       <td>{{usage.penalty_jan|floatformat:2 }}</td>
                       <td>{{usage.totalbill_jan|floatformat:2 }}</td>
                       <td>{{usage.paidamt_jan|floatformat:2 }}</td>
+                      <td>{{usage.ior_jan }}</td>
+                      <td>{{context.balance|floatformat:2 }}</td>
 
                     </tr>
                     <tr>

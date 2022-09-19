@@ -513,7 +513,7 @@ class payment_history(models.Model):
    amount = models.FloatField(default = 0)
    date = models.DateTimeField()
    or_number = models.CharField(max_length = 45)
-   time = models.CharField(max_length = 45)
+   time = models.CharField(max_length = 45) 
    postedby = models.CharField(max_length = 45)
    consumer = models.CharField(max_length = 120)
    accountinfoid = models.CharField(max_length = 45)

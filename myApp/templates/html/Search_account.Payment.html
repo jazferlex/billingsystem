@@ -138,9 +138,10 @@
                                 <span>Reports</span>
                             </a>
                             <ul class="sub">
+                              <li><a href="/source_access/barangay-monthly-report-data">Barangay Report</a></li>
                               <li><a href="/source_access/usage-report-data">Usage Report</a></li>
                               <li><a href="/source_access/revenue-report-data">Revenue Report</a></li>
-                                <li><a href="/source_access/pending_bills">Unsettled Bills</a></li>
+                              <li><a href="/source_access/pending_bills">Unsettled Bills</a></li>
                             </ul>
                         </li>
                         </div>
@@ -284,12 +285,12 @@
                             <!-- Call to action buttons -->
                             <ul class="list-inline m-0">
                                 <li class="list-inline-item">
-                                    <a href="/source_access/Payment={{ account.accountinfoid }}" ><button class="btn btn-success btn-sm rounded-0" data-toggle="modal" data-target="#exampleModalCenterEdit" type="button"  data-placement="top" title="Edit"><i class="fa fa-edit"></i></button></a>
+                                    <a href="/source_access/billing-ledger={{ account.accountinfoid }}" ><button class="btn btn-success btn-sm rounded-0" data-toggle="modal" data-target="#exampleModalCenterEdit" type="button"  data-placement="top" title="Edit"><i class="fa fa-edit"></i></button></a>
                                 </li>
                             </ul>
                         </td>
                     </tr>
-{%endfor%}
+                      {%endfor%}
                 </tbody>
 
             </table>

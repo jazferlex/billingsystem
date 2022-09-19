@@ -1,15 +1,31 @@
+from myApp.DataTransfer import prev_reading
 from .models import *
 from django.shortcuts import render
 from django.shortcuts import redirect
 from .models import consumers_info,getTotalBill
 from django.template import Context
-from datetime import date
+from datetime import date, datetime
 from .BillingDB import *
 from django.template.loader import get_template, render_to_string
 from django.views import View
 from xhtml2pdf import pisa
 from io import BytesIO
 from django.http import HttpResponse
+from django.shortcuts import render
+from django.shortcuts import redirect,HttpResponseRedirect
+
+from myApp.DataTransfer import Payment_History
+from .models import *
+from django.template import Context
+from datetime import date
+from django.contrib import messages
+from .BillingDB import *
+from .BillingUtil import *
+from .Payment import *
+from .Application import *
+import datetime
+import time
+
 
 
 
@@ -240,9 +256,9 @@ def Usage_Report(request):
          template = "html/unavailable.html"
    else:
       return redirect("/")
-
+  
    year_request = request.POST.get(ReqParams.year)
-   brgy_code = request.POST.get(ReqParams.barangay)
+   brgycode = request.POST.get(ReqParams.barangay)
 
 
    current_date = date.today()
@@ -250,6 +266,10 @@ def Usage_Report(request):
    #default value(year)
    current_date = date.today()
    defval_year = str(current_date.year)
+
+   current_year = current_date.year
+   allyear = []
+   defval_year = str(current_year)
 
    report = Year_Report.objects.get(pk = current_date.year)
    if year_request != None:
@@ -260,8 +280,17 @@ def Usage_Report(request):
           report = None
 
 
-   #year dropdown value
-   allyear = Year_Report.objects.all()
+   # #year dropdown value
+   # allyear = Year_Report.objects.all()
+
+   #year to choose,from year 2010 until today
+   while current_year >= 2018:
+      allyear.append(current_year)
+      current_year = current_year - 1
+   current_year = 2011
+   while current_year >= 2010:
+      allyear.append(current_year)
+      current_year = current_year - 1
 
 
    brgy_report = barangay_report.objects.all()
@@ -271,7 +300,6 @@ def Usage_Report(request):
    totalbrgy_usage = 0
    totaldue = 0
    totalpaid = 0
-   index = 0
    context = {
       "userid":request.session.get(ReqParams.userid),
       "UserType":request.session.get(ReqParams.LOGIN_SESSION),
@@ -354,10 +382,8 @@ def Usage_Report(request):
    if barangay_report.objects.filter(pk = "13-" + str(year_brgy)).exists():
       salamanca_record = barangay_report.objects.get(pk = "13-" + str(year_brgy))
 
-   if barangay_report.objects.filter(pk = "10-" + str(year_brgy)).exists():
-      sanroque_record = barangay_report.objects.get(pk = "10-" + str(year_brgy))
-
-
+   if barangay_report.objects.filter(pk = "14-" + str(year_brgy)).exists():
+      sanroque_record = barangay_report.objects.get(pk = "14-" + str(year_brgy))
 
 
 
@@ -365,6 +391,360 @@ def Usage_Report(request):
                                     "context":context,"brgy_report":brgy_report,
                                     "brgy_usage":brgy_usage,"allyear":allyear,"ReqParams":ReqParams,
                                     "defval":defval_year,
+                                    "brgycode":brgycode,
+                                    "brgy":brgy,
+                                    "anao_record":anao_record,"cagsing_record":cagsing_record,"calabawan_record":calabawan_record,"campisong_record":campisong_record,"cañorong_record":cañorong_record,"cambagte_record":cambagte_record,
+                                    "guiwanon_record":guiwanon_record,"looc_record":looc_record,"malatbo_record":malatbo_record,"mangaco_record":mangaco_record,
+                                    "palanas_record":palanas_record,"poblacion_record":poblacion_record,"salamanca_record":salamanca_record,"sanroque_record":sanroque_record})
+
+def Barangay_Monthly_Report(request):
+   #rendering page
+   template = ""
+   LogInSession = request.session.get(ReqParams.LOGIN_SESSION)
+   if LogInSession:
+      if LogInSession.__contains__(ReqParams.TELLER_LOGIN_VAL) or LogInSession.__contains__(ReqParams.SUPERVISOR_LOGIN_VAL) or LogInSession.__contains__(ReqParams.MANAGER_LOGIN_VAL):
+
+         template = "html/barangay_monthly_report.html"
+      else:
+         template = "html/unavailable.html"
+   else:
+      return redirect("/")
+
+   year_request = request.POST.get(ReqParams.year)
+   brgycode = request.POST.get(ReqParams.barangay)
+
+
+   current_date = date.today()
+
+   #default value(year)
+   current_date = date.today()
+   defval_year = str(current_date.year)
+
+   current_year = current_date.year
+   allyear = []
+   defval_year = str(current_year)
+
+   report = Year_Report.objects.get(pk = current_date.year)
+   if year_request != None:
+      defval_year = year_request
+      if Year_Report.objects.filter(pk = year_request).exists():
+          report = Year_Report.objects.get(pk = year_request)
+      else:
+          report = None
+
+
+   # #year dropdown value
+   # allyear = Year_Report.objects.all()
+
+   #year to choose,from year 2010 until today
+   while current_year >= 2018:
+      allyear.append(current_year)
+      current_year = current_year - 1
+   current_year = 2011
+   while current_year >= 2010:
+      allyear.append(current_year)
+      current_year = current_year - 1
+
+
+   brgy_report = barangay_report.objects.all()
+   brgy_due = []
+   brgy_paid = []
+   brgy_usage = []
+   brgy_rate = []
+   totalbrgy_usage = 0
+   totaldue = 0
+   totalpaid = 0
+   rate = 0
+   context = {
+      "userid":request.session.get(ReqParams.userid),
+      "UserType":request.session.get(ReqParams.LOGIN_SESSION),
+      "name":request.session.get(ReqParams.name)
+   }
+
+   #usage per baranggay
+   year_brgy = 0
+   if year_request != None:
+      year_brgy = year_request
+   else:
+      year_brgy = current_date.year
+
+   for brgy in brgy_report:
+      totaldue = 0
+      totalpaid = 0
+      totalbrgy_usage = 0
+      rate = 0
+
+      if brgy.year == int(year_brgy):
+         totaldue = brgy.total_due_ytd
+         totalpaid = brgy.total_paid_ytd
+         totalbrgy_usage = brgy.total_usage
+         brgy_usage.append(totalbrgy_usage)
+         brgy_due.append(totaldue)
+         brgy_paid.append(totalpaid)
+
+   #get monthly report in in Every Barangay
+   #default value(brgycode)
+   anao_record = None
+   cagsing_record = None
+   calabawan_record = None
+   cambagte_record = None
+   campisong_record = None
+   cañorong_record = None
+   guiwanon_record = None
+   looc_record = None
+   malatbo_record = None
+   mangaco_record = None
+   palanas_record = None
+   poblacion_record = None
+   salamanca_record = None
+   sanroque_record = None
+
+   if barangay_report.objects.filter(pk = "1-" + str(year_brgy)).exists():
+      anao_record = barangay_report.objects.get(pk = "1-" + str(year_brgy))
+
+   if barangay_report.objects.filter(pk = "2-" + str(year_brgy)).exists():
+      cagsing_record = barangay_report.objects.get(pk = "2-" + str(year_brgy))
+
+   if barangay_report.objects.filter(pk = "3-" + str(year_brgy)).exists():
+      calabawan_record = barangay_report.objects.get(pk = "3-" + str(year_brgy))
+
+   if barangay_report.objects.filter(pk = "4-" + str(year_brgy)).exists():
+      cambagte_record = barangay_report.objects.get(pk = "4-" + str(year_brgy))
+
+   if barangay_report.objects.filter(pk = "5-" + str(year_brgy)).exists():
+      campisong_record = barangay_report.objects.get(pk = "5-" + str(year_brgy))
+
+   if barangay_report.objects.filter(pk = "6-" + str(year_brgy)).exists():
+      cañorong_record = barangay_report.objects.get(pk = "6-" + str(year_brgy))
+
+   if barangay_report.objects.filter(pk = "7-" + str(year_brgy)).exists():
+      guiwanon_record = barangay_report.objects.get(pk = "7-" + str(year_brgy))
+
+   if barangay_report.objects.filter(pk = "8-" + str(year_brgy)).exists():
+      looc_record = barangay_report.objects.get(pk = "8-" + str(year_brgy))
+
+   if barangay_report.objects.filter(pk = "9-" + str(year_brgy)).exists():
+      malatbo_record = barangay_report.objects.get(pk = "9-" + str(year_brgy))
+
+   if barangay_report.objects.filter(pk = "10-" + str(year_brgy)).exists():
+      mangaco_record = barangay_report.objects.get(pk = "10-" + str(year_brgy))
+
+   if barangay_report.objects.filter(pk = "11-" + str(year_brgy)).exists():
+      palanas_record = barangay_report.objects.get(pk = "11-" + str(year_brgy))
+
+   if barangay_report.objects.filter(pk = "12-" + str(year_brgy)).exists():
+      poblacion_record = barangay_report.objects.get(pk = "12-" + str(year_brgy))
+
+   if barangay_report.objects.filter(pk = "13-" + str(year_brgy)).exists():
+      salamanca_record = barangay_report.objects.get(pk = "13-" + str(year_brgy))
+
+   if barangay_report.objects.filter(pk = "14-" + str(year_brgy)).exists():
+      sanroque_record = barangay_report.objects.get(pk = "14-" + str(year_brgy))
+   
+
+
+   return render(request,template,{"report":report,"brgy_due":brgy_due,"brgy_paid":brgy_paid,"rate":rate,
+                                    "context":context,"brgy_report":brgy_report,
+                                    "brgy_usage":brgy_usage,"allyear":allyear,"ReqParams":ReqParams,
+                                    "defval":defval_year,
+                                    "brgycode":brgycode,
+                                    "brgy":brgy,
+                                    "anao_record":anao_record,"cagsing_record":cagsing_record,"calabawan_record":calabawan_record,"campisong_record":campisong_record,"cañorong_record":cañorong_record,"cambagte_record":cambagte_record,
+                                    "guiwanon_record":guiwanon_record,"looc_record":looc_record,"malatbo_record":malatbo_record,"mangaco_record":mangaco_record,
+                                    "palanas_record":palanas_record,"poblacion_record":poblacion_record,"salamanca_record":salamanca_record,"sanroque_record":sanroque_record})
+
+def Barangay_Monthly_Record(request,year,id):
+   #rendering page
+   template = ""
+   LogInSession = request.session.get(ReqParams.LOGIN_SESSION)
+   if LogInSession:
+      if LogInSession.__contains__(ReqParams.TELLER_LOGIN_VAL) or LogInSession.__contains__(ReqParams.SUPERVISOR_LOGIN_VAL) or LogInSession.__contains__(ReqParams.MANAGER_LOGIN_VAL):
+
+         template = "html/barangay_monthly_record.html"
+      else:
+         template = "html/unavailable.html"
+   else:
+      return redirect("/")
+
+
+   brgycode = id
+
+   current_date = date.today()
+
+   #default value(year)
+   current_date = date.today()
+   defval = str(year)
+
+   current_year = current_date.year
+   allyear = []
+   defval = str(current_year)
+
+   #default value(year)
+   current_date = date.today()
+   year_brgy = year
+   defval = year_brgy
+   if request.method == 'POST':
+      year_request = request.POST.get(ReqParams.year)
+      defval = year_request
+      year_brgy = year_request
+      if Year_Report.objects.filter(pk = year_request).exists():
+         report = Year_Report.objects.get(pk = year_request)
+      else:
+         report = None
+   else:
+      report = Year_Report.objects.get(pk = defval)
+
+   # #year dropdown value
+   # allyear = Year_Report.objects.all()
+
+   #year to choose,from year 2010 until today
+   while current_year >= 2018:
+      allyear.append(current_year)
+      current_year = current_year - 1
+   current_year = 2011
+   while current_year >= 2010:
+      allyear.append(current_year)
+      current_year = current_year - 1
+
+
+   brgy_report = barangay_report.objects.all()
+   brgy_due = []
+   brgy_paid = []
+   brgy_usage = []
+   totalbrgy_usage = 0
+   totaldue = 0
+   totalpaid = 0
+   context = {
+      "userid":request.session.get(ReqParams.userid),
+      "UserType":request.session.get(ReqParams.LOGIN_SESSION),
+      "name":request.session.get(ReqParams.name)
+   }
+
+
+   for brgy in brgy_report:
+      totaldue = 0
+      totalpaid = 0
+      totalbrgy_usage = 0
+
+      if brgy.year == int(year_brgy):
+         totaldue = brgy.total_due_ytd
+         totalpaid = brgy.total_paid_ytd
+         totalbrgy_usage = brgy.total_usage
+         brgy_usage.append(totalbrgy_usage)
+         brgy_due.append(totaldue)
+         brgy_paid.append(totalpaid)
+
+   #get monthly report in in Every Barangay
+   #default value(brgycode)
+   anao_record = None
+   cagsing_record = None
+   calabawan_record = None
+   cambagte_record = None
+   campisong_record = None
+   cañorong_record = None
+   guiwanon_record = None
+   looc_record = None
+   malatbo_record = None
+   mangaco_record = None
+   palanas_record = None
+   poblacion_record = None
+   salamanca_record = None
+   sanroque_record = None
+
+   if barangay_report.objects.filter(pk = "1-" + str(year_brgy)).exists():
+      anao_record = barangay_report.objects.get(pk = "1-" + str(year_brgy))
+
+   if barangay_report.objects.filter(pk = "2-" + str(year_brgy)).exists():
+      cagsing_record = barangay_report.objects.get(pk = "2-" + str(year_brgy))
+
+   if barangay_report.objects.filter(pk = "3-" + str(year_brgy)).exists():
+      calabawan_record = barangay_report.objects.get(pk = "3-" + str(year_brgy))
+
+   if barangay_report.objects.filter(pk = "4-" + str(year_brgy)).exists():
+      cambagte_record = barangay_report.objects.get(pk = "4-" + str(year_brgy))
+
+   if barangay_report.objects.filter(pk = "5-" + str(year_brgy)).exists():
+      campisong_record = barangay_report.objects.get(pk = "5-" + str(year_brgy))
+
+   if barangay_report.objects.filter(pk = "6-" + str(year_brgy)).exists():
+      cañorong_record = barangay_report.objects.get(pk = "6-" + str(year_brgy))
+
+   if barangay_report.objects.filter(pk = "7-" + str(year_brgy)).exists():
+      guiwanon_record = barangay_report.objects.get(pk = "7-" + str(year_brgy))
+
+   if barangay_report.objects.filter(pk = "8-" + str(year_brgy)).exists():
+      looc_record = barangay_report.objects.get(pk = "8-" + str(year_brgy))
+
+   if barangay_report.objects.filter(pk = "9-" + str(year_brgy)).exists():
+      malatbo_record = barangay_report.objects.get(pk = "9-" + str(year_brgy))
+
+   if barangay_report.objects.filter(pk = "10-" + str(year_brgy)).exists():
+      mangaco_record = barangay_report.objects.get(pk = "10-" + str(year_brgy))
+
+   if barangay_report.objects.filter(pk = "11-" + str(year_brgy)).exists():
+      palanas_record = barangay_report.objects.get(pk = "11-" + str(year_brgy))
+
+   if barangay_report.objects.filter(pk = "12-" + str(year_brgy)).exists():
+      poblacion_record = barangay_report.objects.get(pk = "12-" + str(year_brgy))
+
+   if barangay_report.objects.filter(pk = "13-" + str(year_brgy)).exists():
+      salamanca_record = barangay_report.objects.get(pk = "13-" + str(year_brgy))
+
+   if barangay_report.objects.filter(pk = "14-" + str(year_brgy)).exists():
+      sanroque_record = barangay_report.objects.get(pk = "14-" + str(year_brgy))
+   barangay_name = ReqParams.barangay_list
+   if brgycode != None or brgycode != "" or brgycode != '':
+      defval_brgycode = brgycode
+      defval_brgyname = barangay_name[int(defval_brgycode) - 1]
+      if brgycode == "1":
+         brgy = anao_record
+      if brgycode == "2":
+         brgy = cagsing_record
+      if brgycode == "3":
+         brgy = calabawan_record
+      if brgycode == "4":
+         brgy = cambagte_record
+      if brgycode == "5":
+         brgy = campisong_record
+      if brgycode == "6":
+         brgy = cañorong_record
+      if brgycode == "7":
+         brgy = guiwanon_record
+      if brgycode == "8":
+         brgy = looc_record
+      if brgycode == "9":
+         brgy = malatbo_record
+      if brgycode == "10":
+         brgy = mangaco_record
+      if brgycode == "11":
+         brgy = palanas_record
+      if brgycode == "12":
+         brgy = poblacion_record
+      if brgycode == "13":
+         brgy = salamanca_record
+      if brgycode == "14":
+         brgy = sanroque_record
+   else:
+      defval_brgycode = "14"
+      brgycode = "14"
+      defval_brgyname = barangay_name[int(defval_brgycode) - 1]
+
+   records = []
+   for n in range(current_date.year, 2017, -1):
+      new_record1 =  barangay_report.objects.get(pk = (brgycode + "-" + str(n)))
+      records.append(new_record1)
+   for n in range(2011, 2009, -1):
+      new_record1 =  barangay_report.objects.get(pk = (brgycode + "-" + str(n)))
+      records.append(new_record1)
+   
+
+   return render(request,template,{"report":report,"brgy_due":brgy_due,"brgy_paid":brgy_paid,
+                                    "context":context,"brgy_report":brgy_report,
+                                    "brgy_usage":brgy_usage,"allyear":allyear,"ReqParams":ReqParams,
+                                    "defval":defval,
+                                    "brgycode":brgycode,
+                                    "brgy":brgy,"records":records,
+                                    "defval_brgyname":defval_brgyname,
                                     "anao_record":anao_record,"cagsing_record":cagsing_record,"calabawan_record":calabawan_record,"campisong_record":campisong_record,"cañorong_record":cañorong_record,"cambagte_record":cambagte_record,
                                     "guiwanon_record":guiwanon_record,"looc_record":looc_record,"malatbo_record":malatbo_record,"mangaco_record":mangaco_record,
                                     "palanas_record":palanas_record,"poblacion_record":poblacion_record,"salamanca_record":salamanca_record,"sanroque_record":sanroque_record})
@@ -389,9 +769,15 @@ def Revenue_Report(request):
    brgy_code = request.POST.get(ReqParams.barangay)
    current_date = date.today()
 
+   current_date = date.today()
+
    #default value(year)
    current_date = date.today()
    defval_year = str(current_date.year)
+
+   current_year = current_date.year
+   allyear = []
+   defval_year = str(current_year)
 
    report = Year_Report.objects.get(pk = current_date.year)
    if year_request != None:
@@ -402,8 +788,19 @@ def Revenue_Report(request):
           report = None
 
 
-   #year dropdown value
-   allyear = Year_Report.objects.all()
+   # #year dropdown value
+   # allyear = Year_Report.objects.all()
+
+   #year to choose,from year 2010 until today
+   while current_year >= 2018:
+      allyear.append(current_year)
+      current_year = current_year - 1
+   current_year = 2011
+   while current_year >= 2010:
+      allyear.append(current_year)
+      current_year = current_year - 1
+
+
 
    brgy_report = barangay_report.objects.all()
    brgy_due = []
@@ -412,7 +809,6 @@ def Revenue_Report(request):
    totalbrgy_usage = 0
    totaldue = 0
    totalpaid = 0
-   index = 0
    context = {
       "userid":request.session.get(ReqParams.userid),
       "UserType":request.session.get(ReqParams.LOGIN_SESSION),
@@ -495,8 +891,8 @@ def Revenue_Report(request):
    if barangay_report.objects.filter(pk = "13-" + str(year_brgy)).exists():
       salamanca_record = barangay_report.objects.get(pk = "13-" + str(year_brgy))
 
-   if barangay_report.objects.filter(pk = "10-" + str(year_brgy)).exists():
-      sanroque_record = barangay_report.objects.get(pk = "10-" + str(year_brgy))
+   if barangay_report.objects.filter(pk = "14-" + str(year_brgy)).exists():
+      sanroque_record = barangay_report.objects.get(pk = "14-" + str(year_brgy))
 
    #unuse next line of code
    #monthname = ReqParams.barangay_list
@@ -585,6 +981,1661 @@ def pending_bills(request):
 
 def OldSystemRecordDisplay(request,id):
 
+   account = account_info()
+   usage = usage_record()
+   current_date = date.today()
+   context = {}
+   defval = {}
+   all_list = []
+   usage_list = []
+   account_list = []
+   getID = account_info.objects.get(accountinfoid = id)
+   account_list.append(getID)
+   idstr = id + "-" + str(current_date.year)
+   pkstr = usage_record.objects.get(accountid = idstr)
+   usage_list.append(pkstr)
+
+   all_list = zip(usage_list,account_list)
+
+   #set selected value
+   defmonthval = current_date.month - 1
+   #get the month name
+   month_obj = datetime.datetime.strptime(str(defmonthval),"%M")
+   month_name = month_obj.strftime("%B")
+   defval["selectmonth"] = str(defmonthval)
+   defval["selectyear"] = str(current_date.year)
+   defval["monthval"]  = month_name
+   getID = account_info.objects.get(accountinfoid = id)
+   account_list.append(getID)
+
+   idstr = id + "-" + str(current_date.year)
+   pkstr = usage_record.objects.get(accountid = idstr)
+   usage_list.append(pkstr)
+   context["balance"] = pkstr.commulative_bill
+
+   yearstr = str(current_date.year)
+   context = {}
+   context["UserType"] = request.session.get(ReqParams.LOGIN_SESSION)
+
+   accstr = id + "-" + yearstr
+   get_usageid = usage_record.objects.get(accountid = accstr)
+   #amount paid
+   amountpaid = request.POST.get('amount')
+   or_number = request.POST.get("or_number")
+   postedby = request.session.get("postedby")
+
+
+   #Totals
+   totalpkstr = getID.barangay + "-" + str(current_date.year)
+   total_paid_brgy = barangay_report.objects.get(pk = totalpkstr)
+   yearly_record = Year_Report.objects.get(pk = current_date.year)
+
+   payment = payment_history()
+
+   if request.method == "POST":
+
+      #month of non payment
+      prev_list = UnpaidMonth(id,str(current_date.year - 1))#list of unpaid month previous year
+      current_list = UnpaidMonth(id,str(current_date.year))#list of unpaid this year
+      ziplist = (prev_list,current_list)
+
+      print(current_list)
+
+      #Payment History
+      user = SystemUser.objects.get(pk = request.session.get(ReqParams.userid))
+      payment.amount = float(amountpaid)
+      payment.date = current_date
+      payment.or_number = or_number
+      payment.time = time.asctime( time.localtime(time.time()) )
+      payment.postedby = user.firstname + " " + user.lastname
+      payment.consumer = getID.firstname + " " + getID.lastname
+      payment.accountinfoid = getID.accountinfoid
+      payment.meternumber = getID.meternumber
+      payment.year = current_date.year
+      payment.save()
+
+      get_usageid = usage_record.objects.get(pk = id + "-" + str(current_date.year))
+
+      postedbystr = request.session.get(ReqParams.postedby) + "|" + get_usageid.postedby_history
+      get_usageid.postedby_history = postedbystr
+      amountpaidstr =  str(amountpaid) + "|" + get_usageid.amountpaid_history
+      get_usageid.amountpaid_history = amountpaidstr
+      datestr = time.asctime( time.localtime(time.time()) ) + "|" + get_usageid.datepaid_history
+      get_usageid.datepaid_history = datestr
+      or_numberstr = or_number + "|" + get_usageid.or_number_history
+      get_usageid.or_number_history = or_numberstr
+
+      #excess payment and  commulative bill
+      if float(amountpaid) > get_usageid.commulative_bill:
+         #excess payment
+         excesspayment = float(amountpaid) - get_usageid.commulative_bill
+         get_usageid.excesspayment = excesspayment
+         get_usageid.commulative_bill = 0
+         get_usageid.save()
+      else:
+         get_usageid.commulative_bill = get_usageid.commulative_bill -  float(amountpaid)
+         get_usageid.save()
+
+      #january
+      if 1 in prev_list and amountpaid != 0:
+         if usage_record.objects.filter(pk = id + "-" + str(current_date.year - 1)).exists():
+            get_usageid = usage_record.objects.get(pk = id + "-" + str(current_date.year))
+
+            if amountpaid:
+
+               #saving all amount paid
+               tobePosted = 0
+               difference = 0
+               if get_usageid.totalbill_jan > get_usageid.paidamt_jan:
+                  difference = get_usageid.totalbill_jan - get_usageid.paidamt_jan
+                  if float(amountpaid) >= difference:
+                     amountpaid = float(amountpaid) - difference
+                     tobePosted = difference
+                     get_usageid.paidamt_jan += tobePosted
+                  else:
+                     tobePosted = float(amountpaid)
+                     get_usageid.paidamt_jan += tobePosted
+                     amountpaid = 0
+
+
+               postedbystr = request.session.get(ReqParams.postedby) + "|" + get_usageid.postedby_jan
+               get_usageid.postedby_jan = postedbystr
+               amountpaidstr =  str(tobePosted) + "|" + get_usageid.amountpaid_str_jan
+               get_usageid.amountpaid_str_jan = amountpaidstr
+               or_numberstr = or_number + "|" + get_usageid.ior_jan
+               get_usageid.ior_jan = or_numberstr
+               datestr = time.asctime( time.localtime(time.time()) ) + "|" + get_usageid.datepaid_jan
+               get_usageid.datepaid_jan = datestr
+
+
+
+               #we set total paid per month
+               total_paid_brgy.total_paid_january += float(tobePosted)
+               if total_paid_brgy.total_due_ytd < float(tobePosted):
+                  total_paid_brgy.total_due_ytd = 0
+               else:
+                  total_paid_brgy.total_due_ytd -= float(tobePosted)
+
+               if total_paid_brgy.total_due_january < float(tobePosted):
+                  total_paid_brgy.total_due_january = 0
+               else:
+                  total_paid_brgy.total_due_january -= float(tobePosted)
+
+               total_paid_brgy.total_paid_ytd += float(tobePosted)
+               total_paid_brgy.save()
+
+               yearly_record.total_paid_january += float(tobePosted)
+               if yearly_record.total_due_january < float(tobePosted):
+                  yearly_record.total_due_january = 0
+               else:
+                  yearly_record.total_due_january -= float(tobePosted)
+
+               yearly_record.total_paid_ytd += float(tobePosted)
+               if yearly_record.total_due_ytd < float(tobePosted):
+                  yearly_record.total_due_ytd = 0
+               else:
+                  yearly_record.total_due_ytd -= float(tobePosted)
+
+               yearly_record.save()
+
+
+               get_usageid.save()
+
+      if 2 in prev_list and amountpaid != 0:
+
+         if usage_record.objects.filter(pk = id + "-" + str(current_date.year - 1)).exists():
+            get_usageid = usage_record.objects.get(pk = id + "-" + str(current_date.year - 1))
+
+            if amountpaid:
+
+               #saving all amount paid
+               difference = 0
+               tobePosted = 0
+               if get_usageid.totalbill_feb > get_usageid.paidamt_feb:
+                  difference = get_usageid.totalbill_feb - get_usageid.paidamt_feb
+                  if float(amountpaid) >= difference:
+                     amountpaid = float(amountpaid) - difference
+                     tobePosted = difference
+                     get_usageid.paidamt_feb += tobePosted
+                  else:
+                     tobePosted = float(amountpaid)
+                     get_usageid.paidamt_feb += tobePosted
+                     amountpaid = 0
+
+
+
+               #February
+               #saving all amount paid
+
+               postedbystr = request.session.get(ReqParams.postedby) + "|" + get_usageid.postedby_feb
+               get_usageid.postedby_feb = postedbystr
+               amountpaidstr =  str(tobePosted) + "|" + get_usageid.amountpaid_str_feb
+               get_usageid.amountpaid_str_feb = amountpaidstr
+               or_numberstr = or_number + "|" + get_usageid.ior_feb
+               get_usageid.ior_feb = or_numberstr
+               datestr = time.asctime( time.localtime(time.time()) ) + "|" + get_usageid.datepaid_jan
+               get_usageid.datepaid_feb = datestr
+
+               #we set total paid per month
+               total_paid_brgy.total_paid_february += float(tobePosted)
+               if total_paid_brgy.total_due_ytd < float(tobePosted):
+                     total_paid_brgy.total_due_ytd = 0
+               else:
+                  total_paid_brgy.total_due_ytd -= float(tobePosted)
+
+               if total_paid_brgy.total_due_february < float(tobePosted):
+                  total_paid_brgy.total_due_february = 0
+               else:
+                  total_paid_brgy.total_due_february -= float(tobePosted)
+
+               total_paid_brgy.total_paid_ytd += float(tobePosted)
+               total_paid_brgy.save()
+
+               yearly_record.total_paid_february += float(tobePosted)
+               if yearly_record.total_due_february < float(tobePosted):
+                  yearly_record.total_due_february = 0
+               else:
+                  yearly_record.total_due_february -= float(tobePosted)
+
+               yearly_record.total_paid_ytd += float(tobePosted)
+               if yearly_record.total_due_ytd < float(tobePosted):
+                  yearly_record.total_due_ytd = 0
+               else:
+                  yearly_record.total_due_ytd -= float(tobePosted)
+
+               yearly_record.save()
+               get_usageid.save()
+
+      #p March
+      if 3 in prev_list and amountpaid != 0:
+         if usage_record.objects.filter(pk = id + "-" + str(current_date.year - 1)).exists():
+            get_usageid = usage_record.objects.get(pk = id + "-" + str(current_date.year - 1))
+
+            if amountpaid:
+
+               #saving all amount paid
+               difference = 0
+               tobePosted = 0
+               if get_usageid.totalbill_mar > get_usageid.paidamt_mar:
+                  difference = get_usageid.totalbill_mar - get_usageid.paidamt_mar
+                  if float(amountpaid) >= difference:
+                     amountpaid = float(amountpaid) - difference
+                     tobePosted = difference
+                     get_usageid.paidamt_mar += tobePosted
+                  else:
+                     tobePosted = float(amountpaid)
+                     get_usageid.paidamt_mar += tobePosted
+                     amountpaid = 0
+
+
+               #March
+               #saving all amount paid
+               postedbystr = request.session.get(ReqParams.postedby) + "|" + get_usageid.postedby_mar
+               get_usageid.postedby_mar = postedbystr
+               amountpaidstr =  str(tobePosted) + "|" + get_usageid.amountpaid_str_mar
+               get_usageid.amountpaid_str_mar = amountpaidstr
+               or_numberstr = or_number + "|" + get_usageid.ior_mar
+               get_usageid.ior_mar = or_numberstr
+               datestr = time.asctime( time.localtime(time.time()) ) + "|" + get_usageid.datepaid_mar
+               get_usageid.datepaid_mar = datestr
+
+               #we set total paid per month
+               total_paid_brgy.total_paid_march += float(tobePosted)
+               if total_paid_brgy.total_due_ytd < float(tobePosted):
+                     total_paid_brgy.total_due_ytd = 0
+               else:
+                  total_paid_brgy.total_due_ytd -= float(tobePosted)
+
+               if total_paid_brgy.total_due_march < float(tobePosted):
+                  total_paid_brgy.total_due_march = 0
+               else:
+                  total_paid_brgy.total_due_march -= float(tobePosted)
+
+               total_paid_brgy.total_paid_ytd += float(tobePosted)
+               total_paid_brgy.save()
+
+               yearly_record.total_paid_march += float(tobePosted)
+               if yearly_record.total_due_march < float(tobePosted):
+                  yearly_record.total_due_march = 0
+               else:
+                  yearly_record.total_due_march -= float(tobePosted)
+
+               yearly_record.total_paid_ytd += float(tobePosted)
+               if yearly_record.total_due_ytd < float(tobePosted):
+                  yearly_record.total_due_ytd = 0
+               else:
+                  yearly_record.total_due_ytd -= float(tobePosted)
+
+               yearly_record.save()
+
+
+               get_usageid.save()
+
+      #April
+      if 4 in prev_list and amountpaid != 0:
+         if usage_record.objects.filter(pk = id + "-" + str(current_date.year - 1)).exists():
+            get_usageid = usage_record.objects.get(pk = id + "-" + str(current_date.year - 1))
+
+            if amountpaid:
+
+               #saving all amount paid
+               difference = 0
+               tobePosted = 0
+               if get_usageid.totalbill_apr > get_usageid.paidamt_apr:
+                  difference = get_usageid.totalbill_apr - get_usageid.paidamt_apr
+                  if float(amountpaid) >= difference:
+                     amountpaid = float(amountpaid) - get_usageid.totalbill_apr
+                     tobePosted = difference
+                     get_usageid.paidamt_apr = tobePosted
+                  else:
+                     tobePosted = float(amountpaid)
+                     get_usageid.paidamt_apr += tobePosted
+                     amountpaid = 0
+
+
+
+               #April
+               #saving all amount paid
+
+               postedbystr = request.session.get(ReqParams.postedby) + "|" + get_usageid.postedby_apr
+               get_usageid.postedby_apr = postedbystr
+               amountpaidstr =  str(tobePosted) + "|" + get_usageid.amountpaid_str_apr
+               get_usageid.amountpaid_str_apr = amountpaidstr
+               or_numberstr = or_number + "|" + get_usageid.ior_apr
+               get_usageid.ior_apr = or_numberstr
+               datestr = time.asctime( time.localtime(time.time()) ) + "|" + get_usageid.datepaid_apr
+               get_usageid.datepaid_apr = datestr
+
+               #we set total paid per month
+               total_paid_brgy.total_paid_april += float(tobePosted)
+               if total_paid_brgy.total_due_ytd < float(tobePosted):
+                     total_paid_brgy.total_due_ytd = 0
+               else:
+                  total_paid_brgy.total_due_ytd -= float(tobePosted)
+
+               if total_paid_brgy.total_due_april < float(tobePosted):
+                  total_paid_brgy.total_due_april = 0
+               else:
+                  total_paid_brgy.total_due_april -= float(tobePosted)
+
+               total_paid_brgy.total_paid_ytd += float(tobePosted)
+               total_paid_brgy.save()
+
+               yearly_record.total_paid_april += float(tobePosted)
+               if yearly_record.total_due_april < float(tobePosted):
+                  yearly_record.total_due_april = 0
+               else:
+                  yearly_record.total_due_april -= float(tobePosted)
+
+               yearly_record.total_paid_ytd += float(tobePosted)
+               if yearly_record.total_due_ytd < float(tobePosted):
+                  yearly_record.total_due_ytd = 0
+               else:
+                  yearly_record.total_due_ytd -= float(tobePosted)
+
+               yearly_record.save()
+
+
+               get_usageid.save()
+
+      #current May
+      if 5 in prev_list and amountpaid != 0:
+         if usage_record.objects.filter(pk = id + "-" + str(current_date.year - 1)).exists():
+            get_usageid = usage_record.objects.get(pk = id + "-" + str(current_date.year - 1))
+
+            if amountpaid:
+               #saving all amount paid
+               difference = 0
+               tobePosted = 0
+               if get_usageid.totalbill_may > get_usageid.paidamt_may:
+                  difference = get_usageid.totalbill_may - get_usageid.paidamt_may
+                  if float(amountpaid) >= difference:
+                     amountpaid = float(amountpaid) - difference
+                     tobePosted = difference
+                     get_usageid.paidamt_may += tobePosted
+                  else:
+                     tobePosted = float(amountpaid)
+                     get_usageid.paidamt_may += tobePosted
+                     amountpaid = 0
+
+
+
+               #May
+               #saving all amount paid
+
+               postedbystr = request.session.get(ReqParams.postedby) + "|" + get_usageid.postedby_may
+               get_usageid.postedby_may = postedbystr
+               amountpaidstr =  str(tobePosted) + "|" + get_usageid.amountpaid_str_may
+               get_usageid.amountpaid_str_may = amountpaidstr
+               or_numberstr = or_number + "|" + get_usageid.ior_may
+               get_usageid.ior_may = or_numberstr
+               datestr = time.asctime( time.localtime(time.time()) ) + "|" + get_usageid.datepaid_may
+               get_usageid.datepaid_may = datestr
+
+               #we set total paid per month
+               total_paid_brgy.total_paid_may += float(tobePosted)
+               if total_paid_brgy.total_due_ytd < float(tobePosted):
+                     total_paid_brgy.total_due_ytd = 0
+               else:
+                  total_paid_brgy.total_due_ytd -= float(tobePosted)
+
+               if total_paid_brgy.total_due_may < float(tobePosted):
+                  total_paid_brgy.total_due_may = 0
+               else:
+                  total_paid_brgy.total_due_may -= float(tobePosted)
+
+               total_paid_brgy.total_paid_ytd += float(tobePosted)
+               total_paid_brgy.save()
+
+               yearly_record.total_paid_may += float(tobePosted)
+               if yearly_record.total_due_may < float(tobePosted):
+                  yearly_record.total_due_january = 0
+               else:
+                  yearly_record.total_due_may -= float(tobePosted)
+
+               yearly_record.total_paid_ytd += float(tobePosted)
+               if yearly_record.total_due_ytd < float(tobePosted):
+                  yearly_record.total_due_ytd = 0
+               else:
+                  yearly_record.total_due_ytd -= float(tobePosted)
+               yearly_record.save()
+
+
+               get_usageid.save()
+
+      #june
+      if 6 in prev_list and amountpaid != 0:
+         if usage_record.objects.filter(pk = id + "-" + str(current_date.year - 1)).exists():
+            get_usageid = usage_record.objects.get(pk = id + "-" + str(current_date.year - 1))
+
+            if amountpaid:
+               #saving all amount paid
+               difference = 0
+               tobePosted = 0
+               if get_usageid.totalbill_jun > get_usageid.paidamt_jun:
+                  difference = get_usageid.totalbill_jun - get_usageid.paidamt_jun
+                  if float(amountpaid) >= difference:
+                     amountpaid = float(amountpaid) - difference
+                     tobePosted = difference
+                     get_usageid.paidamt_jun += tobePosted
+                  else:
+                     tobePosted = float(amountpaid)
+                     get_usageid.paidamt_jun += tobePosted
+                     amountpaid = 0
+
+
+
+               #June
+               #saving all amount paid
+               get_usageid.paidamt_jun += float(tobePosted)
+               postedbystr = request.session.get(ReqParams.postedby) + "|" + get_usageid.postedby_jun
+               get_usageid.postedby_jun = postedbystr
+               amountpaidstr =  str(tobePosted) + "|" + get_usageid.amountpaid_str_jun
+               get_usageid.amountpaid_str_jun = amountpaidstr
+               or_numberstr = or_number + "|" + get_usageid.ior_jun
+               get_usageid.ior_jun = or_numberstr
+               datestr = time.asctime( time.localtime(time.time()) ) + "|" + get_usageid.datepaid_jun
+               get_usageid.datepaid_jun = datestr
+
+               #we set total paid per month
+               total_paid_brgy.total_paid_june += float(tobePosted)
+               if total_paid_brgy.total_due_ytd < float(tobePosted):
+                     total_paid_brgy.total_due_ytd = 0
+               else:
+                  total_paid_brgy.total_due_ytd -= float(tobePosted)
+
+               if total_paid_brgy.total_due_june < float(tobePosted):
+                  total_paid_brgy.total_due_june = 0
+               else:
+                  total_paid_brgy.total_due_june -= float(tobePosted)
+
+               total_paid_brgy.total_paid_ytd += float(tobePosted)
+               total_paid_brgy.save()
+
+               yearly_record.total_paid_june += float(tobePosted)
+               if yearly_record.total_due_june < float(tobePosted):
+                  yearly_record.total_due_january = 0
+               else:
+                  yearly_record.total_due_june -= float(tobePosted)
+
+               yearly_record.total_paid_ytd += float(tobePosted)
+               if yearly_record.total_due_ytd < float(tobePosted):
+                  yearly_record.total_due_ytd = 0
+               else:
+                  yearly_record.total_due_ytd -= float(tobePosted)
+               yearly_record.save()
+
+
+               get_usageid.save()
+
+      #July
+      if 7 in prev_list and amountpaid != 0:
+         if usage_record.objects.filter(pk = id + "-" + str(current_date.year - 1)).exists():
+            get_usageid = usage_record.objects.get(pk = id + "-" + str(current_date.year - 1))
+
+            if amountpaid:
+               #saving all amount paid
+               difference = 0
+               tobePosted = 0
+               if get_usageid.totalbill_jul > get_usageid.paidamt_jul:
+                  difference = get_usageid.totalbill_jul - get_usageid.paidamt_jul
+                  if float(amountpaid) >= difference:
+                     amountpaid = float(amountpaid) - difference
+                     tobePosted = difference
+                     get_usageid.paidamt_jul += tobePosted
+
+                  else:
+                     tobePosted = float(amountpaid)
+                     get_usageid.paidamt_jul += tobePosted
+                     amountpaid = 0
+
+
+
+               #July
+               #saving all amount paid
+
+               postedbystr = request.session.get(ReqParams.postedby) + "|" + get_usageid.postedby_jul
+               get_usageid.postedby_jul = postedbystr
+               amountpaidstr =  str(tobePosted) + "|" + get_usageid.amountpaid_str_jul
+               get_usageid.amountpaid_str_jul = amountpaidstr
+               or_numberstr = or_number + "|" + get_usageid.ior_jul
+               get_usageid.ior_jul = or_numberstr
+               datestr = time.asctime( time.localtime(time.time()) ) + "|" + get_usageid.datepaid_jul
+               get_usageid.datepaid_jul = datestr
+
+               #we set total paid per month
+               total_paid_brgy.total_paid_july += float(tobePosted)
+               if total_paid_brgy.total_due_ytd < float(tobePosted):
+                     total_paid_brgy.total_due_ytd = 0
+               else:
+                  total_paid_brgy.total_due_ytd -= float(tobePosted)
+
+               if total_paid_brgy.total_due_july < float(tobePosted):
+                  total_paid_brgy.total_due_july = 0
+               else:
+                  total_paid_brgy.total_due_july -= float(tobePosted)
+
+               total_paid_brgy.total_paid_ytd += float(tobePosted)
+               total_paid_brgy.save()
+
+               yearly_record.total_paid_july += float(tobePosted)
+               if yearly_record.total_due_july < float(tobePosted):
+                  yearly_record.total_due_july = 0
+               else:
+                  yearly_record.total_due_july -= float(tobePosted)
+
+               yearly_record.total_paid_ytd += float(tobePosted)
+               if yearly_record.total_due_ytd < float(tobePosted):
+                  yearly_record.total_due_ytd = 0
+               else:
+                  yearly_record.total_due_ytd -= float(tobePosted)
+
+               yearly_record.save()
+               get_usageid.save()
+
+
+      if 8 in prev_list and amountpaid != 0:
+         if usage_record.objects.filter(pk = id + "-" + str(current_date.year - 1)).exists():
+            get_usageid = usage_record.objects.get(pk = id + "-" + str(current_date.year - 1))
+
+            if amountpaid:
+               #saving all amount paid
+               difference = 0
+               tobePosted = 0
+               if get_usageid.totalbill_aug > get_usageid.paidamt_aug:
+                  difference = get_usageid.totalbill_aug - get_usageid.paidamt_aug
+                  if float(amountpaid) >= difference:
+                     amountpaid = float(amountpaid) - difference
+                     tobePosted = difference
+                     get_usageid.paidamt_aug += tobePosted
+                  else:
+                     tobePosted = float(amountpaid)
+                     get_usageid.paidamt_aug += tobePosted
+                     amountpaid = 0
+
+
+
+               #August
+               #saving all amount paid
+               postedbystr = request.session.get(ReqParams.postedby) + "|" + get_usageid.postedby_aug
+               get_usageid.postedby_aug = postedbystr
+               amountpaidstr =  str(tobePosted) + "|" + get_usageid.amountpaid_str_aug
+               get_usageid.amountpaid_str_aug = amountpaidstr
+               or_numberstr = or_number + "|" + get_usageid.ior_aug
+               get_usageid.ior_aug = or_numberstr
+               datestr = time.asctime( time.localtime(time.time()) ) + "|" + get_usageid.datepaid_aug
+               get_usageid.datepaid_aug = datestr
+
+               #we set total paid per month
+               total_paid_brgy.total_paid_august += float(tobePosted)
+               if total_paid_brgy.total_due_ytd < float(tobePosted):
+                     total_paid_brgy.total_due_ytd = 0
+               else:
+                  total_paid_brgy.total_due_ytd -= float(tobePosted)
+
+               if total_paid_brgy.total_due_august < float(tobePosted):
+                  total_paid_brgy.total_due_august = 0
+               else:
+                  total_paid_brgy.total_due_august -= float(tobePosted)
+
+               total_paid_brgy.total_paid_ytd += float(tobePosted)
+               total_paid_brgy.save()
+
+               yearly_record.total_paid_august += float(tobePosted)
+               if yearly_record.total_due_august < float(tobePosted):
+                  yearly_record.total_due_august = 0
+               else:
+                  yearly_record.total_due_august -= float(tobePosted)
+
+               yearly_record.total_paid_ytd += float(tobePosted)
+               if yearly_record.total_due_ytd < float(tobePosted):
+                  yearly_record.total_due_ytd = 0
+               else:
+                  yearly_record.total_due_ytd -= float(tobePosted)
+
+               yearly_record.save()
+
+
+               get_usageid.save()
+
+
+       # September
+      if 9 in prev_list and amountpaid != 0:
+         if usage_record.objects.filter(pk = id + "-" + str(current_date.year - 1)).exists():
+            get_usageid = usage_record.objects.get(pk = id + "-" + str(current_date.year - 1))
+
+            if amountpaid:
+               #saving all amount paid
+               difference = 0
+               tobePosted = 0
+               if get_usageid.totalbill_sept > get_usageid.paidamt_sept:
+                  difference = get_usageid.totalbill_sept - get_usageid.paidamt_sept
+                  if float(amountpaid) >= difference:
+                     amountpaid = float(amountpaid) - difference
+                     tobePosted = difference
+                     get_usageid.paidamt_sept += tobePosted
+                  else:
+                     tobePosted = float(amountpaid)
+                     get_usageid.paidamt_sept += tobePosted
+                     amountpaid = 0
+
+
+
+               get_usageid.postedby_sept = request.session.get(ReqParams.postedby)
+               get_usageid.amountpaid_str_sept += str(tobePosted) + "|" #saving all amount paid
+               get_usageid.ior_sept += or_number  + "|"
+               get_usageid.datepaid_sept += time.asctime( time.localtime(time.time()) ) + "|"
+
+               #we set total paid per month
+               total_paid_brgy.total_paid_september += float(tobePosted)
+               if total_paid_brgy.total_due_ytd < float(tobePosted):
+                     total_paid_brgy.total_due_ytd = 0
+               else:
+                  total_paid_brgy.total_due_ytd -= float(tobePosted)
+
+               if total_paid_brgy.total_due_september < float(tobePosted):
+                  total_paid_brgy.total_due_september = 0
+               else:
+                  total_paid_brgy.total_due_september -= float(tobePosted)
+
+               total_paid_brgy.total_paid_ytd += float(tobePosted)
+               total_paid_brgy.save()
+
+               yearly_record.total_paid_september += float(tobePosted)
+               if yearly_record.total_due_september < float(tobePosted):
+                  yearly_record.total_due_september = 0
+               else:
+                  yearly_record.total_due_september -= float(tobePosted)
+
+               yearly_record.total_paid_ytd += float(tobePosted)
+               if yearly_record.total_due_ytd < float(tobePosted):
+                  yearly_record.total_due_ytd = 0
+               else:
+                  yearly_record.total_due_ytd -= float(tobePosted)
+
+               yearly_record.save()
+
+
+            get_usageid.save()
+
+      # October
+      if 10 in prev_list and amountpaid != 0:
+         if usage_record.objects.filter(pk = id + "-" + str(current_date.year - 1)).exists():
+            get_usageid = usage_record.objects.get(pk = id + "-" + str(current_date.year - 1))
+
+            if amountpaid:
+               #saving all amount paid
+               difference = 0
+               tobePosted = 0
+               if get_usageid.totalbill_oct > get_usageid.paidamt_oct:
+                  difference = get_usageid.totalbill_oct - get_usageid.paidamt_oct
+                  if float(amountpaid) >= difference:
+                     amountpaid = float(amountpaid) - difference
+                     tobePosted = difference
+                     get_usageid.paidamt_oct += tobePosted
+                  else:
+                     tobePosted = float(amountpaid)
+                     get_usageid.paidamt_oct += tobePosted
+                     amountpaid = 0
+
+
+
+               #October
+               postedbystr = request.session.get(ReqParams.postedby) + "|" + get_usageid.postedby_oct
+               get_usageid.postedby_oct = postedbystr
+               amountpaidstr =  str(tobePosted) + "|" + get_usageid.amountpaid_str_oct
+               get_usageid.amountpaid_str_oct = amountpaidstr
+               or_numberstr = or_number + "|" + get_usageid.ior_oct
+               get_usageid.ior_oct = or_numberstr
+               datestr = time.asctime( time.localtime(time.time()) ) + "|" + get_usageid.datepaid_oct
+               get_usageid.datepaid_oct = datestr
+
+               #we set total paid per month
+               total_paid_brgy.total_paid_october += float(tobePosted)
+               if total_paid_brgy.total_due_ytd < float(tobePosted):
+                     total_paid_brgy.total_due_ytd = 0
+               else:
+                  total_paid_brgy.total_due_ytd -= float(tobePosted)
+
+               if total_paid_brgy.total_due_october < float(tobePosted):
+                  total_paid_brgy.total_due_october = 0
+               else:
+                  total_paid_brgy.total_due_october -= float(tobePosted)
+
+               total_paid_brgy.total_paid_ytd += float(tobePosted)
+               total_paid_brgy.save()
+
+               yearly_record.total_paid_july += float(tobePosted)
+               if yearly_record.total_due_october < float(tobePosted):
+                  yearly_record.total_due_october = 0
+               else:
+                  yearly_record.total_due_october -= float(tobePosted)
+
+               yearly_record.total_paid_ytd += float(tobePosted)
+               if yearly_record.total_due_ytd < float(tobePosted):
+                  yearly_record.total_due_ytd = 0
+               else:
+                  yearly_record.total_due_ytd -= float(tobePosted)
+
+               yearly_record.save()
+
+
+               get_usageid.save()
+
+      #November
+      if 11 in prev_list and amountpaid != 0:
+         if usage_record.objects.filter(pk = id + "-" + str(current_date.year - 1)).exists():
+            get_usageid = usage_record.objects.get(pk = id + "-" + str(current_date.year - 1))
+
+            if amountpaid:
+               #saving all amount paid
+               difference = 0
+               tobePosted = 0
+               if get_usageid.totalbill_nov > get_usageid.paidamt_nov:
+                  difference = get_usageid.totalbill_nov - get_usageid.paidamt_nov
+                  if float(amountpaid) >= difference:
+                     amountpaid = float(amountpaid) - difference
+                     tobePosted  = difference
+                     get_usageid.paidamt_nov += tobePosted
+                  else:
+                     tobePosted = float(amountpaid)
+                     get_usageid.paidamt_nov += tobePosted
+                     amountpaid = 0
+
+
+
+               #November
+               #saving all amount paid
+               postedbystr = request.session.get(ReqParams.postedby) + "|" + get_usageid.postedby_nov
+               get_usageid.postedby_nov = postedbystr
+               amountpaidstr =  str(tobePosted) + "|" + get_usageid.amountpaid_str_nov
+               get_usageid.amountpaid_str_nov = amountpaidstr
+               or_numberstr = or_number + "|" + get_usageid.ior_nov
+               get_usageid.ior_nov = or_numberstr
+               datestr = time.asctime( time.localtime(time.time()) ) + "|" + get_usageid.datepaid_nov
+               get_usageid.datepaid_nov = datestr
+
+               #we set total paid per month
+               total_paid_brgy.total_paid_november += float(tobePosted)
+               if total_paid_brgy.total_due_ytd < float(tobePosted):
+                     total_paid_brgy.total_due_ytd = 0
+               else:
+                  total_paid_brgy.total_due_ytd -= float(tobePosted)
+
+               if total_paid_brgy.total_due_july < float(tobePosted):
+                  total_paid_brgy.total_due_july = 0
+               else:
+                  total_paid_brgy.total_due_july -= float(tobePosted)
+
+               total_paid_brgy.total_paid_ytd += float(tobePosted)
+               total_paid_brgy.save()
+
+               yearly_record.total_paid_july += float(tobePosted)
+               if yearly_record.total_due_july < float(tobePosted):
+                  yearly_record.total_due_july = 0
+               else:
+                  yearly_record.total_due_july -= float(tobePosted)
+
+               yearly_record.total_paid_ytd += float(tobePosted)
+               if yearly_record.total_due_ytd < float(tobePosted):
+                  yearly_record.total_due_ytd = 0
+               else:
+                  yearly_record.total_due_ytd -= float(tobePosted)
+
+               yearly_record.save()
+
+
+               get_usageid.save()
+
+      if 12 in prev_list and amountpaid != 0:
+         if usage_record.objects.filter(pk = id + "-" + str(current_date.year - 1)).exists():
+            get_usageid = usage_record.objects.get(pk = id + "-" + str(current_date.year - 1))
+            if amountpaid:
+               #December
+               #saving all amount paid
+               difference = 0
+               tobePosted = 0
+               if get_usageid.totalbill_dec > get_usageid.paidamt_dec:
+                  difference = get_usageid.totalbill_dec - get_usageid.paidamt_dec
+                  if tobePosted >= difference:
+                     amountpaid = float(amountpaid) - difference
+                     tobePosted = difference
+                     get_usageid.paidamt_dec += tobePosted
+                  else:
+                     tobePosted = float(amountpaid)
+                     get_usageid.paidamt_dec += tobePosted
+                     amountpaid = 0
+
+
+               get_usageid.paidamt_dec += float(tobePosted)
+               postedbystr = request.session.get(ReqParams.postedby) + "|" + get_usageid.postedby_dec
+               get_usageid.postedby_dec = postedbystr
+               amountpaidstr =  str(tobePosted) + "|" + get_usageid.amountpaid_str_dec
+               get_usageid.amountpaid_str_dec = amountpaidstr
+               or_numberstr = or_number + "|" + get_usageid.ior_dec
+               get_usageid.ior_dec = or_numberstr
+               datestr = time.asctime( time.localtime(time.time()) ) + "|" + get_usageid.datepaid_dec
+               get_usageid.datepaid_dec = datestr
+
+
+               #we set total paid per month
+               total_paid_brgy.total_paid_december += float(tobePosted)
+               if total_paid_brgy.total_due_ytd < float(tobePosted):
+                     total_paid_brgy.total_due_ytd = 0
+               else:
+                  total_paid_brgy.total_due_ytd -= float(tobePosted)
+
+               if total_paid_brgy.total_due_december < float(tobePosted):
+                  total_paid_brgy.total_due_december = 0
+               else:
+                  total_paid_brgy.total_due_december -= float(tobePosted)
+
+               total_paid_brgy.total_paid_ytd += float(tobePosted)
+               total_paid_brgy.save()
+
+               yearly_record.total_paid_december += float(tobePosted)
+               if yearly_record.total_due_december < float(tobePosted):
+                  yearly_record.total_due_december = 0
+               else:
+                  yearly_record.total_due_december -= float(tobePosted)
+
+               yearly_record.total_paid_ytd += float(tobePosted)
+               if yearly_record.total_due_ytd < float(tobePosted):
+                  yearly_record.total_due_ytd = 0
+               else:
+                  yearly_record.total_due_ytd -= float(tobePosted)
+
+               yearly_record.save()
+               get_usageid.save()
+
+
+      #current january
+      if 1 in current_list and amountpaid != 0:
+
+         if usage_record.objects.filter(pk = id + "-" + str(current_date.year)).exists():
+            get_usageid = usage_record.objects.get(pk = id + "-" + str(current_date.year))
+
+            if amountpaid:
+
+               #saving all amount paid
+               tobePosted = 0
+               difference = 0
+               if get_usageid.totalbill_jan > get_usageid.paidamt_jan:
+                  difference = get_usageid.totalbill_jan - get_usageid.paidamt_jan
+                  if float(amountpaid) >= difference:
+                     amountpaid = float(amountpaid) - difference
+                     tobePosted = difference
+                     get_usageid.paidamt_jan += tobePosted
+                  else:
+                     tobePosted = float(amountpaid)
+                     get_usageid.paidamt_jan += tobePosted
+                     amountpaid = 0
+
+
+               postedbystr = request.session.get(ReqParams.postedby) + "|" + get_usageid.postedby_jan
+               get_usageid.postedby_jan = postedbystr
+               amountpaidstr =  str(tobePosted) + "|" + get_usageid.amountpaid_str_jan
+               get_usageid.amountpaid_str_jan = amountpaidstr
+               or_numberstr = or_number + "|" + get_usageid.ior_jan
+               get_usageid.ior_jan = or_numberstr
+               datestr = time.asctime( time.localtime(time.time()) ) + "|" + get_usageid.datepaid_jan
+               get_usageid.datepaid_jan = datestr
+
+
+               #we set total paid per month
+               total_paid_brgy.total_paid_january += float(tobePosted)
+               if total_paid_brgy.total_due_ytd < float(tobePosted):
+                  total_paid_brgy.total_due_ytd = 0
+               else:
+                  total_paid_brgy.total_due_ytd -= float(tobePosted)
+
+               if total_paid_brgy.total_due_january < float(tobePosted):
+                  total_paid_brgy.total_due_january = 0
+               else:
+                  total_paid_brgy.total_due_january -= float(tobePosted)
+
+               total_paid_brgy.total_paid_ytd += float(tobePosted)
+               total_paid_brgy.save()
+
+               yearly_record.total_paid_january += float(tobePosted)
+               if yearly_record.total_due_january < float(tobePosted):
+                  yearly_record.total_due_january = 0
+               else:
+                  yearly_record.total_due_january -= float(tobePosted)
+
+               yearly_record.total_paid_ytd += float(tobePosted)
+               if yearly_record.total_due_ytd < float(tobePosted):
+                  yearly_record.total_due_ytd = 0
+               else:
+                  yearly_record.total_due_ytd -= float(tobePosted)
+
+               yearly_record.save()
+
+
+
+               get_usageid.save()
+
+
+
+
+      #current February
+      if 2 in current_list and amountpaid != 0:
+         if usage_record.objects.filter(pk = id + "-" + str(current_date.year)).exists():
+            get_usageid = usage_record.objects.get(pk = id + "-" + str(current_date.year))
+
+            if amountpaid:
+
+               #saving all amount paid
+               difference = 0
+               tobePosted = 0
+               if get_usageid.totalbill_feb > get_usageid.paidamt_feb:
+                  difference = get_usageid.totalbill_feb - get_usageid.paidamt_feb
+                  if float(amountpaid) >= difference:
+                     amountpaid = float(amountpaid) - difference
+                     tobePosted = difference
+                     get_usageid.paidamt_feb += tobePosted
+                  else:
+                     tobePosted = float(amountpaid)
+                     get_usageid.paidamt_feb += tobePosted
+                     amountpaid = 0
+
+
+               #February
+               #saving all amount paid
+
+               postedbystr = request.session.get(ReqParams.postedby) + "|" + get_usageid.postedby_feb
+               get_usageid.postedby_feb = postedbystr
+               amountpaidstr =  str(tobePosted) + "|" + get_usageid.amountpaid_str_feb
+               get_usageid.amountpaid_str_feb = amountpaidstr
+               or_numberstr = or_number + "|" + get_usageid.ior_feb
+               get_usageid.ior_feb = or_numberstr
+               datestr = time.asctime( time.localtime(time.time()) ) + "|" + get_usageid.datepaid_feb
+               get_usageid.datepaid_feb = datestr
+
+               #we set total paid per month
+               total_paid_brgy.total_paid_february += float(tobePosted)
+               if total_paid_brgy.total_due_ytd < float(tobePosted):
+                     total_paid_brgy.total_due_ytd = 0
+               else:
+                  total_paid_brgy.total_due_ytd -= float(tobePosted)
+
+               if total_paid_brgy.total_due_february < float(tobePosted):
+                  total_paid_brgy.total_due_february = 0
+               else:
+                  total_paid_brgy.total_due_february -= float(tobePosted)
+
+               total_paid_brgy.total_paid_ytd += float(tobePosted)
+               total_paid_brgy.save()
+
+               yearly_record.total_paid_february += float(tobePosted)
+               if yearly_record.total_due_february < float(tobePosted):
+                  yearly_record.total_due_february = 0
+               else:
+                  yearly_record.total_due_february -= float(tobePosted)
+
+               yearly_record.total_paid_ytd += float(tobePosted)
+               if yearly_record.total_due_ytd < float(tobePosted):
+                  yearly_record.total_due_ytd = 0
+               else:
+                  yearly_record.total_due_ytd -= float(tobePosted)
+
+               yearly_record.save()
+
+               get_usageid.save()
+
+
+
+      #current march
+      if 3 in current_list and amountpaid != 0:
+         if usage_record.objects.filter(pk = id + "-" + str(current_date.year)).exists():
+            get_usageid = usage_record.objects.get(pk = id + "-" + str(current_date.year))
+
+            if amountpaid:
+
+               difference = 0
+               tobePosted = 0
+               if get_usageid.totalbill_mar > get_usageid.paidamt_mar:
+                  difference = get_usageid.totalbill_mar - get_usageid.paidamt_mar
+                  if float(amountpaid) >= difference:
+                     amountpaid = float(amountpaid) - difference
+                     tobePosted = difference
+                     get_usageid.paidamt_mar += tobePosted
+                  else:
+                     tobePosted = float(amountpaid)
+                     get_usageid.paidamt_mar += tobePosted
+                     amountpaid = 0
+            #March
+            #saving all amount paid
+            postedbystr = request.session.get(ReqParams.postedby) + "|" + get_usageid.postedby_mar
+            get_usageid.postedby_mar = postedbystr
+            amountpaidstr =  str(tobePosted) + "|" + get_usageid.amountpaid_str_mar
+            get_usageid.amountpaid_str_mar = amountpaidstr
+            or_numberstr = or_number + "|" + get_usageid.ior_mar
+            get_usageid.ior_mar = or_numberstr
+            datestr = time.asctime( time.localtime(time.time()) ) + "|" + get_usageid.datepaid_mar
+            get_usageid.datepaid_mar = datestr
+
+            #we set total paid per month
+            total_paid_brgy.total_paid_march += float(tobePosted)
+            if total_paid_brgy.total_due_ytd < float(tobePosted):
+                   total_paid_brgy.total_due_ytd = 0
+            else:
+               total_paid_brgy.total_due_ytd -= float(tobePosted)
+
+            if total_paid_brgy.total_due_march < float(tobePosted):
+               total_paid_brgy.total_due_march = 0
+            else:
+               total_paid_brgy.total_due_march -= float(tobePosted)
+
+            total_paid_brgy.total_paid_ytd += float(tobePosted)
+            total_paid_brgy.save()
+
+            yearly_record.total_paid_march += float(tobePosted)
+            if yearly_record.total_due_march < float(tobePosted):
+               yearly_record.total_due_march = 0
+            else:
+               yearly_record.total_due_march -= float(tobePosted)
+
+            yearly_record.total_paid_ytd += float(tobePosted)
+            if yearly_record.total_due_ytd < float(tobePosted):
+               yearly_record.total_due_ytd = 0
+            else:
+               yearly_record.total_due_ytd -= float(tobePosted)
+
+            yearly_record.save()
+
+
+            get_usageid.save()
+
+
+
+      #previous April
+      if 4 in current_list and amountpaid != 0:
+         if usage_record.objects.filter(pk = id + "-" + str(current_date.year)).exists():
+            get_usageid = usage_record.objects.get(pk = id + "-" + str(current_date.year))
+
+            if amountpaid:
+               #saving all amount paid
+               difference = 0
+               tobePosted = 0
+               if get_usageid.totalbill_apr > get_usageid.paidamt_apr:
+                  difference = get_usageid.totalbill_apr - get_usageid.paidamt_apr
+                  if float(amountpaid) >= difference:
+                     amountpaid = float(amountpaid) - get_usageid.totalbill_apr
+                     tobePosted = difference
+                     get_usageid.paidamt_apr += tobePosted
+                  else:
+                     tobePosted = float(amountpaid)
+                     get_usageid.paidamt_apr += tobePosted
+                     amountpaid = 0
+
+            #April
+            #saving all amount paid
+            postedbystr = request.session.get(ReqParams.postedby) + "|" + get_usageid.postedby_apr
+            get_usageid.postedby_apr = postedbystr
+            amountpaidstr =  str(tobePosted) + "|" + get_usageid.amountpaid_str_apr
+            get_usageid.amountpaid_str_apr = amountpaidstr
+            or_numberstr = or_number + "|" + get_usageid.ior_apr
+            get_usageid.ior_apr = or_numberstr
+            datestr = time.asctime( time.localtime(time.time()) ) + "|" + get_usageid.datepaid_apr
+            get_usageid.datepaid_apr = datestr
+
+            #we set total paid per month
+            total_paid_brgy.total_paid_april += float(tobePosted)
+            if total_paid_brgy.total_due_ytd < float(tobePosted):
+                   total_paid_brgy.total_due_ytd = 0
+            else:
+               total_paid_brgy.total_due_ytd -= float(tobePosted)
+
+            if total_paid_brgy.total_due_april < float(tobePosted):
+               total_paid_brgy.total_due_april = 0
+            else:
+               total_paid_brgy.total_due_april -= float(tobePosted)
+
+            total_paid_brgy.total_paid_ytd += float(tobePosted)
+            total_paid_brgy.save()
+
+            yearly_record.total_paid_april += float(tobePosted)
+            if yearly_record.total_due_april < float(tobePosted):
+               yearly_record.total_due_april = 0
+            else:
+               yearly_record.total_due_april -= float(tobePosted)
+
+            yearly_record.total_paid_ytd += float(tobePosted)
+            if yearly_record.total_due_ytd < float(tobePosted):
+               yearly_record.total_due_ytd = 0
+            else:
+               yearly_record.total_due_ytd -= float(tobePosted)
+
+            yearly_record.save()
+
+
+            get_usageid.save()
+
+
+
+
+
+      #previous May
+      if 5 in current_list and amountpaid != 0:
+         if usage_record.objects.filter(pk = id + "-" + str(current_date.year)).exists():
+            get_usageid = usage_record.objects.get(pk = id + "-" + str(current_date.year))
+
+            if amountpaid:
+               #saving all amount paid
+               difference = 0
+               tobePosted = 0
+               if get_usageid.totalbill_may > get_usageid.paidamt_may:
+                  difference = get_usageid.totalbill_may - get_usageid.paidamt_may
+                  if float(amountpaid) >= difference:
+                     amountpaid = float(amountpaid) - difference
+                     tobePosted = difference
+                     get_usageid.paidamt_may += tobePosted
+                  else:
+                     tobePosted = float(amountpaid)
+                     get_usageid.paidamt_may += tobePosted
+                     amountpaid = 0
+            #May
+            #saving all amount paid
+
+            postedbystr = request.session.get(ReqParams.postedby) + "|" + get_usageid.postedby_may
+            get_usageid.postedby_may = postedbystr
+            amountpaidstr =  str(tobePosted) + "|" + get_usageid.amountpaid_str_may
+            get_usageid.amountpaid_str_may = amountpaidstr
+            or_numberstr = or_number + "|" + get_usageid.ior_may
+            get_usageid.ior_may = or_numberstr
+            datestr = time.asctime( time.localtime(time.time()) ) + "|" + get_usageid.datepaid_may
+            get_usageid.datepaid_may = datestr
+
+            #we set total paid per month
+            total_paid_brgy.total_paid_may += float(tobePosted)
+            if total_paid_brgy.total_due_ytd < float(tobePosted):
+                   total_paid_brgy.total_due_ytd = 0
+            else:
+               total_paid_brgy.total_due_ytd -= float(tobePosted)
+
+            if total_paid_brgy.total_due_may < float(tobePosted):
+               total_paid_brgy.total_due_may = 0
+            else:
+               total_paid_brgy.total_due_may -= float(tobePosted)
+
+            total_paid_brgy.total_paid_ytd += float(tobePosted)
+            total_paid_brgy.save()
+
+            yearly_record.total_paid_may += float(tobePosted)
+            if yearly_record.total_due_may < float(tobePosted):
+               yearly_record.total_due_january = 0
+            else:
+               yearly_record.total_due_may -= float(tobePosted)
+
+            yearly_record.total_paid_ytd += float(tobePosted)
+            if yearly_record.total_due_ytd < float(tobePosted):
+               yearly_record.total_due_ytd = 0
+            else:
+               yearly_record.total_due_ytd -= float(tobePosted)
+            yearly_record.save()
+
+
+            get_usageid.save()
+
+
+
+
+
+      if 6 in current_list and amountpaid != 0:
+         if usage_record.objects.filter(pk = id + "-" + str(current_date.year)).exists():
+            get_usageid = usage_record.objects.get(pk = id + "-" + str(current_date.year))
+
+            if amountpaid:
+               #saving all amount paid
+               difference = 0
+               tobePosted = 0
+               if get_usageid.totalbill_jun > get_usageid.paidamt_jun:
+                  difference = get_usageid.totalbill_jun - get_usageid.paidamt_jun
+                  if float(amountpaid) >= difference:
+                     amountpaid = float(amountpaid) - difference
+                     tobePosted = difference
+                     get_usageid.paidamt_jun += tobePosted
+                  else:
+                     tobePosted = float(amountpaid)
+                     get_usageid.paidamt_jun += tobePosted
+                     amountpaid = 0
+
+            #June
+            #saving all amount paid
+
+            postedbystr = request.session.get(ReqParams.postedby) + "|" + get_usageid.postedby_jun
+            get_usageid.postedby_jun = postedbystr
+            amountpaidstr =  str(tobePosted) + "|" + get_usageid.amountpaid_str_jun
+            get_usageid.amountpaid_str_jun = amountpaidstr
+            or_numberstr = or_number + "|" + get_usageid.ior_jun
+            get_usageid.ior_jun = or_numberstr
+            datestr = time.asctime( time.localtime(time.time()) ) + "|" + get_usageid.datepaid_jun
+            get_usageid.datepaid_jun = datestr
+
+            #we set total paid per month
+            total_paid_brgy.total_paid_june += float(tobePosted)
+            if total_paid_brgy.total_due_ytd < float(tobePosted):
+                   total_paid_brgy.total_due_ytd = 0
+            else:
+               total_paid_brgy.total_due_ytd -= float(tobePosted)
+
+            if total_paid_brgy.total_due_june < float(tobePosted):
+               total_paid_brgy.total_due_june = 0
+            else:
+               total_paid_brgy.total_due_june -= float(tobePosted)
+
+            total_paid_brgy.total_paid_ytd += float(tobePosted)
+            total_paid_brgy.save()
+
+            yearly_record.total_paid_june += float(tobePosted)
+            if yearly_record.total_due_june < float(tobePosted):
+               yearly_record.total_due_january = 0
+            else:
+               yearly_record.total_due_june -= float(tobePosted)
+
+            yearly_record.total_paid_ytd += float(tobePosted)
+            if yearly_record.total_due_ytd < float(tobePosted):
+               yearly_record.total_due_ytd = 0
+            else:
+               yearly_record.total_due_ytd -= float(tobePosted)
+            yearly_record.save()
+
+
+
+            get_usageid.save()
+
+
+
+
+
+      if 7 in current_list and amountpaid != 0:
+         if usage_record.objects.filter(pk = id + "-" + str(current_date.year)).exists():
+            get_usageid = usage_record.objects.get(pk = id + "-" + str(current_date.year))
+
+            if amountpaid:
+               #saving all amount paid
+               difference = 0
+               tobePosted = 0
+               if get_usageid.totalbill_jul > get_usageid.paidamt_jul:
+                  difference = get_usageid.totalbill_jul - get_usageid.paidamt_jul
+                  if float(amountpaid) >= difference:
+                     amountpaid = float(amountpaid) - difference
+                     tobePosted = difference
+                     get_usageid.paidamt_jul += tobePosted
+
+                  else:
+                     tobePosted = float(amountpaid)
+                     get_usageid.paidamt_jul += tobePosted
+                     amountpaid = 0
+
+            #July
+            #saving all amount paid
+
+            postedbystr = request.session.get(ReqParams.postedby) + "|" + get_usageid.postedby_jul
+            get_usageid.postedby_jul = postedbystr
+            amountpaidstr =  str(tobePosted) + "|" + get_usageid.amountpaid_str_jul
+            get_usageid.amountpaid_str_jul = amountpaidstr
+            or_numberstr = or_number + "|" + get_usageid.ior_jul
+            get_usageid.ior_jul = or_numberstr
+            datestr = time.asctime( time.localtime(time.time()) ) + "|" + get_usageid.datepaid_jul
+            get_usageid.datepaid_jul = datestr
+
+            #we set total paid per month
+            total_paid_brgy.total_paid_july += float(tobePosted)
+            if total_paid_brgy.total_due_ytd < float(tobePosted):
+                   total_paid_brgy.total_due_ytd = 0
+            else:
+               total_paid_brgy.total_due_ytd -= float(tobePosted)
+
+            if total_paid_brgy.total_due_july < float(tobePosted):
+               total_paid_brgy.total_due_july = 0
+            else:
+               total_paid_brgy.total_due_july -= float(tobePosted)
+
+            total_paid_brgy.total_paid_ytd += float(tobePosted)
+            total_paid_brgy.save()
+
+            yearly_record.total_paid_july += float(tobePosted)
+            if yearly_record.total_due_july < float(tobePosted):
+               yearly_record.total_due_july = 0
+            else:
+               yearly_record.total_due_july -= float(tobePosted)
+
+            yearly_record.total_paid_ytd += float(tobePosted)
+            if yearly_record.total_due_ytd < float(tobePosted):
+               yearly_record.total_due_ytd = 0
+            else:
+               yearly_record.total_due_ytd -= float(tobePosted)
+
+            yearly_record.save()
+
+
+
+            get_usageid.save()
+
+
+      if 8 in current_list and amountpaid != 0:
+         if usage_record.objects.filter(pk = id + "-" + str(current_date.year)).exists():
+            get_usageid = usage_record.objects.get(pk = id + "-" + str(current_date.year))
+
+            if amountpaid:
+               #saving all amount paid
+               difference = 0
+               tobePosted = 0
+               if get_usageid.totalbill_aug > get_usageid.paidamt_aug:
+                  difference = get_usageid.totalbill_aug - get_usageid.paidamt_aug
+                  if float(amountpaid) >= difference:
+                     amountpaid = float(amountpaid) - difference
+                     tobePosted = difference
+                     get_usageid.paidamt_aug += tobePosted
+                  else:
+                     tobePosted = float(amountpaid)
+                     get_usageid.paidamt_aug += tobePosted
+                     amountpaid = 0
+
+            #August
+            #saving all amount paid
+            postedbystr = request.session.get(ReqParams.postedby) + "|" + get_usageid.postedby_aug
+            get_usageid.postedby_aug = postedbystr
+            amountpaidstr =  str(tobePosted) + "|" + get_usageid.amountpaid_str_aug
+            get_usageid.amountpaid_str_aug = amountpaidstr
+            or_numberstr = or_number + "|" + get_usageid.ior_aug
+            get_usageid.ior_aug = or_numberstr
+            datestr = time.asctime( time.localtime(time.time()) ) + "|" + get_usageid.datepaid_aug
+            get_usageid.datepaid_aug = datestr
+
+            #we set total paid per month
+            total_paid_brgy.total_paid_august += float(tobePosted)
+            if total_paid_brgy.total_due_ytd < float(tobePosted):
+                   total_paid_brgy.total_due_ytd = 0
+            else:
+               total_paid_brgy.total_due_ytd -= float(tobePosted)
+
+            if total_paid_brgy.total_due_august < float(tobePosted):
+               total_paid_brgy.total_due_august = 0
+            else:
+               total_paid_brgy.total_due_august -= float(tobePosted)
+
+            total_paid_brgy.total_paid_ytd += float(tobePosted)
+            total_paid_brgy.save()
+
+            yearly_record.total_paid_august += float(tobePosted)
+            if yearly_record.total_due_august < float(tobePosted):
+               yearly_record.total_due_august = 0
+            else:
+               yearly_record.total_due_august -= float(tobePosted)
+
+            yearly_record.total_paid_ytd += float(tobePosted)
+            if yearly_record.total_due_ytd < float(tobePosted):
+               yearly_record.total_due_ytd = 0
+            else:
+               yearly_record.total_due_ytd -= float(tobePosted)
+
+            yearly_record.save()
+
+
+            get_usageid.save()
+
+
+      if 9 in current_list and amountpaid != 0:
+         if usage_record.objects.filter(pk = id + "-" + str(current_date.year)).exists():
+            get_usageid = usage_record.objects.get(pk = id + "-" + str(current_date.year))
+
+            if amountpaid:
+               #saving all amount paid
+               difference = 0
+               tobePosted = 0
+               if get_usageid.totalbill_sept > get_usageid.paidamt_sept:
+                  difference = get_usageid.totalbill_sept - get_usageid.paidamt_sept
+                  if float(amountpaid) >= difference:
+                     amountpaid = float(amountpaid) - difference
+                     tobePosted = difference
+                     get_usageid.paidamt_sept += tobePosted
+                  else:
+                     tobePosted = float(amountpaid)
+                     get_usageid.paidamt_sept += tobePosted
+                     amountpaid = 0
+
+
+               get_usageid.postedby_sept = request.session.get(ReqParams.postedby)
+               get_usageid.amountpaid_str_sept += str(tobePosted) + "|" #saving all amount paid
+               get_usageid.ior_sept += or_number  + "|"
+               get_usageid.datepaid_sept += time.asctime( time.localtime(time.time()) ) + "|"
+
+               #we set total paid per month
+               total_paid_brgy.total_paid_september += float(tobePosted)
+               if total_paid_brgy.total_due_ytd < float(tobePosted):
+                     total_paid_brgy.total_due_ytd = 0
+               else:
+                  total_paid_brgy.total_due_ytd -= float(tobePosted)
+
+               if total_paid_brgy.total_due_september < float(tobePosted):
+                  total_paid_brgy.total_due_september = 0
+               else:
+                  total_paid_brgy.total_due_september -= float(tobePosted)
+
+               total_paid_brgy.total_paid_ytd += float(tobePosted)
+               total_paid_brgy.save()
+
+               yearly_record.total_paid_september += float(tobePosted)
+               if yearly_record.total_due_september < float(tobePosted):
+                  yearly_record.total_due_september = 0
+               else:
+                  yearly_record.total_due_september -= float(tobePosted)
+
+               yearly_record.total_paid_ytd += float(tobePosted)
+               if yearly_record.total_due_ytd < float(tobePosted):
+                  yearly_record.total_due_ytd = 0
+               else:
+                  yearly_record.total_due_ytd -= float(tobePosted)
+
+               yearly_record.save()
+
+
+               get_usageid.save()
+
+
+      if 10 in current_list and amountpaid != 0:
+         if usage_record.objects.filter(pk = id + "-" + str(current_date.year)).exists():
+            get_usageid = usage_record.objects.get(pk = id + "-" + str(current_date.year))
+
+            if amountpaid:
+               #saving all amount paid
+               difference = 0
+               tobePosted = 0
+               if get_usageid.totalbill_oct > get_usageid.paidamt_oct:
+                  difference = get_usageid.totalbill_oct - get_usageid.paidamt_oct
+                  if float(amountpaid) >= difference:
+                     amountpaid = float(amountpaid) - difference
+                     tobePosted = difference
+                     get_usageid.paidamt_oct += tobePosted
+                  else:
+                     tobePosted = float(amountpaid)
+                     get_usageid.paidamt_oct += tobePosted
+                     amountpaid = 0
+
+            #October
+            #saving all amount paid
+            postedbystr = request.session.get(ReqParams.postedby) + "|" + get_usageid.postedby_oct
+            get_usageid.postedby_oct = postedbystr
+            amountpaidstr =  str(tobePosted) + "|" + get_usageid.amountpaid_str_oct
+            get_usageid.amountpaid_str_oct = amountpaidstr
+            or_numberstr = or_number + "|" + get_usageid.ior_oct
+            get_usageid.ior_oct = or_numberstr
+            datestr = time.asctime( time.localtime(time.time()) ) + "|" + get_usageid.datepaid_oct
+            get_usageid.datepaid_oct = datestr
+
+            #we set total paid per month
+            total_paid_brgy.total_paid_october += float(tobePosted)
+            if total_paid_brgy.total_due_ytd < float(tobePosted):
+                   total_paid_brgy.total_due_ytd = 0
+            else:
+               total_paid_brgy.total_due_ytd -= float(tobePosted)
+
+            if total_paid_brgy.total_due_october < float(tobePosted):
+               total_paid_brgy.total_due_october = 0
+            else:
+               total_paid_brgy.total_due_october -= float(tobePosted)
+
+            total_paid_brgy.total_paid_ytd += float(tobePosted)
+            total_paid_brgy.save()
+
+            yearly_record.total_paid_july += float(tobePosted)
+            if yearly_record.total_due_october < float(tobePosted):
+               yearly_record.total_due_october = 0
+            else:
+               yearly_record.total_due_october -= float(tobePosted)
+
+            yearly_record.total_paid_ytd += float(tobePosted)
+            if yearly_record.total_due_ytd < float(tobePosted):
+               yearly_record.total_due_ytd = 0
+            else:
+               yearly_record.total_due_ytd -= float(tobePosted)
+
+            yearly_record.save()
+
+
+            get_usageid.save()
+
+
+      if 11 in current_list and amountpaid != 0:
+         if usage_record.objects.filter(pk = id + "-" + str(current_date.year)).exists():
+            get_usageid = usage_record.objects.get(pk = id + "-" + str(current_date.year))
+
+            if amountpaid:
+               ##saving all amount paid
+               difference = 0
+               tobePosted = 0
+               if get_usageid.totalbill_nov > get_usageid.paidamt_nov:
+                  difference = get_usageid.totalbill_nov - get_usageid.paidamt_nov
+                  if float(amountpaid) >= difference:
+                     amountpaid = float(amountpaid) - difference
+                     tobePosted  = difference
+                     get_usageid.paidamt_nov += tobePosted
+                  else:
+                     tobePosted = float(amountpaid)
+                     get_usageid.paidamt_nov += tobePosted
+                     amountpaid = 0
+
+            #November
+            #saving all amount paid
+            get_usageid.paidamt_nov += float(tobePosted)
+            postedbystr = request.session.get(ReqParams.postedby) + "|" + get_usageid.postedby_nov
+            get_usageid.postedby_nov = postedbystr
+            amountpaidstr =  str(tobePosted) + "|" + get_usageid.amountpaid_str_nov
+            get_usageid.amountpaid_str_nov = amountpaidstr
+            or_numberstr = or_number + "|" + get_usageid.ior_nov
+            get_usageid.ior_nov = or_numberstr
+            datestr = time.asctime( time.localtime(time.time()) ) + "|" + get_usageid.datepaid_nov
+            get_usageid.datepaid_nov = datestr
+
+            #we set total paid per month
+            total_paid_brgy.total_paid_november += float(tobePosted)
+            if total_paid_brgy.total_due_ytd < float(tobePosted):
+                   total_paid_brgy.total_due_ytd = 0
+            else:
+               total_paid_brgy.total_due_ytd -= float(tobePosted)
+
+            if total_paid_brgy.total_due_july < float(tobePosted):
+               total_paid_brgy.total_due_july = 0
+            else:
+               total_paid_brgy.total_due_july -= float(tobePosted)
+
+            total_paid_brgy.total_paid_ytd += float(tobePosted)
+            total_paid_brgy.save()
+
+            yearly_record.total_paid_july += float(tobePosted)
+            if yearly_record.total_due_july < float(tobePosted):
+               yearly_record.total_due_july = 0
+            else:
+               yearly_record.total_due_july -= float(tobePosted)
+
+            yearly_record.total_paid_ytd += float(tobePosted)
+            if yearly_record.total_due_ytd < float(tobePosted):
+               yearly_record.total_due_ytd = 0
+            else:
+               yearly_record.total_due_ytd -= float(tobePosted)
+
+            yearly_record.save()
+
+            get_usageid.save()
+
+
+      if 12 in current_list and amountpaid != 0:
+
+         if usage_record.objects.filter(pk = id + "-" + str(current_date.year)).exists():
+            get_usageid = usage_record.objects.get(pk = id + "-" + str(current_date.year))
+            if amountpaid:
+               #December
+               #saving all amount paid
+               difference = 0
+               tobePosted = 0
+               if get_usageid.totalbill_dec > get_usageid.paidamt_dec:
+                  difference = get_usageid.totalbill_dec - get_usageid.paidamt_dec
+                  if tobePosted >= difference:
+                     amountpaid = float(amountpaid) - difference
+                     tobePosted = difference
+                     get_usageid.paidamt_dec += tobePosted
+                  else:
+                     tobePosted = float(amountpaid)
+                     get_usageid.paidamt_dec += tobePosted
+                     amountpaid = 0
+
+               get_usageid.paidamt_dec += float(tobePosted)
+               postedbystr = request.session.get(ReqParams.postedby) + "|" + get_usageid.postedby_dec
+               get_usageid.postedby_dec = postedbystr
+               amountpaidstr =  str(tobePosted) + "|" + get_usageid.amountpaid_str_dec
+               get_usageid.amountpaid_str_dec = amountpaidstr
+               or_numberstr = or_number + "|" + get_usageid.ior_dec
+               get_usageid.ior_dec = or_numberstr
+               datestr = time.asctime( time.localtime(time.time()) ) + "|" + get_usageid.datepaid_dec
+               get_usageid.datepaid_dec = datestr
+
+
+               #we set total paid per month
+               total_paid_brgy.total_paid_december += float(tobePosted)
+               if total_paid_brgy.total_due_ytd < float(tobePosted):
+                     total_paid_brgy.total_due_ytd = 0
+               else:
+                  total_paid_brgy.total_due_ytd -= float(tobePosted)
+
+               if total_paid_brgy.total_due_december < float(tobePosted):
+                  total_paid_brgy.total_due_december = 0
+               else:
+                  total_paid_brgy.total_due_december -= float(tobePosted)
+
+               total_paid_brgy.total_paid_ytd += float(tobePosted)
+               total_paid_brgy.save()
+
+               yearly_record.total_paid_december += float(tobePosted)
+               if yearly_record.total_due_december < float(tobePosted):
+                  yearly_record.total_due_december = 0
+               else:
+                  yearly_record.total_due_december -= float(tobePosted)
+
+               yearly_record.total_paid_ytd += float(tobePosted)
+               if yearly_record.total_due_ytd < float(tobePosted):
+                  yearly_record.total_due_ytd = 0
+               else:
+                  yearly_record.total_due_ytd -= float(tobePosted)
+
+               yearly_record.save()
+
+               get_usageid.save()
+
+      pathstr = "/source_access"  + "/Payment=" + id
+      return HttpResponseRedirect((pathstr))
+
+   #get the commulative bill
+   context["balance"] = str(get_usageid.commulative_bill)
+   context["Fullname"] = getID.firstname + " " + getID.lastname
+   context["Id"] = getID.accountinfoid
+   context["consumerid"] = getID.consumerid
+   context[ReqParams.address] = getID.address
+   context[ReqParams.userid] =  request.session.get(ReqParams.userid)
+   context[ReqParams.name] = request.session.get(ReqParams.name)
+   context[ReqParams.DashBoard_url] = request.session.get(ReqParams.DashBoard_url)
    template = ""
    LogInSession = request.session.get(ReqParams.LOGIN_SESSION)
    if LogInSession:
@@ -620,13 +2671,14 @@ def OldSystemRecordDisplay(request,id):
    current_year = current_date.year
    year_list = []
    #default value
-   retval = []
+   retval_list = []
+   retvall_list = []
    defval_year = str(current_year)
    prev_record = getTotalBill.objects.filter(con_id = consumer.oldconsumerid)
-   readingdate = ""
+   readingdate = usage_record.objects.get(pk = accountidstr)
    for record in  prev_record:
       if record.reading_date.__contains__(str(defval_year)):
-         retval.append(record)
+         retval_list.append(record)
          index = index + 1
    new_record = None
    #get the latest bill
@@ -639,38 +2691,76 @@ def OldSystemRecordDisplay(request,id):
    else:
       new_record = None
 
-   #year to choose,from year 2010 until today
-   while current_year >= 2010:
-      year_list.append(current_year)
-      current_year = current_year - 1
+   # #year to choose,from year 2010 until today
+   # while current_year >= 2018:
+   #    year_list.append(current_year)
+   #    current_year = current_year - 1
+
+   # current_year = 2011
+   # while current_year >= 2010:
+   #    year_list.append(current_year)
+   #    current_year = current_year - 1
+
+   account = account_info.objects.get(pk = id)
+   accountrecord = payment_history.objects.filter(accountinfoid = id)
+   for record in accountrecord:
+      #for dropdown values(year)
+      if record.year not in year_list:
+         year_list.append(record.year)
+      #default display, current year
+      if record.year == current_date.year:
+         retvall_list.append(record)
+
+   # accountrecord = payment_history.objects.filter(accountinfoid = id)
+   # if year_request:
+   #    accountrecord = payment_history.objects.filter(accountinfoid = id)
+   #    for record in accountrecord:
+
+   #       #default display, current year
+   #       if record.year == int(year_request):
+   #          retvall_list.append(record)
+   #    defval_year = year_request
 
 
-   if request.method == "POST":
-      retval = []
-      index = 0
-      if year_request:
-         prev_record = getTotalBill.objects.filter(con_id = consumer.oldconsumerid)
-         defval_year = year_request
-         for record in  prev_record:
-            if record.reading_date.__contains__(str(year_request)):
-               retval.append(record)
-               index = index + 1
+   # if request.method == "POST":
+   #    retval_list = []
+   #    index = 0
+   #    if year_request:
+   #       prev_record = getTotalBill.objects.filter(con_id = consumer.oldconsumerid)
+   #       defval_year = year_request
+   #       for record in  prev_record:
+   #          if record.reading_date.__contains__(str(year_request)):
+   #             retval_list.append(record)
+   #             index = index + 1
 
-         #for record that has been updated/posted on this new System
-         if usage_record.objects.filter(pk = account.accountinfoid + "-" + str(defval_year)).exists():
-            new_record =  usage_record.objects.get(pk = account.accountinfoid + "-" + str(defval_year))
+   #       #for record that has been updated/posted on this new System
+   #       if usage_record.objects.filter(pk = account.accountinfoid + "-" + str(defval_year)).exists():
+   #          new_record =  usage_record.objects.get(pk = account.accountinfoid + "-" + str(defval_year))
    
 
-   records = []
-   n = 2022
-   for i in range(13):
+   newrecord = []
+   for n in range(current_date.year, 2009, -1):
       if usage_record.objects.filter(pk = account.accountinfoid + "-" + str(n)).exists():
-         new_record =  usage_record.objects.get(pk = account.accountinfoid + "-" + str(n))
-         records.append(new_record)
-      n-=1
-   return render(request,template,{"year_list":year_list,"retval":retval,"consumer":consumer,"ErrorMessagePass":ErrorMessagePass,"context":context,
-                        "PaidStatus":PaidStatus,"ReqParams":ReqParams,"defval_year":defval_year,"oldcon":oldconsumer,"account":account,
-                        "new_record":new_record,"index":index,"commulative_bill":commulative_bill,"records":records})
+         new_record1 =  usage_record.objects.get(pk = account.accountinfoid + "-" + str(n))
+         newrecord.append(new_record1)
+   for n in range(2011, 2009, -1):
+      if usage_record.objects.filter(pk = account.accountinfoid + "-" + str(n)).exists():
+         new_record1 =  usage_record.objects.get(pk = account.accountinfoid + "-" + str(n))
+         newrecord.append(new_record1)
+
+
+         
+   return render(request,template,{"year_list":year_list,"retval":retval_list,"retvall":retvall_list,
+                                    "consumer":consumer,"ErrorMessagePass":ErrorMessagePass,"context":context,
+                                     "PaidStatus":PaidStatus,"ReqParams":ReqParams,"defval_year":defval_year,
+                                     "oldcon":oldconsumer,"account":account,"accountrecord":accountrecord,
+                                     "new_record":new_record, "index":index,"commulative_bill":commulative_bill,
+                                     "newrecord":newrecord,"account":getID,"usage":pkstr,"context":context,
+                                    "defval":defval,"month":month.getMonth,"monthval":month,
+                                    "params":ReqParams,"monthval":month,"defval":defval_year,"year_list":year_list,})
+
+   
+
 
 
 def getUsageRevenue(request):#we get only the record for 2021
@@ -682,6 +2772,12 @@ def getUsageRevenue(request):#we get only the record for 2021
    year_report = Year_Report()
    current_year = current_date.year
 
+   while current_year >= 2018:
+      record = Year_Report.objects.filter(pk = str(current_year)).exists()
+      if record == False:
+         year_report.year = current_year
+         year_report.save()
+   current_year = 2011
    while current_year >= 2010:
       record = Year_Report.objects.filter(pk = str(current_year)).exists()
       if record == False:

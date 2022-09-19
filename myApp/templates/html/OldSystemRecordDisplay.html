@@ -46,7 +46,7 @@
 
 </head>
 
-<body onload="format_date(); format_date_pdf()">
+<body onload="format_date(); format_date_pdf(); Month()">
     <!-- Modal -->
     <div class="modal fade" id="modalbill" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
         aria-hidden="true">
@@ -137,6 +137,8 @@
                                             <td>Meter Number</td>
                                             <td>Name</td>
                                             <td>Address</td>
+                                            <td>Balance</td>
+                                            <td>Action</td>
                                         </tr>
                                         <i></i>
                                     </thead>
@@ -148,6 +150,12 @@
                                             <td>{{ consumer.firstname }} {{ consumer.middlename }}.
                                                 {{consumer.lastname}} </td>
                                             <td>{{ consumer.homeaddress }}</td>
+                                            <td>{{commulative_bill|floatformat:2}}</td>
+                                            <td><button type="button" class="btn btn-primary" id="nxtbtn" data-toggle="modal"
+                                                data-target="#officialreceipt">
+                                                Pay
+                                                </button>
+                                            </td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -156,21 +164,21 @@
                         <div class="row">
                             <div class="col-sm-offset-9 col-sm-3">
 
-                                <button type="button" id="postbtn" class="btn btn-primary" onclick="this_record()">Get a
-                                    Copy</button>
+                                <!-- <button type="button" id="postbtn" class="btn btn-primary" onclick="this_record()">Get a
+                                    Copy</button> -->
                             </div>
                             <noscript><input type="submit" value="Submit"></noscript>
 
                             <div class="col-sm-offset-9 col-sm-3">
 
-                                <label for="exampleInputBarangay">Select Year</label>
+                                <!-- <label for="exampleInputBarangay">Select Year</label>
                                 <select name="{{ ReqParams.year }}" class="form-control" onchange='this.form.submit();'>
                                     <option value="{{defval_year}}">{{defval_year}}</option>
                                     {% for year in year_list %}
                                     <option value="{{ year }}">{{year}}</option>
                                     {%endfor%}
                                 </select>
-                                <noscript><input type="submit" value="Submit"></noscript>
+                                <noscript><input type="submit" value="Submit"></noscript> -->
                             </div>
                             <div class="col-sm">
                                 <div class="form-group"></div>
@@ -297,7 +305,7 @@
                             function format_date_pdf() {
                                 to_format = document.getElementsByClassName("to_format_pdf")
                                 var all_dates=[]
-                                {%for i in records%}
+                                {%for i in newrecord%}
                                 dates = [
                                     "{{ i.reading_date_jan }}",
                                     "{{ i.reading_date_feb }}",
@@ -337,21 +345,78 @@
                                     }
                                 }
                             }
+
+                            function CurrencyConverter(amount) {
+                                var formatter = new Intl.NumberFormat('en-US', {
+                                    style: 'currency',
+                                    currency: 'Php',
+
+                                });
+                                return formatter.format(amount);
+                            }
+
+                            function Month(){
+                                January = document.getElementsByClassName("jan")
+                                February = document.getElementsByClassName("feb")
+                                March = document.getElementsByClassName("mar")
+                                April = document.getElementsByClassName("apr")
+                                May = document.getElementsByClassName("may")
+                                June = document.getElementsByClassName("jun")
+                                July = document.getElementsByClassName("july")
+                                August = document.getElementsByClassName("aug")
+                                Sepetember = document.getElementsByClassName("sept")
+                                October = document.getElementsByClassName("oct")
+                                November = document.getElementsByClassName("nov")
+                                December = document.getElementsByClassName("dec")
+                                
+
+
+
+
+
+                            }
+
+
                         </script>
-                        <center><strong>Total Balance:Php {{commulative_bill|floatformat:2}}</strong></center>
+                        <div class="centered">
+                            <strong>Total Balance:Php {{commulative_bill|floatformat:2}}</strong>
+                        </div>
+                        
                         <br>
+                        <div class="table-responsive">
+                            <table id="tablePagination" class="table table-bordered this_table" style="width:100%">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Date</th>
+                                        <th scope="col">Amount Paid</th>
+                                        <th scope="col">OR Number</th>
+                                        <th scope="col">Posted By</th>
 
-
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for element in accountrecord %}
+                                    <tr>
+                                        <td>{{ element.date }}</td>
+                                        <th scope="row">{{ element.amount|floatformat:2 }}</th>
+                                        <td>{{ element.or_number }}</td>
+                                        <td>{{ element.postedby }}</td>
+                                    </tr>
+                                    {%endfor %}
+                                </tbody>
+                            </table>
+                        </div>
                         <div id="newrecord">
-                            <table id="tablePagination" class="table table-striped table-bordered"
-                                style="width:100%">
+                            <!-- <table id="tablePagination" class="table table-striped table-bordered"
+                                style="width:100%" hidden>
                                 <thead>
                                     <tr>
                                         <td>Month</td>
-                                        <td>Reading</td>
+                                        <td>Current Reading</td>
+                                        <td>Previous Reading</td>
                                         <td>Reading Date<br>(mm-dd-yyyy)</td>
-                                        <td>Consumption</td>
-                                        <td>Total Bill</td>
+                                        <td>Cu. Meter Used</td>
+                                        <td>Amount Billed</td>
                                         <td>Total Paid</td>
 
                                     </tr>
@@ -361,6 +426,7 @@
                                     <tr>
                                         <td>January</td>
                                         <td>{{ new_record.reading_jan }}</td>
+                                        <td>{{ new_record.reading_jan }}</td>
                                         <td class="to_format"></td>
                                         <td>{{ new_record.usage_jan }}</td>
                                         <td>{{new_record.totalbill_jan}}</td>
@@ -368,7 +434,8 @@
                                     </tr>
                                     <tr>
                                         <td>February</td>
-                                        <td>{{ new_record.reading_feb }}</td>
+                                        <td>{{ new_record.reading_jan }}</td>
+                                        <td>{{ new_record.reading_jan }}</td>
                                         <td class="to_format"></td>
                                         <td>{{ new_record.usage_feb }}</td>
                                         <td>{{new_record.totalbill_feb}}</td>
@@ -377,6 +444,7 @@
                                     <tr>
                                         <td>March</td>
                                         <td>{{ new_record.reading_mar }}</td>
+                                        <td>{{ new_record.reading_jan }}</td>
                                         <td class="to_format"></td>
                                         <td>{{ new_record.usage_mar }}</td>
                                         <td>{{new_record.totalbill_mar}}</td>
@@ -385,6 +453,7 @@
                                     <tr>
                                         <td>April</td>
                                         <td>{{ new_record.reading_apr }}</td>
+                                        <td>{{ new_record.reading_mar }}</td>
                                         <td class="to_format"></td>
                                         <td>{{ new_record.usage_apr }}</td>
                                         <td>{{new_record.totalbill_apr }}</td>
@@ -393,6 +462,7 @@
                                     <tr>
                                         <td>May</td>
                                         <td>{{ new_record.reading_may }}</td>
+                                        <td>{{ new_record.reading_apr }}</td>
                                         <td class="to_format"></td>
                                         <td>{{ new_record.usage_may }}</td>
                                         <td>{{new_record.totalbill_may }}</td>
@@ -401,6 +471,7 @@
                                     <tr>
                                         <td>June</td>
                                         <td>{{ new_record.reading_jun }}</td>
+                                        <td>{{ new_record.reading_may }}</td>
                                         <td class="to_format"></td>
                                         <td>{{ new_record.usage_jun }}</td>
                                         <td>{{new_record.totalbill_jun }}</td>
@@ -409,6 +480,7 @@
                                     <tr>
                                         <td>July</td>
                                         <td>{{ new_record.reading_jul }}</td>
+                                        <td>{{ new_record.reading_jun }}</td>
                                         <td class="to_format"></td>
                                         <td>{{ new_record.usage_jul }}</td>
                                         <td>{{new_record.totalbill_jul }}</td>
@@ -417,6 +489,7 @@
                                     <tr>
                                         <td>August</td>
                                         <td>{{ new_record.reading_aug }}</td>
+                                        <td>{{ new_record.reading_jul }}</td>
                                         <td class="to_format"></td>
                                         <td>{{ new_record.usage_aug }}</td>
                                         <td>{{new_record.totalbill_aug }}</td>
@@ -425,6 +498,7 @@
                                     <tr>
                                         <td>September</td>
                                         <td>{{ new_record.reading_sept }}</td>
+                                        <td>{{ new_record.reading_aug }}</td>
                                         <td class="to_format"></td>
                                         <td>{{ new_record.usage_sept }}</td>
                                         <td>{{new_record.totalbill_sept }}</td>
@@ -433,6 +507,7 @@
                                     <tr>
                                         <td>October</td>
                                         <td>{{ new_record.reading_oct }}</td>
+                                        <td>{{ new_record.reading_sept }}</td>
                                         <td class="to_format"></td>
                                         <td>{{ new_record.usage_oct }}</td>
                                         <td>{{new_record.totalbill_oct }}</td>
@@ -441,6 +516,7 @@
                                     <tr>
                                         <td>November</td>
                                         <td>{{ new_record.reading_nov }}</td>
+                                        <td>{{ new_record.reading_oct }}</td>
                                         <td class="to_format"></td>
                                         <td>{{ new_record.usage_nov }}</td>
                                         <td>{{new_record.totalbill_nov }}</td>
@@ -449,6 +525,7 @@
                                     <tr>
                                         <td>December</td>
                                         <td>{{ new_record.reading_dec }}</td>
+                                        <td>{{ new_record.reading_nov }}</td>
                                         <td class="to_format"></td>
                                         <td>{{ new_record.usage_dec }}</td>
                                         <td>{{new_record.totalbill_dec }}</td>
@@ -456,122 +533,211 @@
                                     </tr>
                                 </tbody>
 
-                            </table>
+                            </table> -->
                             <!--Total Balancce-->
-                            {% for i in records %}
-                            <table id="tablePagination" class="table table-striped table-bordered this_table" style="width:100%" hidden>
+                            {% for i in newrecord %}
+                            <table id="tablePagination" class="table table-striped table-bordered this_table" style="width:100%">
                                 <thead>
                                     <tr>
                                         <td>Month</td>
-                                        <td>Reading</td>
+                                        <td>Current Reading</td>
+                                        <td>Previous Reading</td>
                                         <td>Reading Date<br>(mm-dd-yyyy)</td>
-                                        <td>Consumption</td>
-                                        <td>Total Bill</td>
-                                        <td>Total Paid</td>
+                                        <td>Cu. Meter Used</td>
+                                        <td>Amount Billed</td>
+                                        <td>Payment</td>
+                                        <td>OR Number</td>
+                                        <td>Posted By</td>
+                                        <td>Current Balance</td>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <script>var accountid = "{{ i.accountid }}";</script>
                                     <tr>
-                                        <td>January</td>
+                                        <td class = "jan">January</td>
+                                        <td>{{ i.reading_jan }}</td>
                                         <td>{{ i.reading_jan }}</td>
                                         <td class="to_format_pdf"></td>
                                         <td>{{ i.usage_jan }}</td>
-                                        <td>{{i.totalbill_jan}}</td>
-                                        <td>{{ i.paidamt_jan }}</td>
+                                        <td class = "bill">{{i.totalbill_jan|floatformat:2}}</td>
+                                        <td>{{ i.paidamt_jan|floatformat:2 }}</td>
+                                        <td></td>
+                                        <td></td>
+                                        <td class = "to_bill">{{ i.commulative_bill|floatformat:2 }}</td>
                                     </tr>
                                     <tr>
-                                        <td>February</td>
+                                        <td class = "feb">February</td>
                                         <td>{{ i.reading_feb }}</td>
+                                        <td>{{ i.reading_jan }}</td>
                                         <td class="to_format_pdf"></td>
                                         <td>{{ i.usage_feb }}</td>
-                                        <td>{{i.totalbill_feb}}</td>
-                                        <td>{{ i.paidamt_feb }}</td>
+                                        <td class = "bill">{{i.totalbill_feb|floatformat:2}}</td>
+                                        <td>{{ i.paidamt_feb|floatformat:2 }}</td>
+                                        <td></td>
+                                        <td></td>
+                                        <td class = "to_bill">{{ i.commulative_bill |floatformat:2}}</td>
                                     </tr>
                                     <tr>
-                                        <td>March</td>
+                                        <td class = "mar">March</td>
                                         <td>{{ i.reading_mar }}</td>
+                                        <td>{{ i.reading_feb }}</td>
                                         <td class="to_format_pdf"></td>
                                         <td>{{ i.usage_mar }}</td>
-                                        <td>{{i.totalbill_mar}}</td>
-                                        <td>{{ i.paidamt_mar }}</td>
+                                        <td class = "bill">{{i.totalbill_mar|floatformat:2}}</td>
+                                        <td>{{ i.paidamt_mar|floatformat:2 }}</td>
+                                        <td></td>
+                                        <td></td>
+                                        <td class = "to_bill">{{ i.commulative_bill |floatformat:2}}</td>
                                     </tr>
                                     <tr>
-                                        <td>April</td>
+                                        <td class = "apr">April</td>
                                         <td>{{ i.reading_apr }}</td>
+                                        <td>{{ i.reading_mar }}</td>
                                         <td class="to_format_pdf"></td>
                                         <td>{{ i.usage_apr }}</td>
-                                        <td>{{i.totalbill_apr }}</td>
-                                        <td>{{ i.paidamt_apr }}</td>
+                                        <td class = "bill">{{i.totalbill_apr |floatformat:2}}</td>
+                                        <td>{{ i.paidamt_apr|floatformat:2 }}</td>
+                                        <td></td>
+                                        <td></td>
+                                        <td class = "to_bill">{{ i.commulative_bill|floatformat:2 }}</td>
                                     </tr>
                                     <tr>
-                                        <td>May</td>
+                                        <td class = "may">May</td>
                                         <td>{{ i.reading_may }}</td>
+                                        <td>{{ i.reading_apr }}</td>
                                         <td class="to_format_pdf"></td>
                                         <td>{{ i.usage_may }}</td>
-                                        <td>{{i.totalbill_may }}</td>
-                                        <td>{{ i.paidamt_may }}</td>
+                                        <td class = "bill">{{i.totalbill_may|floatformat:2 }}</td>
+                                        <td>{{ i.paidamt_may|floatformat:2 }}</td>
+                                        <td></td>
+                                        <td></td>
+                                        <td class = "to_bill">{{ i.commulative_bill |floatformat:2}}</td>
                                     </tr>
                                     <tr>
-                                        <td>June</td>
+                                        <td class = "jun">June</td>
                                         <td>{{ i.reading_jun }}</td>
+                                        <td>{{ i.reading_may }}</td>
                                         <td class="to_format_pdf"></td>
                                         <td>{{ i.usage_jun }}</td>
-                                        <td>{{i.totalbill_jun }}</td>
-                                        <td>{{ i.paidamt_jun }}</td>
+                                        <td class = "bill">{{i.totalbill_jun |floatformat:2}}</td>
+                                        <td>{{ i.paidamt_jun|floatformat:2 }}</td>
+                                        <td></td>
+                                        <td></td>
+                                        <td class = "to_bill">{{ i.commulative_bill |floatformat:2}}</td>
                                     </tr>
                                     <tr>
-                                        <td>July</td>
+                                        <td class = "jul">July</td>
                                         <td>{{ i.reading_jul }}</td>
+                                        <td>{{ i.reading_jun }}</td>
                                         <td class="to_format_pdf"></td>
                                         <td>{{ i.usage_jul }}</td>
-                                        <td>{{i.totalbill_jul }}</td>
-                                        <td>{{ i.paidamt_jul }}</td>
+                                        <td class = "bill">{{i.totalbill_jul |floatformat:2}}</td>
+                                        <td>{{ i.paidamt_jul|floatformat:2 }}</td>
+                                        <td></td>
+                                        <td></td>
+                                        <td class = "to_bill">{{ i.commulative_bill |floatformat:2}}</td>
                                     </tr>
                                     <tr>
-                                        <td>August</td>
+                                        <td class = "aug">August</td>
                                         <td>{{ i.reading_aug }}</td>
+                                        <td>{{ i.reading_jul }}</td>
                                         <td class="to_format_pdf"></td>
                                         <td>{{ i.usage_aug }}</td>
-                                        <td>{{i.totalbill_aug }}</td>
-                                        <td>{{ i.paidamt_aug }}</td>
+                                        <td class = "bill">{{i.totalbill_aug |floatformat:2}}</td>
+                                        <td>{{ i.paidamt_aug|floatformat:2 }}</td>
+                                        <td></td>
+                                        <td></td>
+                                        <td class = "to_bill">{{ i.commulative_bill |floatformat:2}}</td>
                                     </tr>
                                     <tr>
-                                        <td>September</td>
+                                        <td class = "sept">September</td>
                                         <td>{{ i.reading_sept }}</td>
+                                        <td>{{ i.reading_aug }}</td>
                                         <td class="to_format_pdf"></td>
                                         <td>{{ i.usage_sept }}</td>
-                                        <td>{{i.totalbill_sept }}</td>
-                                        <td>{{ i.paidamt_sept }}</td>
+                                        <td class = "bill">{{i.totalbill_sept|floatformat:2 }}</td>
+                                        <td>{{ i.paidamt_sept|floatformat:2 }}</td>
+                                        <td></td>
+                                        <td></td>
+                                        <td class = "to_bill">{{ i.commulative_bill |floatformat:2}}</td>
                                     </tr>
                                     <tr>
-                                        <td>October</td>
+                                        <td class = "oct">October</td>
                                         <td>{{ i.reading_oct }}</td>
+                                        <td>{{ i.reading_sept }}</td>
                                         <td class="to_format_pdf"></td>
                                         <td>{{ i.usage_oct }}</td>
-                                        <td>{{i.totalbill_oct }}</td>
-                                        <td>{{ i.paidamt_oct }}</td>
+                                        <td class = "bill">{{i.totalbill_oct |floatformat:2}}</td>
+                                        <td>{{ i.paidamt_oct|floatformat:2 }}</td>
+                                        <td></td>
+                                        <td></td>
+                                        <td class = "to_bill">{{ i.commulative_bill|floatformat:2 }}</td>
                                     </tr>
                                     <tr>
-                                        <td>November</td>
+                                        <td class = "nov">November</td>
                                         <td>{{ i.reading_nov }}</td>
+                                        <td>{{ i.reading_oct }}</td>
                                         <td class="to_format_pdf"></td>
                                         <td>{{ i.usage_nov }}</td>
-                                        <td>{{i.totalbill_nov }}</td>
-                                        <td>{{ i.paidamt_nov }}</td>
+                                        <td class = "bill">{{i.totalbill_nov |floatformat:2}}</td>
+                                        <td>{{ i.paidamt_nov|floatformat:2 }}</td>
+                                        <td></td>
+                                        <td></td>
+                                        <td class = "to_bill">{{ i.commulative_bill|floatformat:2 }}</td>
                                     </tr>
                                     <tr>
-                                        <td>December</td>
+                                        <td class = "dec">December</td>
                                         <td>{{ i.reading_dec }}</td>
+                                        <td>{{ i.reading_nov }}</td>
                                         <td class="to_format_pdf"></td>
                                         <td>{{ i.usage_dec }}</td>
-                                        <td>{{i.totalbill_dec }}</td>
-                                        <td>{{ i.paidamt_dec }}</td>
+                                        <td class = "bill">{{i.totalbill_dec |floatformat:2}}</td>
+                                        <td>{{ i.paidamt_dec|floatformat:2 }}</td>
+                                        <td></td>
+                                        <td></td>
+                                        <td class = "to_bill">{{ i.commulative_bill |floatformat:2}}</td>
                                     </tr>
                                 </tbody>
                             
                             </table>
                             {% endfor %}
+                        </div>
+                         <!-- modal for Official Receipt -->
+                        <div class="modal fade" id="officialreceipt" tabindex="-1" role="dialog"
+                            aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered" role="document">
+                                <div class="modal-content">
+                                <div class="modal-header">
+
+                                </div>
+
+                                <div class="modal-body">
+
+                                    <div class="modal-body mx-3">
+
+                                    <div class="form-group">
+                                        <label for="receipt">Amount</label>
+                                        <input type="number" name="amount" class="form-control" id="amount"
+                                        aria-describedby="ornumber" value="" placeholder="Enter Amount">
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="receipt">Official Receipt Number</label>
+                                        <input type="text" name="or_number" class="form-control" id="ornumber"
+                                        aria-describedby="ornumber" value="" placeholder="Official Receipt Number">
+                                    </div>
+
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                        <button type="submit" id="postbtn" class="btn btn-primary"
+                                        onclick="this.form.submit();this.disabled = true;" value="POST">Submit</button>
+
+                                    </div>
+
+                                    </div>
+                                </div>
+                                </div>
+                            </div>
                         </div>
 
                         </form>
